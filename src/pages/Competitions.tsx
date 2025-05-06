@@ -10,6 +10,7 @@ import EquityCompetitionTabs from "@/components/competitions/EquityCompetitionTa
 import OpinionEventTabs from "@/components/competitions/OpinionEventTabs";
 import CompetitionFilters from "@/components/competitions/CompetitionFilters";
 import CompetitionListDisplay from "@/components/competitions/CompetitionListDisplay";
+import GeoQuestContainer from "@/components/geoQuest/GeoQuestContainer"; // Import GeoQuest Container
 
 const Competitions = () => {
   // Router related hooks
@@ -69,15 +70,15 @@ const Competitions = () => {
 
   // Handle URL params and update
   useEffect(() => {
-    // Update URL with game type
     const newParams = new URLSearchParams();
     
-    if (activeGameType !== "equity") {
+    // Set gameType unless it's the default 'equity'
+    if (activeGameType !== "equity") { 
       newParams.set("gameType", activeGameType);
     }
     
-    // Only add type parameter for equity games
-    if (activeGameType === "equity" && activeTab !== "all") {
+    // Only add type parameter for equity games, not for crypto, opinion, or trivia
+    if (activeGameType === "equity" && activeTab !== "all") { 
       newParams.set("type", activeTab);
     }
     
@@ -97,7 +98,7 @@ const Competitions = () => {
     }
   }, [location.search]);
 
-  // Filter competitions based on activeGameType and activeTab
+  // Filter competitions based on activeGameType and activeTab (Only for equity)
   useEffect(() => {
     if (activeGameType === "equity") {
       let filtered = [...equityCompetitions];
@@ -132,7 +133,7 @@ const Competitions = () => {
     }
   }, [activeGameType, activeTab, searchQuery, sortBy, equityCompetitions]);
   
-  // Filter opinion events
+  // Filter opinion events (Only for opinion)
   useEffect(() => {
     if (activeGameType === "opinion") {
       let filtered = [...opinionEvents];
@@ -169,11 +170,13 @@ const Competitions = () => {
     // Reset other filters when changing game type
     setSearchQuery("");
     
+    // Reset specific tabs based on the new game type
     if (value === "equity") {
-      setActiveTab("all");
+      setActiveTab("all"); 
     } else if (value === "opinion") {
       setActiveOpinionTab("all");
-    }
+    } 
+    // No specific tab state needed for 'crypto' or 'trivia' currently
   };
 
   const handleOpinionTabChange = (value: string) => {
@@ -216,37 +219,57 @@ const Competitions = () => {
             onGameTypeChange={handleGameTypeChange}
           />
 
-          <CompetitionFilters
-            searchQuery={searchQuery}
-            onSearchChange={handleSearchChange}
-            sortBy={sortBy}
-            onSortChange={handleSortChange}
-          />
+          {/* Render specific content based on game type */}
+          {activeGameType === "trivia" ? (
+            // Render GeoQuest Game when Trivia tab is active
+            <div className="mt-8"> 
+              <GeoQuestContainer />
+            </div>
+          ) : (
+            // Render Filters and Competition Lists for other game types
+            <>
+              <CompetitionFilters
+                searchQuery={searchQuery}
+                onSearchChange={handleSearchChange}
+                sortBy={sortBy}
+                onSortChange={handleSortChange}
+              />
 
-          {/* Conditional UI based on active game type */}
-          {activeGameType === "equity" && (
-            <EquityCompetitionTabs
-              activeTab={activeTab}
-              onTabChange={handleTabChange} 
-            />
+              {activeGameType === "equity" && (
+                <EquityCompetitionTabs
+                  activeTab={activeTab}
+                  onTabChange={handleTabChange} 
+                />
+              )}
+
+              {activeGameType === "opinion" && (
+                <OpinionEventTabs
+                  activeOpinionTab={activeOpinionTab}
+                  onOpinionTabChange={handleOpinionTabChange}
+                  categories={categories}
+                />
+              )}
+              
+              {/* CompetitionListDisplay might need adjustment if crypto is added later */}
+              {(activeGameType === "equity" || activeGameType === "opinion") && (
+                 <CompetitionListDisplay
+                    activeGameType={activeGameType}
+                    filteredCompetitions={filteredCompetitions}
+                    filteredEvents={filteredEvents}
+                    isLoading={isLoading}
+                    error={error}
+                    onOpinionAnswerSubmitted={handleOpinionAnswerSubmitted}
+                  />
+              )}
+              {/* Placeholder for Crypto competitions if added */}
+              {activeGameType === "crypto" && (
+                <div className="text-center py-12 my-4 bg-secondary/40 rounded-lg">
+                  <h3 className="text-xl font-medium mb-2">Crypto Competitions Coming Soon!</h3>
+                  <p className="text-muted-foreground">Check back later for crypto challenges.</p>
+                </div>
+              )}
+            </>
           )}
-
-          {activeGameType === "opinion" && (
-            <OpinionEventTabs
-              activeOpinionTab={activeOpinionTab}
-              onOpinionTabChange={handleOpinionTabChange}
-              categories={categories}
-            />
-          )}
-
-          <CompetitionListDisplay
-            activeGameType={activeGameType}
-            filteredCompetitions={filteredCompetitions}
-            filteredEvents={filteredEvents}
-            isLoading={isLoading}
-            error={error}
-            onOpinionAnswerSubmitted={handleOpinionAnswerSubmitted}
-          />
         </div>
       </main>
 
