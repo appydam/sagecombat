@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,9 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Clock, Users, Trophy, ArrowRight, TrendingUp, Bitcoin, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
-import { toast } from "sonner";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export interface CompetitionProps {
   id: string;
@@ -24,8 +20,6 @@ export interface CompetitionProps {
   gameType: "equity" | "crypto" | "opinion";
   currency_type: "real" | "virtual";
   competition_interval: number;
-  hasJoined?: boolean;
-  scoringDone?: boolean;
 }
 
 const CompetitionCard = ({
@@ -41,11 +35,8 @@ const CompetitionCard = ({
   type,
   gameType,
   currency_type,
-  competition_interval,
-  hasJoined = false,
-  scoringDone = false
+  competition_interval
 }: CompetitionProps) => {
-  const [leaderboardDialogOpen, setLeaderboardDialogOpen] = useState(false);
   const percentFilled = (currentParticipants / maxParticipants) * 100;
   const isExpired = new Date(registerDeadline) < new Date();
 
@@ -62,9 +53,6 @@ const CompetitionCard = ({
   const remainingDays = Math.floor(remainingHours / 24);
 
   const statusDisplay = isExpired ? "closed" : status;
-  
-  // Determine if leaderboard is available (only for closed competitions with scoring done)
-  const isLeaderboardAvailable = statusDisplay === "closed" && scoringDone;
 
   // Generate contest URL with all relevant params
   const getGameLink = () => {
@@ -105,13 +93,6 @@ const CompetitionCard = ({
         return <MessageSquare className="h-4 w-4 text-mint-600" />;
       default:
         return <TrendingUp className="h-4 w-4 text-primary" />;
-    }
-  };
-
-  const handleLeaderboardClick = (e: React.MouseEvent) => {
-    if (!isLeaderboardAvailable) {
-      e.preventDefault();
-      setLeaderboardDialogOpen(true);
     }
   };
 
@@ -193,6 +174,9 @@ const CompetitionCard = ({
             "text-xs",
             remainingHours <= 24 && statusDisplay === "open" ? "text-destructive font-medium" : "text-muted-foreground"
           )}>
+            {/* {competition_interval}
+            {registerDeadline} */}
+            {/* {remainingHours} */}
             {statusDisplay === "open" && remainingTime > 0 ? (
               remainingDays > 0 ? (
                 <>
@@ -214,56 +198,23 @@ const CompetitionCard = ({
         </div>
 
         <div className="flex gap-2">
-          {statusDisplay === "closed" ? (
-            <Link to={isLeaderboardAvailable ? `/contest-leaderboard/${id}` : "#"} onClick={handleLeaderboardClick}>
-              <Button variant="outline" size="sm">
-                Leaderboard
-              </Button>
-            </Link>
-          ) : (
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleLeaderboardClick}
-            >
+          <Link to={`/contest-leaderboard/${id}`}>
+            <Button variant="outline" size="sm">
               Leaderboard
             </Button>
-          )}
-          
+          </Link>
           <Link to={getGameLink()}>
             <Button
-              variant={statusDisplay === "open" && !hasJoined ? "default" : "secondary"}
+              variant={statusDisplay === "open" ? "default" : "secondary"}
               size="sm"
-              disabled={statusDisplay !== "open" || hasJoined}
+              disabled={statusDisplay !== "open"}
             >
-              {hasJoined ? "Already Joined" : statusDisplay === "open" ? "Join Now" : "View Details"}
+              {statusDisplay === "open" ? "Join Now" : "View Details"}
               <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
           </Link>
         </div>
       </CardFooter>
-
-      {/* Leaderboard Dialog */}
-      <Dialog open={leaderboardDialogOpen} onOpenChange={setLeaderboardDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Leaderboard Not Available</DialogTitle>
-            <DialogDescription>
-              {statusDisplay === "closed" 
-                ? "The leaderboard for this competition is still being calculated. Please check back later."
-                : "Leaderboard will be available after the competition ends."}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-center py-4">
-            <Trophy className="h-16 w-16 text-gray-300" />
-          </div>
-          <div className="flex justify-end">
-            <Button variant="outline" onClick={() => setLeaderboardDialogOpen(false)}>
-              Close
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </Card>
   );
 };

@@ -1,4 +1,3 @@
-
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -13,8 +12,7 @@ import { Input } from "@/components/ui/input";
 import { availableStocks } from "../../stockSymbolsData/stocks";
 import { BACKEND_HOST } from "@/constants/config";
 import { Calendar } from "lucide-react";
-import { toast as sonnerToast } from "sonner";
-import { joinCompetition } from "@/services/competitionsService";
+import { toast } from "sonner";
 
 const CustomBasketGame = () => {
   const navigate = useNavigate();
@@ -93,11 +91,6 @@ const CustomBasketGame = () => {
         title: "Success!",
         description: "You've successfully joined the competition.",
       });
-
-      // Fix 1: Convert contestId from number to string when calling joinCompetition
-      await joinCompetition(String(contestId));
-      // Fix 2: Use sonnerToast instead of toast.success
-      sonnerToast.success("You have joined the competition!");
 
       setTimeout(() => {
         navigate(`/competition-confirmation`);

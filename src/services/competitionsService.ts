@@ -4,37 +4,29 @@ import { mockCompetitionsData } from "@/components/competitions/data/mockData";
 import { BACKEND_HOST } from "@/constants/config";
 import { toast } from "sonner";
 
-// Track which contests user has joined (in memory for demo)
-const userJoinedContests = new Set<string>();
-
 // Function to transform API data to frontend format
 export const mapApiDataToFrontend = (apiData: CompetitionsApiResponseData): {
   equityCompetitions: CompetitionProps[],
   opinionEvents: OpinionEvent[]
 } => {
   // Map equity contests, handle missing key gracefully
-  const equityCompetitions = (apiData.equity_contests || []).map(contest => {
-    const contestId = String(contest.id);
-    return {
-      id: contestId,
-      name: contest.name,
-      title: contest.name, // Add title property for consistency
-      description: contest.description,
-      entryFee: contest.entry_fee,
-      maxParticipants: contest.max_participants,
-      currentParticipants: contest.current_participants,
-      status: contest.status,
-      // Calculate prize pool based on entry fee and max participants if not provided directly
-      prizePool: contest.entry_fee * contest.max_participants * 0.8, // Assuming 80% of total pool is prize
-      registerDeadline: contest.register_deadline,
-      type: contest.basket_type === "Custom Basket" ? "custom" as const : "predefined" as const,
-      gameType: "equity" as const,
-      currency_type: contest.currency_type,
-      competition_interval: contest.competition_interval,
-      hasJoined: userJoinedContests.has(contestId), // Check if user has joined
-      scoringDone: contest.scoring_done // Use scoring_done from API
-    };
-  });
+  const equityCompetitions = (apiData.equity_contests || []).map(contest => ({
+    id: String(contest.id),
+    name: contest.name,
+    title: contest.name, // Add title property for consistency
+    description: contest.description,
+    entryFee: contest.entry_fee,
+    maxParticipants: contest.max_participants,
+    currentParticipants: contest.current_participants,
+    status: contest.status,
+    // Calculate prize pool based on entry fee and max participants if not provided directly
+    prizePool: contest.entry_fee * contest.max_participants * 0.8, // Assuming 80% of total pool is prize
+    registerDeadline: contest.register_deadline,
+    type: contest.basket_type === "Custom Basket" ? "custom" as const : "predefined" as const,
+    gameType: "equity" as const,
+    currency_type: contest.currency_type,
+    competition_interval: contest.competition_interval
+  }));
 
   // Map opinion contests, handle missing key gracefully
   const opinionEvents = (apiData.opinions_contests || []).map(contest => ({
@@ -164,44 +156,3 @@ export const submitOpinionAnswer = async (
     };
   }
 };
-
-// Add a function to join a competition
-export const joinCompetition = async (competitionId: string): Promise<{ success: boolean; message: string }> => {
-  try {
-    // In a real implementation, this would call an API
-    // For now, we'll just track it in memory
-    userJoinedContests.add(competitionId);
-    
-    return {
-      success: true,
-      message: "Successfully joined competition!"
-    };
-  } catch (error) {
-    console.error("Error joining competition:", error);
-    return {
-      success: false,
-      message: "Failed to join competition. Please try again."
-    };
-  }
-};
-
-// Add a function to check if a user has already joined a competition
-export const hasUserJoinedCompetition = (competitionId: string): boolean => {
-  return userJoinedContests.has(competitionId);
-};
-
-// Update the mock competitions data to include the scoringDone field
-export const updateMockCompetitionsData = () => {
-  // This would normally not be necessary with real API data that includes scoring_done
-  for (const contestType in mockCompetitionsData) {
-    if (contestType === 'equity_contests') {
-      mockCompetitionsData.equity_contests = mockCompetitionsData.equity_contests.map(contest => ({
-        ...contest,
-        scoring_done: contest.status === 'closed' ? Math.random() > 0.5 : false // Randomly mark closed contests as scored
-      }));
-    }
-  }
-};
-
-// Call this once to ensure our mock data has the scoringDone field
-updateMockCompetitionsData();
