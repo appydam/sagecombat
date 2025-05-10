@@ -1,4 +1,3 @@
-
 // --- API Response Types ---
 
 export interface ApiEquityContest {
@@ -62,7 +61,9 @@ export interface CompetitionProps {
   type: "custom" | "predefined"; // Derived from basket_type
   gameType: "equity" | "crypto" | "opinion"; // Include all possible game types
   currency_type: "real" | "virtual";
-  competition_interval: number
+  competition_interval: number;
+  hasJoined?: boolean; // Add this property to track if user has joined
+  scoringDone?: boolean; // Track if scoring/leaderboard is available
 }
 
 // For <OpinionEventCard /> - Derived from ApiOpinionContest

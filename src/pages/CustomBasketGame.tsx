@@ -13,6 +13,7 @@ import { availableStocks } from "../../stockSymbolsData/stocks";
 import { BACKEND_HOST } from "@/constants/config";
 import { Calendar } from "lucide-react";
 import { toast } from "sonner";
+import { joinCompetition } from "@/services/competitionsService";
 
 const CustomBasketGame = () => {
   const navigate = useNavigate();
@@ -91,6 +92,9 @@ const CustomBasketGame = () => {
         title: "Success!",
         description: "You've successfully joined the competition.",
       });
+
+      await joinCompetition(contestId);
+      toast.success("You have joined the competition!");
 
       setTimeout(() => {
         navigate(`/competition-confirmation`);
