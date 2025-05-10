@@ -1,3 +1,4 @@
+
 import { CompetitionsApiResponseData, FullCompetitionsApiResponse, CompetitionProps, OpinionEvent } from "@/types/competitions";
 import { mockCompetitionsData } from "@/components/competitions/data/mockData";
 import { BACKEND_HOST } from "@/constants/config";
