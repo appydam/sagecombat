@@ -156,7 +156,7 @@ const CompetitionListDisplay = ({
     if (activeGameType === "poly") {
       if (filteredPolyContests && filteredPolyContests.length > 0) {
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {filteredPolyContests.map(contest => (
               <PolyContestCard
                 key={contest.id}
@@ -183,7 +183,7 @@ const CompetitionListDisplay = ({
     if (activeGameType === "geoquest") {
       if (filteredGeoQuests && filteredGeoQuests.length > 0) {
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {filteredGeoQuests.map(contest => (
               <GeoQuestCard
                 key={contest.id}

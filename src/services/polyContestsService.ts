@@ -5,16 +5,16 @@ import { toast } from "sonner";
 const mockPolyContests: PolyContest[] = [
   {
     id: "1",
-    title: "Will Bitcoin reach $100k by Q4 2025?",
+    title: "Will Bitcoin reach $110k by 25 May, 2025?",
     description: "Predict if Bitcoin will reach $100,000 before the end of Q4 2025.",
     category: "Crypto",
     status: "active",
     participants: 456,
     yes_price: 0.65,
     no_price: 0.35,
-    total_volume: 12500,
-    end_time: "2025-12-31T00:00:00Z",
-    created_at: "2024-01-15T12:00:00Z",
+    total_volume: 1250000,
+    end_time: "2025-05-25T00:00:00Z",
+    created_at: "2025-05-10T12:00:00Z",
     outcome: null
   },
   {
@@ -26,37 +26,23 @@ const mockPolyContests: PolyContest[] = [
     participants: 827,
     yes_price: 0.25,
     no_price: 0.75,
-    total_volume: 34200,
-    end_time: "2026-12-31T00:00:00Z",
-    created_at: "2024-02-10T15:30:00Z",
-    outcome: null
-  },
-  {
-    id: "3",
-    title: "Will India win Cricket World Cup 2025?",
-    description: "Predict if India will win the upcoming Cricket World Cup in 2025.",
-    category: "Sports",
-    status: "active",
-    participants: 1253,
-    yes_price: 0.58,
-    no_price: 0.42,
-    total_volume: 24700,
-    end_time: "2025-06-30T00:00:00Z",
-    created_at: "2024-03-05T09:15:00Z",
+    total_volume: 342000,
+    end_time: "2025-12-31T00:00:00Z",
+    created_at: "2025-04-10T15:30:00Z",
     outcome: null
   },
   {
     id: "4",
-    title: "Will Ethereum merge to proof-of-stake in 2024?",
+    title: "Will Ethereum merge to proof-of-stake in May, 2025?",
     description: "Will Ethereum successfully complete its transition to proof-of-stake consensus mechanism in 2024?",
     category: "Crypto",
     status: "resolved",
     participants: 972,
     yes_price: 0.95,
     no_price: 0.05,
-    total_volume: 45800,
-    end_time: "2024-03-15T00:00:00Z",
-    created_at: "2023-11-20T11:45:00Z",
+    total_volume: 458000,
+    end_time: "2025-05-30T00:00:00Z",
+    created_at: "2025-05-10T11:45:00Z",
     outcome: "yes"
   }
 ];
@@ -67,23 +53,23 @@ const generateMockPriceHistory = (contestId: string): PriceHistoryPoint[] => {
   const now = new Date();
   let yesPrice = Math.random() * 0.4 + 0.3; // Between 0.3 and 0.7
   let noPrice = 1 - yesPrice;
-  
+
   // Generate data points for the last 7 days, every 4 hours
   for (let i = 0; i < 7 * 6; i++) {
     const timestamp = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000) + (i * 4 * 60 * 60 * 1000));
-    
+
     // Small random changes to prices
     const yesChange = (Math.random() * 0.1) - 0.05;
     yesPrice = Math.max(0.05, Math.min(0.95, yesPrice + yesChange));
     noPrice = 1 - yesPrice;
-    
+
     points.push({
       timestamp: timestamp.toISOString(),
       yes_price: yesPrice,
       no_price: noPrice
     });
   }
-  
+
   return points;
 };
 
@@ -104,12 +90,12 @@ export const getPolyContests = async () => {
   try {
     // Extract unique categories
     const categories = [...new Set(mockPolyContests.map(contest => contest.category))];
-    
+
     return { data: mockPolyContests, categories, error: null };
   } catch (error) {
     console.error("Error fetching poly contests:", error);
     toast.error("Failed to load poly contests");
-    
+
     // Return empty data with error
     return { data: [], categories: [], error: "Failed to fetch poly contests" };
   }
@@ -122,7 +108,7 @@ export const fetchPolyContests = getPolyContests;
 export const getPolyContestById = async (id: string) => {
   try {
     const contest = mockPolyContests.find(c => c.id === id);
-    
+
     if (!contest) {
       throw new Error(`Contest with ID ${id} not found`);
     }
@@ -183,7 +169,7 @@ export const placePolyBet = async (
     if (contestIndex >= 0) {
       mockPolyContests[contestIndex].participants += 1;
       mockPolyContests[contestIndex].total_volume += coins;
-      
+
       // Adjust prices slightly
       const priceShift = Math.min(0.03, coins / 10000); // Max 3% shift
       if (prediction === "yes") {
@@ -195,17 +181,17 @@ export const placePolyBet = async (
       }
     }
 
-    return { 
-      success: true, 
+    return {
+      success: true,
       message: `Bet placed successfully! Potential payout: ${potentialPayout} coins`,
-      error: null 
+      error: null
     };
   } catch (error) {
     console.error("Error placing bet:", error);
-    return { 
-      success: false, 
+    return {
+      success: false,
       message: null,
-      error: "Failed to place bet. Please try again." 
+      error: "Failed to place bet. Please try again."
     };
   }
 };
@@ -219,7 +205,7 @@ export const getUserBetsForContest = async (contestId: string) => {
     mockUserBets.forEach(userBets => {
       allBets = [...allBets, ...userBets.filter(bet => bet.contest_id === contestId)];
     });
-    
+
     return { data: allBets, error: null };
   } catch (error) {
     console.error("Error fetching user bets:", error);
