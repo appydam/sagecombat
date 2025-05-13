@@ -1,53 +1,9 @@
-import { PolyContest, PriceHistoryPoint } from "@/types/competitions";
+
+import { PolyContest, PriceHistoryPoint, PolyOrder, PolyOrderResponse } from "@/types/competitions";
 import { toast } from "sonner";
+import { API_ENDPOINTS } from "@/constants/config";
 
-// Mock data for poly contests
-const mockPolyContests: PolyContest[] = [
-  {
-    id: "1",
-    title: "Will Bitcoin reach $110k by 25 May, 2025?",
-    description: "Predict if Bitcoin will reach $100,000 before the end of Q4 2025.",
-    category: "Crypto",
-    status: "active",
-    participants: 456,
-    yes_price: 0.65,
-    no_price: 0.35,
-    total_volume: 1250000,
-    end_time: "2025-05-25T00:00:00Z",
-    created_at: "2025-05-10T12:00:00Z",
-    outcome: null
-  },
-  {
-    id: "2",
-    title: "Will SpaceX land humans on Mars by 2026?",
-    description: "Will SpaceX successfully land a crewed mission on Mars by the end of 2026?",
-    category: "Space",
-    status: "active",
-    participants: 827,
-    yes_price: 0.25,
-    no_price: 0.75,
-    total_volume: 342000,
-    end_time: "2025-12-31T00:00:00Z",
-    created_at: "2025-04-10T15:30:00Z",
-    outcome: null
-  },
-  {
-    id: "4",
-    title: "Will Ethereum merge to proof-of-stake in May, 2025?",
-    description: "Will Ethereum successfully complete its transition to proof-of-stake consensus mechanism in 2024?",
-    category: "Crypto",
-    status: "resolved",
-    participants: 972,
-    yes_price: 0.95,
-    no_price: 0.05,
-    total_volume: 458000,
-    end_time: "2025-05-30T00:00:00Z",
-    created_at: "2025-05-10T11:45:00Z",
-    outcome: "yes"
-  }
-];
-
-// Mock price history data generator
+// Mock price history data generator for chart visualization
 const generateMockPriceHistory = (contestId: string): PriceHistoryPoint[] => {
   const points: PriceHistoryPoint[] = [];
   const now = new Date();
@@ -85,13 +41,64 @@ const mockUserBets = new Map<string, Array<{
   created_at: string;
 }>>();
 
+// Transforming API data to our frontend model
+const transformApiPolyContest = (apiContest: any): PolyContest => {
+  return {
+    id: apiContest.id.toString(),
+    title: apiContest.name,
+    description: apiContest.description,
+    category: apiContest.tag || "General",
+    status: apiContest.status === "open" ? "active" : 
+            apiContest.status === "closed" ? "resolved" : "cancelled",
+    participants: 0, // Will be populated from other API or estimations
+    yes_price: 0.5, // Will be fetched separately
+    no_price: 0.5, // Will be fetched separately
+    total_volume: 0, // Will be populated from other API or estimations
+    end_time: apiContest.registration_deadline || new Date().toISOString(),
+    created_at: apiContest.created_at || new Date().toISOString(),
+    outcome: apiContest.answer === true ? "yes" : 
+             apiContest.answer === false ? "no" : null
+  };
+};
+
 // Get all PolyContests
 export const getPolyContests = async () => {
   try {
-    // Extract unique categories
-    const categories = [...new Set(mockPolyContests.map(contest => contest.category))];
+    const response = await fetch(API_ENDPOINTS.GET_ALL_COMP);
+    
+    if (!response.ok) {
+      throw new Error(`API responded with status: ${response.status}`);
+    }
 
-    return { data: mockPolyContests, categories, error: null };
+    const data = await response.json();
+    
+    if (!data.data || !data.data.orderbook_contests) {
+      throw new Error("Invalid API response format");
+    }
+    
+    // Transform API data to our frontend model
+    const polyContests = await Promise.all(data.data.orderbook_contests.map(async (contest: any) => {
+      const transformed = transformApiPolyContest(contest);
+      
+      // Fetch the current price for each contest
+      try {
+        const priceResponse = await fetch(API_ENDPOINTS.GET_MARKET_PRICE(contest.id));
+        if (priceResponse.ok) {
+          const priceData = await priceResponse.json();
+          transformed.yes_price = priceData.yes_price;
+          transformed.no_price = priceData.no_price;
+        }
+      } catch (error) {
+        console.error(`Failed to fetch price for contest ${contest.id}:`, error);
+      }
+      
+      return transformed;
+    }));
+
+    // Extract unique categories
+    const categories = [...new Set(polyContests.map(contest => contest.category))];
+
+    return { data: polyContests, categories, error: null };
   } catch (error) {
     console.error("Error fetching poly contests:", error);
     toast.error("Failed to load poly contests");
@@ -107,12 +114,36 @@ export const fetchPolyContests = getPolyContests;
 // Get a single PolyContest by ID
 export const getPolyContestById = async (id: string) => {
   try {
-    const contest = mockPolyContests.find(c => c.id === id);
-
-    if (!contest) {
-      throw new Error(`Contest with ID ${id} not found`);
+    const response = await fetch(API_ENDPOINTS.GET_ALL_COMP);
+    
+    if (!response.ok) {
+      throw new Error(`API responded with status: ${response.status}`);
     }
 
+    const data = await response.json();
+    
+    if (!data.data || !data.data.orderbook_contests) {
+      throw new Error("Invalid API response format");
+    }
+    
+    // Find the requested contest
+    const apiContest = data.data.orderbook_contests.find((c: any) => c.id.toString() === id);
+    
+    if (!apiContest) {
+      throw new Error(`Contest with ID ${id} not found`);
+    }
+    
+    // Transform into our model
+    const contest = transformApiPolyContest(apiContest);
+    
+    // Fetch the current price
+    const priceResponse = await fetch(API_ENDPOINTS.GET_MARKET_PRICE(parseInt(id)));
+    if (priceResponse.ok) {
+      const priceData = await priceResponse.json();
+      contest.yes_price = priceData.yes_price;
+      contest.no_price = priceData.no_price;
+    }
+    
     return { contest, error: null };
   } catch (error) {
     console.error(`Error fetching poly contest with ID ${id}:`, error);
@@ -123,6 +154,8 @@ export const getPolyContestById = async (id: string) => {
 // Get price history for a contest
 export const getPolyPriceHistory = async (contestId: string) => {
   try {
+    // Currently using mock data since the API doesn't provide historical prices
+    // This can be replaced when the API supports this feature
     const priceHistory = generateMockPriceHistory(contestId);
     return { priceHistory, error: null };
   } catch (error) {
@@ -131,7 +164,59 @@ export const getPolyPriceHistory = async (contestId: string) => {
   }
 };
 
-// Place a bet on a poly contest
+// Place an order (buy/sell) for a poly contest
+export const placePolyOrder = async (
+  userId: string,
+  marketId: string,
+  outcome: boolean,
+  orderType: "buy" | "sell",
+  price: number,
+  quantity: number
+) => {
+  try {
+    const payload = {
+      user_id: parseInt(userId),
+      market_id: parseInt(marketId),
+      outcome,
+      type: orderType,
+      order_type: "limit", // Currently only supporting limit orders
+      price,
+      quantity
+    };
+
+    const response = await fetch(API_ENDPOINTS.PLACE_ORDER, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `Failed with status: ${response.status}`);
+    }
+
+    const data = await response.json() as PolyOrderResponse;
+    
+    return {
+      success: true,
+      data,
+      message: `Order placed successfully! ${orderType === "buy" ? "Bought" : "Sold"} ${quantity} shares at ₹${price.toFixed(2)}`,
+      error: null
+    };
+  } catch (error) {
+    console.error("Error placing order:", error);
+    return {
+      success: false,
+      data: null,
+      message: null,
+      error: error instanceof Error ? error.message : "Failed to place order. Please try again."
+    };
+  }
+};
+
+// Legacy method - for backward compatibility
 export const placePolyBet = async (
   userId: string,
   contestId: string,
@@ -139,51 +224,35 @@ export const placePolyBet = async (
   coins: number
 ) => {
   try {
-    // Find the contest
-    const contestObj = mockPolyContests.find(c => c.id === contestId);
-    if (!contestObj) throw new Error("Contest not found");
-
-    const price = prediction === "yes" ? contestObj.yes_price : contestObj.no_price;
-    const potentialPayout = +(coins / price).toFixed(2);
-
-    // Create bet object
-    const bet = {
-      id: `bet-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-      user_id: userId,
-      contest_id: contestId,
-      prediction,
-      coins,
+    const outcome = prediction === "yes";
+    const marketId = contestId;
+    
+    // Determine price based on prediction
+    const priceResponse = await fetch(API_ENDPOINTS.GET_MARKET_PRICE(parseInt(marketId)));
+    if (!priceResponse.ok) {
+      throw new Error("Failed to get current price");
+    }
+    
+    const priceData = await priceResponse.json();
+    const price = outcome ? priceData.yes_price : priceData.no_price;
+    
+    // Place the order
+    const orderResult = await placePolyOrder(
+      userId,
+      marketId,
+      outcome,
+      "buy",
       price,
-      potential_payout: potentialPayout,
-      created_at: new Date().toISOString()
-    };
-
-    // Store bet in our mock database
-    if (!mockUserBets.has(userId)) {
-      mockUserBets.set(userId, []);
+      coins
+    );
+    
+    if (!orderResult.success) {
+      throw new Error(orderResult.error || "Failed to place bet");
     }
-    mockUserBets.get(userId)?.push(bet);
-
-    // Update contest (increase participation and volume)
-    const contestIndex = mockPolyContests.findIndex(c => c.id === contestId);
-    if (contestIndex >= 0) {
-      mockPolyContests[contestIndex].participants += 1;
-      mockPolyContests[contestIndex].total_volume += coins;
-
-      // Adjust prices slightly
-      const priceShift = Math.min(0.03, coins / 10000); // Max 3% shift
-      if (prediction === "yes") {
-        mockPolyContests[contestIndex].yes_price = Math.min(0.95, mockPolyContests[contestIndex].yes_price + priceShift);
-        mockPolyContests[contestIndex].no_price = 1 - mockPolyContests[contestIndex].yes_price;
-      } else {
-        mockPolyContests[contestIndex].no_price = Math.min(0.95, mockPolyContests[contestIndex].no_price + priceShift);
-        mockPolyContests[contestIndex].yes_price = 1 - mockPolyContests[contestIndex].no_price;
-      }
-    }
-
+    
     return {
       success: true,
-      message: `Bet placed successfully! Potential payout: ${potentialPayout} coins`,
+      message: orderResult.message,
       error: null
     };
   } catch (error) {
@@ -191,7 +260,7 @@ export const placePolyBet = async (
     return {
       success: false,
       message: null,
-      error: "Failed to place bet. Please try again."
+      error: error instanceof Error ? error.message : "Failed to place bet. Please try again."
     };
   }
 };
@@ -199,7 +268,7 @@ export const placePolyBet = async (
 // Get user bets for a specific contest
 export const getUserBetsForContest = async (contestId: string) => {
   try {
-    // In a real implementation, we would filter by user ID and contest ID
+    // In a real implementation, we would call an API endpoint
     // For mock data, we'll return all bets for this contest
     let allBets: any[] = [];
     mockUserBets.forEach(userBets => {

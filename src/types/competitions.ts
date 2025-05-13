@@ -34,9 +34,23 @@ export interface ApiOpinionContest {
   };
 }
 
+export interface ApiOrderbookContest {
+  id: number;
+  name: string;
+  description: string;
+  registration_deadline: string;
+  tag: string;
+  status: string;
+  answer: boolean | null;
+  currency_type: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface CompetitionsApiResponseData {
   opinions_contests: ApiOpinionContest[];
   equity_contests: ApiEquityContest[];
+  orderbook_contests: ApiOrderbookContest[];
 }
 
 export interface FullCompetitionsApiResponse {
@@ -82,7 +96,7 @@ export interface OpinionEvent {
   outcome?: "yes" | "no" | null; // MISSING in API
 }
 
-// New interface for Poly contests
+// Interface for Poly contests
 export interface PolyContest {
   id: string;
   title: string;
@@ -104,4 +118,32 @@ export interface PriceHistoryPoint {
   timestamp: string;
   yes_price: number;
   no_price: number;
+}
+
+// New types for the order functionality
+export interface PolyOrder {
+  user_id: number;
+  market_id: number;
+  outcome: boolean;
+  type: "buy" | "sell";
+  order_type: "limit";
+  price: number;
+  quantity: number;
+}
+
+export interface PolyOrderResponse {
+  order: {
+    id: number;
+    user_id: number;
+    market_id: number;
+    outcome: boolean;
+    type: "buy" | "sell";
+    order_type: "limit";
+    price: number;
+    quantity: number;
+    status: string;
+    created_at: string;
+  };
+  price: number;
+  trades: any | null;
 }

@@ -4,64 +4,112 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle, XCircle, Plus, Minus } from "lucide-react";
 
 interface PolyBetPlacementProps {
   yesPrice: number;
   noPrice: number;
   isSubmitting: boolean;
-  onPlaceBet: (outcome: "yes" | "no", amount: number) => Promise<void>;
+  onPlaceOrder: (outcome: boolean, orderType: "buy" | "sell", price: number, quantity: number) => Promise<void>;
 }
 
 const PolyBetPlacement = ({ 
   yesPrice,
   noPrice,
   isSubmitting,
-  onPlaceBet 
+  onPlaceOrder 
 }: PolyBetPlacementProps) => {
-  const [selectedOutcome, setSelectedOutcome] = useState<"yes" | "no">("yes");
-  const [betAmount, setBetAmount] = useState<number>(100);
+  const [selectedOutcome, setSelectedOutcome] = useState<boolean>(true); // true = yes, false = no
+  const [orderType, setOrderType] = useState<"buy" | "sell">("buy");
+  const [quantity, setQuantity] = useState<number>(100);
+  const [price, setPrice] = useState<number>(yesPrice);
 
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Update price when outcome or current prices change
+  React.useEffect(() => {
+    setPrice(selectedOutcome ? yesPrice : noPrice);
+  }, [selectedOutcome, yesPrice, noPrice]);
+
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
     if (isNaN(value) || value < 10) {
-      setBetAmount(10);
+      setQuantity(10);
     } else {
-      setBetAmount(value);
+      setQuantity(value);
+    }
+  };
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+    if (isNaN(value) || value <= 0 || value >= 1) {
+      setPrice(selectedOutcome ? yesPrice : noPrice);
+    } else {
+      setPrice(value);
     }
   };
 
   const handleQuickAdd = (amount: number) => {
-    setBetAmount(prev => prev + amount);
+    setQuantity(prev => prev + amount);
   };
 
   const handleIncreaseBet = () => {
-    setBetAmount(prev => prev + 50);
+    setQuantity(prev => prev + 50);
   };
 
   const handleDecreaseBet = () => {
-    setBetAmount(prev => Math.max(50, prev - 50));
+    setQuantity(prev => Math.max(50, prev - 50));
   };
 
-  const calculateWinnings = () => {
-    const price = selectedOutcome === "yes" ? yesPrice : noPrice;
-    return (betAmount / price).toFixed(2);
+  const calculatePotentialValue = () => {
+    if (orderType === "buy") {
+      // When buying, potential payout if correct = quantity / price
+      return (quantity / price).toFixed(2);
+    } else {
+      // When selling, you get the sale price = quantity * price
+      return (quantity * price).toFixed(2);
+    }
+  };
+
+  const calculateRisk = () => {
+    if (orderType === "buy") {
+      // When buying, risk is the cost = quantity * price
+      return (quantity * price).toFixed(2);
+    } else {
+      // When selling, risk is potential payout if wrong = quantity * (1 - price)
+      return (quantity * (1 - price)).toFixed(2);
+    }
   };
 
   return (
     <Card className="p-6">
-      <h3 className="font-semibold mb-4">Place Your Bet</h3>
+      <h3 className="font-semibold mb-4">Place Your Order</h3>
+      
+      <Tabs 
+        defaultValue="buy" 
+        value={orderType} 
+        onValueChange={(value) => setOrderType(value as "buy" | "sell")} 
+        className="mb-6"
+      >
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="buy" className="data-[state=active]:bg-green-600 data-[state=active]:text-white">
+            Buy
+          </TabsTrigger>
+          <TabsTrigger value="sell" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
+            Sell
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
       
       <div className="mb-6">
         <p className="text-sm text-muted-foreground mb-2">I think this will happen:</p>
         
         <RadioGroup 
-          value={selectedOutcome} 
-          onValueChange={(value) => setSelectedOutcome(value as "yes" | "no")}
+          value={selectedOutcome ? "yes" : "no"} 
+          onValueChange={(value) => setSelectedOutcome(value === "yes")}
           className="grid grid-cols-2 gap-4"
         >
           <div className={`flex items-center justify-center gap-2 h-12 rounded-md border ${
-            selectedOutcome === "yes" 
+            selectedOutcome 
               ? "bg-gradient-to-r from-green-600 to-green-500 border-green-600 text-white"
               : "border-green-600 text-green-700 hover:bg-green-50"
           } cursor-pointer`}>
@@ -73,7 +121,7 @@ const PolyBetPlacement = ({
           </div>
           
           <div className={`flex items-center justify-center gap-2 h-12 rounded-md border ${
-            selectedOutcome === "no" 
+            !selectedOutcome 
               ? "bg-gradient-to-r from-red-600 to-red-500 border-red-600 text-white"
               : "border-red-600 text-red-700 hover:bg-red-50"
           } cursor-pointer`}>
@@ -86,8 +134,34 @@ const PolyBetPlacement = ({
         </RadioGroup>
       </div>
       
+      <div className="mb-4">
+        <p className="text-sm text-muted-foreground mb-2">Price:</p>
+        <div className="flex items-center border rounded-md overflow-hidden">
+          <Input
+            type="number"
+            min={0.01}
+            max={0.99}
+            step={0.01}
+            value={price}
+            onChange={handlePriceChange}
+            className="h-9 text-center"
+          />
+        </div>
+        <div className="flex justify-between items-center mt-1">
+          <span className="text-xs text-muted-foreground">Current: {selectedOutcome ? yesPrice.toFixed(2) : noPrice.toFixed(2)}</span>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-6 px-2 py-0 text-xs"
+            onClick={() => setPrice(selectedOutcome ? yesPrice : noPrice)}
+          >
+            Use current
+          </Button>
+        </div>
+      </div>
+      
       <div className="mb-6">
-        <p className="text-sm text-muted-foreground mb-2">Amount (₹):</p>
+        <p className="text-sm text-muted-foreground mb-2">Quantity:</p>
         <div className="flex items-center border rounded-md overflow-hidden">
           <Button
             type="button"
@@ -100,8 +174,8 @@ const PolyBetPlacement = ({
           <Input
             type="number"
             min={10}
-            value={betAmount}
-            onChange={handleAmountChange}
+            value={quantity}
+            onChange={handleQuantityChange}
             className="h-9 border-0 text-center"
           />
           <Button
@@ -156,29 +230,37 @@ const PolyBetPlacement = ({
       
       <div className="bg-secondary/30 rounded-lg p-4 mb-6">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-muted-foreground">You're betting:</span>
-          <span className="font-medium">₹{betAmount.toLocaleString()}</span>
+          <span className="text-sm text-muted-foreground">Order type:</span>
+          <span className="font-medium capitalize">{orderType} {selectedOutcome ? "YES" : "NO"}</span>
+        </div>
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm text-muted-foreground">Quantity:</span>
+          <span className="font-medium">{quantity}</span>
         </div>
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm text-muted-foreground">Price per share:</span>
-          <span className="font-medium">₹{selectedOutcome === "yes" ? yesPrice.toFixed(2) : noPrice.toFixed(2)}</span>
+          <span className="font-medium">₹{price.toFixed(2)}</span>
         </div>
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-muted-foreground">If you win:</span>
-          <span className="font-semibold text-green-600">₹{calculateWinnings()}</span>
+          <span className="text-sm text-muted-foreground">
+            {orderType === "buy" ? "Potential value if YES wins:" : "You receive:"}
+          </span>
+          <span className="font-semibold text-green-600">₹{calculatePotentialValue()}</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-muted-foreground">If you lose:</span>
-          <span className="font-semibold text-red-600">₹0.00</span>
+          <span className="text-sm text-muted-foreground">
+            {orderType === "buy" ? "Cost:" : "Maximum loss:"}
+          </span>
+          <span className="font-semibold text-red-600">₹{calculateRisk()}</span>
         </div>
       </div>
       
       <Button
         className="w-full h-12 bg-gradient-to-r from-amber-500 to-amber-400"
-        onClick={() => onPlaceBet(selectedOutcome, betAmount)}
+        onClick={() => onPlaceOrder(selectedOutcome, orderType, price, quantity)}
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Processing..." : "Place Bet"}
+        {isSubmitting ? "Processing..." : `${orderType === "buy" ? "Buy" : "Sell"} ${selectedOutcome ? "YES" : "NO"}`}
       </Button>
     </Card>
   );

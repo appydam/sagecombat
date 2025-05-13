@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -6,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { PolyContest, PriceHistoryPoint } from "@/types/competitions";
-import { getPolyContestById, getPolyPriceHistory, placePolyBet } from "@/services/polyContestsService";
+import { getPolyContestById, getPolyPriceHistory, placePolyOrder } from "@/services/polyContestsService";
 import PolyContestHeader from "@/components/competitions/poly/detail/PolyContestHeader";
 import PolyContestChart from "@/components/competitions/poly/detail/PolyContestChart";
 import PolyPredictionPool from "@/components/competitions/poly/detail/PolyPredictionPool";
@@ -67,32 +68,33 @@ const PolyContestDetail = () => {
     loadContestData();
   }, [id]);
 
-  const handlePlaceBet = async (selectedOutcome: "yes" | "no", betAmount: number) => {
+  const handlePlaceOrder = async (outcome: boolean, orderType: "buy" | "sell", price: number, quantity: number) => {
     if (!contest || !id) return;
     
     setIsSubmitting(true);
     
     try {
       // Mock user ID for demo
-      const userId = localStorage.getItem('userId') || 'demo-user';
+      const userId = localStorage.getItem('userId') || '1';
       
-      const result = await placePolyBet(userId, id, selectedOutcome, betAmount);
+      const result = await placePolyOrder(userId, id, outcome, orderType, price, quantity);
       
-      if (result.error) {
-        toast.error(result.error);
+      if (!result.success) {
+        toast.error(result.error || "Failed to place order");
         return;
       }
       
-      toast.success(`Successfully placed ${selectedOutcome.toUpperCase()} bet for ₹${betAmount}`);
+      toast.success(result.message || `Successfully placed ${orderType} order for ${outcome ? 'YES' : 'NO'}`);
       
+      // Refresh contest data to get updated prices
       const { contest: refreshedContest } = await getPolyContestById(id);
       if (refreshedContest) {
         setContest(refreshedContest);
       }
       
     } catch (err) {
-      console.error("Error placing bet:", err);
-      toast.error("Failed to place bet");
+      console.error("Error placing order:", err);
+      toast.error("Failed to place order");
     } finally {
       setIsSubmitting(false);
     }
@@ -202,7 +204,7 @@ const PolyContestDetail = () => {
                   yesPrice={contest.yes_price}
                   noPrice={contest.no_price}
                   isSubmitting={isSubmitting}
-                  onPlaceBet={handlePlaceBet}
+                  onPlaceOrder={handlePlaceOrder}
                 />
               </div>
             </div>
