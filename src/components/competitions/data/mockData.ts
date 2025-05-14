@@ -1,4 +1,3 @@
-
 import { CompetitionsApiResponseData } from "@/types/competitions";
 
 export const mockCompetitionsData: CompetitionsApiResponseData = {
@@ -139,6 +138,44 @@ export const mockCompetitionsData: CompetitionsApiResponseData = {
       updated_at: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
       currency_type: "real",
       competition_interval: 12
+    }
+  ],
+  orderbook_contests: [
+    {
+      id: 1,
+      name: "Will Bitcoin close above $100K by Dec 2025?",
+      description: "A prediction market on Bitcoin price as of end of 2025.",
+      registration_deadline: "2025-12-01T23:59:59Z",
+      tag: "crypto",
+      status: "open",
+      answer: null,
+      currency_type: "virtual",
+      created_at: "2025-05-01T00:00:00Z",
+      updated_at: "2025-05-01T00:00:00Z"
+    },
+    {
+      id: 2,
+      name: "Will SpaceX land humans on Mars by 2030?",
+      description: "A prediction on SpaceX successfully landing a human mission on Mars before 2030.",
+      registration_deadline: "2029-12-31T23:59:59Z",
+      tag: "technology",
+      status: "open",
+      answer: null,
+      currency_type: "virtual",
+      created_at: "2025-05-02T00:00:00Z",
+      updated_at: "2025-05-02T00:00:00Z"
+    },
+    {
+      id: 3,
+      name: "Will India win over 10 gold medals in Olympics 2028?",
+      description: "Predicting if India will secure more than 10 gold medals in the 2028 Summer Olympics.",
+      registration_deadline: "2028-06-01T23:59:59Z",
+      tag: "sports",
+      status: "open",
+      answer: null,
+      currency_type: "virtual",
+      created_at: "2025-05-03T00:00:00Z",
+      updated_at: "2025-05-03T00:00:00Z"
     }
   ]
 };
