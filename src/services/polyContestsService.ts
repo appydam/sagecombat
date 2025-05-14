@@ -185,7 +185,7 @@ export const placePolyOrder = async (
       quantity
     };
 
-    console.log("poly contest place order payload = ", payload);
+    // console.log("poly contest place order payload = ", payload);
 
     const response = await fetch(API_ENDPOINTS.PLACE_ORDER, {
       method: "POST",

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -60,6 +59,12 @@ const Navbar = () => {
         method: "GET",
         credentials: "include",
       });
+
+      if (response.status === 401) {
+        // Redirect to login if unauthorized
+        navigate('/login');
+        return;
+      }
 
       if (response.ok) {
         // Clear all authentication data from localStorage
