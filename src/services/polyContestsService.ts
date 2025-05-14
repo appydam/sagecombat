@@ -48,16 +48,16 @@ const transformApiPolyContest = (apiContest: any): PolyContest => {
     title: apiContest.name,
     description: apiContest.description,
     category: apiContest.tag || "General",
-    status: apiContest.status === "open" ? "active" : 
-            apiContest.status === "closed" ? "resolved" : "cancelled",
+    status: apiContest.status === "open" ? "active" :
+      apiContest.status === "closed" ? "resolved" : "cancelled",
     participants: 0, // Will be populated from other API or estimations
     yes_price: 0.5, // Will be fetched separately
     no_price: 0.5, // Will be fetched separately
     total_volume: 0, // Will be populated from other API or estimations
     end_time: apiContest.registration_deadline || new Date().toISOString(),
     created_at: apiContest.created_at || new Date().toISOString(),
-    outcome: apiContest.answer === true ? "yes" : 
-             apiContest.answer === false ? "no" : null
+    outcome: apiContest.answer === true ? "yes" :
+      apiContest.answer === false ? "no" : null
   };
 };
 
@@ -65,21 +65,21 @@ const transformApiPolyContest = (apiContest: any): PolyContest => {
 export const getPolyContests = async () => {
   try {
     const response = await fetch(API_ENDPOINTS.GET_ALL_COMP);
-    
+
     if (!response.ok) {
       throw new Error(`API responded with status: ${response.status}`);
     }
 
     const data = await response.json();
-    
+
     if (!data.data || !data.data.orderbook_contests) {
       throw new Error("Invalid API response format");
     }
-    
+
     // Transform API data to our frontend model
     const polyContests = await Promise.all(data.data.orderbook_contests.map(async (contest: any) => {
       const transformed = transformApiPolyContest(contest);
-      
+
       // Fetch the current price for each contest
       try {
         const priceResponse = await fetch(API_ENDPOINTS.GET_MARKET_PRICE(contest.id));
@@ -91,7 +91,7 @@ export const getPolyContests = async () => {
       } catch (error) {
         console.error(`Failed to fetch price for contest ${contest.id}:`, error);
       }
-      
+
       return transformed;
     }));
 
@@ -115,27 +115,27 @@ export const fetchPolyContests = getPolyContests;
 export const getPolyContestById = async (id: string) => {
   try {
     const response = await fetch(API_ENDPOINTS.GET_ALL_COMP);
-    
+
     if (!response.ok) {
       throw new Error(`API responded with status: ${response.status}`);
     }
 
     const data = await response.json();
-    
+
     if (!data.data || !data.data.orderbook_contests) {
       throw new Error("Invalid API response format");
     }
-    
+
     // Find the requested contest
     const apiContest = data.data.orderbook_contests.find((c: any) => c.id.toString() === id);
-    
+
     if (!apiContest) {
       throw new Error(`Contest with ID ${id} not found`);
     }
-    
+
     // Transform into our model
     const contest = transformApiPolyContest(apiContest);
-    
+
     // Fetch the current price
     const priceResponse = await fetch(API_ENDPOINTS.GET_MARKET_PRICE(parseInt(id)));
     if (priceResponse.ok) {
@@ -143,7 +143,7 @@ export const getPolyContestById = async (id: string) => {
       contest.yes_price = priceData.yes_price;
       contest.no_price = priceData.no_price;
     }
-    
+
     return { contest, error: null };
   } catch (error) {
     console.error(`Error fetching poly contest with ID ${id}:`, error);
@@ -174,8 +174,9 @@ export const placePolyOrder = async (
   quantity: number
 ) => {
   try {
+    const userId = Number(JSON.parse(localStorage.getItem("userId")));
     const payload = {
-      user_id: parseInt(userId),
+      user_id: userId,
       market_id: parseInt(marketId),
       outcome,
       type: orderType,
@@ -183,6 +184,8 @@ export const placePolyOrder = async (
       price,
       quantity
     };
+
+    console.log("poly contest place order payload = ", payload);
 
     const response = await fetch(API_ENDPOINTS.PLACE_ORDER, {
       method: "POST",
@@ -198,7 +201,7 @@ export const placePolyOrder = async (
     }
 
     const data = await response.json() as PolyOrderResponse;
-    
+
     return {
       success: true,
       data,
@@ -226,16 +229,16 @@ export const placePolyBet = async (
   try {
     const outcome = prediction === "yes";
     const marketId = contestId;
-    
+
     // Determine price based on prediction
     const priceResponse = await fetch(API_ENDPOINTS.GET_MARKET_PRICE(parseInt(marketId)));
     if (!priceResponse.ok) {
       throw new Error("Failed to get current price");
     }
-    
+
     const priceData = await priceResponse.json();
     const price = outcome ? priceData.yes_price : priceData.no_price;
-    
+
     // Place the order
     const orderResult = await placePolyOrder(
       userId,
@@ -245,11 +248,11 @@ export const placePolyBet = async (
       price,
       coins
     );
-    
+
     if (!orderResult.success) {
       throw new Error(orderResult.error || "Failed to place bet");
     }
-    
+
     return {
       success: true,
       message: orderResult.message,
