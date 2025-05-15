@@ -1,4 +1,3 @@
-
 // --- API Response Types ---
 
 export interface ApiEquityContest {
@@ -32,6 +31,8 @@ export interface ApiOpinionContest {
     agreed: number; // Assuming this is count or value for 'yes'
     disagreed: number; // Assuming this is count or value for 'no'
   };
+  status: "registration_closed" | "open"; // Added based on API response
+  currency_type: "real" | "virtual"; // Added based on API response
 }
 
 export interface ApiOrderbookContest {
@@ -94,6 +95,7 @@ export interface OpinionEvent {
   participants: number; // Mapped from participant_meta_data.totalParticipants
   status: "active" | "pending" | "resolved"; // MISSING in API - Needs clarification/logic (Defaulting to 'active')
   outcome?: "yes" | "no" | null; // MISSING in API
+  currency_type: "real" | "virtual"; // Added to indicate money type
 }
 
 // Interface for Poly contests

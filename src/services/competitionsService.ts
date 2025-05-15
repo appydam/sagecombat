@@ -1,4 +1,3 @@
-
 import { CompetitionsApiResponseData, FullCompetitionsApiResponse, CompetitionProps, OpinionEvent } from "@/types/competitions";
 import { mockCompetitionsData } from "@/components/competitions/data/mockData";
 import { BACKEND_HOST } from "@/constants/config";
@@ -43,7 +42,8 @@ export const mapApiDataToFrontend = (apiData: CompetitionsApiResponseData): {
     },
     participants: contest.participant_meta_data.totalParticipants || 0,
     status: "active" as const,
-    outcome: null
+    outcome: null,
+    currency_type: contest.currency_type
   }));
 
   return { equityCompetitions, opinionEvents };

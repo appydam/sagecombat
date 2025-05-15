@@ -1,4 +1,3 @@
-
 import { Badge } from "@/components/ui/badge";
 import MorphCard from "@/components/ui/MorphCard";
 import { Button } from "@/components/ui/button";
@@ -43,27 +42,27 @@ const OpinionEventCard = ({ event, onAnswerSubmitted }: OpinionEventCardProps) =
           answer: selectedAnswer,
         }),
       });
-    
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-    
+
       const data = await response.json();
       console.log("API response:", data);
-    
+
       toast.success("You've successfully placed your opinion trade.");
-    
+
       setTimeout(() => {
         if (onAnswerSubmitted) {
           onAnswerSubmitted();
         }
       }, 1000);
-    
+
     } catch (error) {
       console.error("API call failed:", error);
       toast.error("Failed to place the trade. Please try again.");
     }
-    
+
   };
 
   return (
@@ -75,35 +74,38 @@ const OpinionEventCard = ({ event, onAnswerSubmitted }: OpinionEventCardProps) =
             <Badge variant={event.status === "active" ? "default" : "secondary"}>
               {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
             </Badge>
+            <Badge variant="outline" className={event.currency_type === "real" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}>
+              {event.currency_type === "real" ? "Real Money" : "Virtual Money"}
+            </Badge>
           </div>
           <h3 className="text-lg font-semibold mb-1">{event.question}</h3>
           <p className="text-xs text-muted-foreground line-clamp-2">{event.description}</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 mt-auto"> 
+      <div className="grid grid-cols-1 gap-3 mt-auto">
         <div className="flex items-center justify-between text-sm flex-wrap gap-y-1">
           <div className="flex items-center">
             <Calendar className="h-4 w-4 text-primary mr-1 flex-shrink-0" />
             <span>Closes: {new Date(event.deadline).toLocaleDateString()}</span>
           </div>
-          
+
           <div className="flex items-center">
             <Users className="h-4 w-4 text-primary mr-1 flex-shrink-0" />
             <span>{event.participants} participants</span>
           </div>
         </div>
-        
+
         <div className="mt-1">
           <p className="text-xs font-medium mb-1">Current Distribution</p>
           <div className="flex justify-between text-xs mb-1">
             <span className="text-primary font-medium">Yes: {event.currentPool.yes} people</span>
             <span className="text-destructive font-medium">No: {event.currentPool.no} people</span>
           </div>
-          
+
           <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-primary transition-all duration-300" 
+            <div
+              className="h-full bg-primary transition-all duration-300"
               style={{ width: `${event.participants > 0 ? (event.currentPool.yes / event.participants) * 100 : 50}%` }}
             />
           </div>
@@ -116,9 +118,9 @@ const OpinionEventCard = ({ event, onAnswerSubmitted }: OpinionEventCardProps) =
           </div>
 
           <div className="flex gap-2">
-            <Button 
-              variant={selectedAnswer === true ? "default" : "outline"} 
-              size="sm" 
+            <Button
+              variant={selectedAnswer === true ? "default" : "outline"}
+              size="sm"
               className={`flex items-center gap-1 ${selectedAnswer === true ? "" : "border-primary text-primary hover:bg-primary/10"}`}
               onClick={() => setSelectedAnswer(true)}
               disabled={isSubmitting}
@@ -126,7 +128,7 @@ const OpinionEventCard = ({ event, onAnswerSubmitted }: OpinionEventCardProps) =
               <CheckCircle className="h-3 w-3" />
               Yes
             </Button>
-            <Button 
+            <Button
               variant={selectedAnswer === false ? "destructive" : "outline"}
               size="sm"
               className={`flex items-center gap-1 ${selectedAnswer === false ? "" : "border-destructive text-destructive hover:bg-destructive/10"}`}
@@ -141,16 +143,16 @@ const OpinionEventCard = ({ event, onAnswerSubmitted }: OpinionEventCardProps) =
 
         {/* Place Trade Button */}
         <div className="mt-3 flex justify-center">
-  <Button
-    size="sm"
-    variant="ghost"
-    className="border border-input text-sm px-4 py-1 rounded-md hover:bg-accent hover:text-primary transition-all"
-    onClick={handlePlaceTrade}
-    disabled={isSubmitting || selectedAnswer === null}
-  >
-    {isSubmitting ? "Placing..." : "Place Trade"}
-  </Button>
-</div>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="border border-input text-sm px-4 py-1 rounded-md hover:bg-accent hover:text-primary transition-all"
+            onClick={handlePlaceTrade}
+            disabled={isSubmitting || selectedAnswer === null}
+          >
+            {isSubmitting ? "Placing..." : "Place Trade"}
+          </Button>
+        </div>
       </div>
     </MorphCard>
   );
