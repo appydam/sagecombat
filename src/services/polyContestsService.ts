@@ -57,7 +57,8 @@ const transformApiPolyContest = (apiContest: any): PolyContest => {
     end_time: apiContest.registration_deadline || new Date().toISOString(),
     created_at: apiContest.created_at || new Date().toISOString(),
     outcome: apiContest.answer === true ? "yes" :
-      apiContest.answer === false ? "no" : null
+      apiContest.answer === false ? "no" : null,
+    currency_type: apiContest.currency_type || "virtual" // Adding currency_type
   };
 };
 

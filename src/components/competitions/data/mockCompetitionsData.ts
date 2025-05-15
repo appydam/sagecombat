@@ -1,4 +1,3 @@
-
 import { CompetitionProps, OpinionEvent } from "@/types/competitions";
 
 // Mock data reflecting the structure derived for the frontend components,
@@ -19,6 +18,7 @@ export const mockOpinionEvents: OpinionEvent[] = [
       participants: 450, // Mapped from totalParticipants
       status: 'active', // Defaulted as missing in API
       outcome: null, // Missing in API
+      currency_type: "virtual", // Added this required property
     },
     {
       id: "ev-2",
@@ -34,6 +34,7 @@ export const mockOpinionEvents: OpinionEvent[] = [
       participants: 890,
       status: 'active', // Defaulted
       outcome: null,
+      currency_type: "virtual", // Added this required property
     },
      {
       id: "ev-3",
@@ -49,6 +50,7 @@ export const mockOpinionEvents: OpinionEvent[] = [
       participants: 1200,
       status: 'active', // Defaulted
       outcome: null,
+      currency_type: "real", // Added this required property
     },
   ];
 

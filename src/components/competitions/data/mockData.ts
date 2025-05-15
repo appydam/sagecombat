@@ -1,3 +1,4 @@
+
 import { CompetitionsApiResponseData } from "@/types/competitions";
 
 export const mockCompetitionsData: CompetitionsApiResponseData = {
@@ -14,7 +15,9 @@ export const mockCompetitionsData: CompetitionsApiResponseData = {
         totalParticipants: 450,
         agreed: 250,
         disagreed: 200
-      }
+      },
+      status: "open", // Added this required property
+      currency_type: "virtual" // Added this required property
     },
     {
       id: 2,
@@ -28,7 +31,9 @@ export const mockCompetitionsData: CompetitionsApiResponseData = {
         totalParticipants: 982,
         agreed: 500,
         disagreed: 482
-      }
+      },
+      status: "open", // Added this required property
+      currency_type: "virtual" // Added this required property
     },
     {
       id: 3,
@@ -42,7 +47,9 @@ export const mockCompetitionsData: CompetitionsApiResponseData = {
         totalParticipants: 2870,
         agreed: 1500,
         disagreed: 1370
-      }
+      },
+      status: "open", // Added this required property
+      currency_type: "virtual" // Added this required property
     },
     {
       id: 4,
@@ -56,7 +63,9 @@ export const mockCompetitionsData: CompetitionsApiResponseData = {
         totalParticipants: 1200,
         agreed: 800,
         disagreed: 400
-      }
+      },
+      status: "open", // Added this required property
+      currency_type: "real" // Added this required property
     },
     {
       id: 5,
@@ -70,7 +79,9 @@ export const mockCompetitionsData: CompetitionsApiResponseData = {
         totalParticipants: 650,
         agreed: 300,
         disagreed: 350
-      }
+      },
+      status: "registration_closed", // Added this required property
+      currency_type: "virtual" // Added this required property
     },
     {
       id: 6,
@@ -84,7 +95,9 @@ export const mockCompetitionsData: CompetitionsApiResponseData = {
         totalParticipants: 780,
         agreed: 230,
         disagreed: 550
-      }
+      },
+      status: "open", // Added this required property
+      currency_type: "virtual" // Added this required property
     }
   ],
   equity_contests: [

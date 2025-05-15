@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import MorphCard from "@/components/ui/MorphCard";
@@ -145,6 +146,12 @@ const PolyContestCard = ({ contest, onBetPlaced }: PolyContestCardProps) => {
               className={contest.status === "active" ? "bg-green-600" : ""}
             >
               {contest.status.charAt(0).toUpperCase() + contest.status.slice(1)}
+            </Badge>
+            <Badge
+              variant="outline"
+              className={`capitalize ${contest.currency_type === "real" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}
+            >
+              {contest.currency_type === "real" ? "Real Money" : "Virtual Money"}
             </Badge>
           </div>
           <h3 className="text-lg font-semibold mb-2 leading-tight cursor-pointer" onClick={handleViewDetails}>
