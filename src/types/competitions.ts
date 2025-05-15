@@ -1,3 +1,4 @@
+
 // --- API Response Types ---
 
 export interface ApiEquityContest {
@@ -113,6 +114,7 @@ export interface PolyContest {
   outcome: "yes" | "no" | null;
   image_url?: string;
   created_at: string;
+  currency_type: "real" | "virtual"; // Added this property
 }
 
 // For Poly contest price history chart
