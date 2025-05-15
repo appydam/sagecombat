@@ -33,6 +33,12 @@ const PolyContestHeader = ({ contest, onBack, onShare }: PolyContestHeaderProps)
         >
           {contest.status.charAt(0).toUpperCase() + contest.status.slice(1)}
         </Badge>
+        <Badge
+          variant="outline"
+          className={`capitalize ${contest.currency_type === "real" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}
+        >
+          {contest.currency_type === "real" ? "Real Money" : "Virtual Money"}
+        </Badge>
         <div className="ml-auto flex items-center gap-2">
           <Button
             variant="outline"
