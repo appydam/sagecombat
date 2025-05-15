@@ -1,4 +1,3 @@
-
 // --- API Response Types ---
 
 export interface ApiEquityContest {
@@ -61,6 +60,11 @@ export interface FullCompetitionsApiResponse {
   message?: string; // Optional message field
 }
 
+export interface PriceHistoryPoint {
+  timestamp: string;
+  yes_price: number;
+  no_price: number;
+}
 
 // --- Frontend Component Prop Types ---
 

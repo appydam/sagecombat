@@ -20,6 +20,7 @@ const PolyContestDetail = () => {
   const [contest, setContest] = useState<PolyContest | null>(null);
   const [priceHistory, setPriceHistory] = useState<PriceHistoryPoint[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isChartLoading, setIsChartLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [timeRange, setTimeRange] = useState<string>("all");
@@ -45,27 +46,51 @@ const PolyContestDetail = () => {
         }
         
         setContest(contestData);
+        setIsLoading(false);
         
+        // Load price history separately to prevent blocking the main content
+        setIsChartLoading(true);
         const { priceHistory: historyData, error: historyError } = await getPolyPriceHistory(id);
         
         if (historyError) {
           console.error("Error loading price history:", historyError);
-          // Don't set error state here, we can still show the contest without history
+          toast.error("Could not load price history data");
         }
         
         if (historyData) {
           setPriceHistory(historyData);
         }
         
+        setIsChartLoading(false);
+        
       } catch (err) {
         console.error("Error loading contest details:", err);
         setError("Failed to load contest details");
-      } finally {
         setIsLoading(false);
+        setIsChartLoading(false);
       }
     };
     
     loadContestData();
+  }, [id]);
+
+  // Set up a polling interval to periodically refresh the price history
+  useEffect(() => {
+    if (!id) return;
+    
+    // Refresh price history every 30 seconds
+    const intervalId = setInterval(async () => {
+      try {
+        const { priceHistory: historyData } = await getPolyPriceHistory(id);
+        if (historyData && historyData.length > 0) {
+          setPriceHistory(historyData);
+        }
+      } catch (err) {
+        console.error("Error refreshing price history:", err);
+      }
+    }, 30000); // 30 seconds
+    
+    return () => clearInterval(intervalId);
   }, [id]);
 
   const handlePlaceOrder = async (outcome: boolean, orderType: "buy" | "sell", price: number, quantity: number) => {
@@ -90,6 +115,12 @@ const PolyContestDetail = () => {
       const { contest: refreshedContest } = await getPolyContestById(id);
       if (refreshedContest) {
         setContest(refreshedContest);
+      }
+      
+      // Refresh price history
+      const { priceHistory: historyData } = await getPolyPriceHistory(id);
+      if (historyData) {
+        setPriceHistory(historyData);
       }
       
     } catch (err) {
@@ -191,6 +222,7 @@ const PolyContestDetail = () => {
                   priceHistory={priceHistory}
                   timeRange={timeRange}
                   onTimeRangeChange={setTimeRange}
+                  isLoading={isChartLoading}
                 />
                 
                 <PolyPredictionPool

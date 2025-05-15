@@ -1,11 +1,19 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChartContainer } from "@/components/ui/chart";
-import { BarChart2, TrendingUp, TrendingDown } from "lucide-react";
+import { 
+  BarChart2, 
+  TrendingUp, 
+  TrendingDown, 
+  Loader2,
+  ZoomIn,
+  ZoomOut
+} from "lucide-react";
 import { format } from "date-fns";
 import { PriceHistoryPoint } from "@/types/competitions";
+import { Button } from "@/components/ui/button";
 import {
   Area,
   AreaChart,
@@ -14,19 +22,33 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  ReferenceArea,
 } from "recharts";
 
 interface PolyContestChartProps {
   priceHistory: PriceHistoryPoint[];
   timeRange: string;
   onTimeRangeChange: (value: string) => void;
+  isLoading?: boolean;
 }
 
 const PolyContestChart = ({ 
   priceHistory, 
   timeRange, 
-  onTimeRangeChange 
+  onTimeRangeChange,
+  isLoading = false
 }: PolyContestChartProps) => {
+  const [left, setLeft] = useState<string | null>(null);
+  const [right, setRight] = useState<string | null>(null);
+  const [zoomMode, setZoomMode] = useState<boolean>(false);
+  const [refAreaLeft, setRefAreaLeft] = useState<string | null>(null);
+  const [refAreaRight, setRefAreaRight] = useState<string | null>(null);
+  const [filteredData, setFilteredData] = useState<PriceHistoryPoint[]>([]);
+
+  useEffect(() => {
+    setFilteredData(getFilteredPriceHistory());
+  }, [priceHistory, timeRange]);
+
   const getFilteredPriceHistory = () => {
     if (!priceHistory.length) return [];
     
@@ -59,32 +81,134 @@ const PolyContestChart = ({
     );
   };
 
+  const handleMouseDown = (e: any) => {
+    if (!zoomMode || !e) return;
+    const { activeLabel } = e;
+    setRefAreaLeft(activeLabel);
+  };
+
+  const handleMouseMove = (e: any) => {
+    if (!zoomMode || !refAreaLeft || !e) return;
+    const { activeLabel } = e;
+    setRefAreaRight(activeLabel);
+  };
+
+  const handleMouseUp = () => {
+    if (!zoomMode || !refAreaLeft || !refAreaRight) {
+      setRefAreaLeft(null);
+      setRefAreaRight(null);
+      return;
+    }
+
+    // Ensure left is always less than right
+    if (refAreaLeft && refAreaRight) {
+      const leftIndex = priceHistory.findIndex(d => d.timestamp === refAreaLeft);
+      const rightIndex = priceHistory.findIndex(d => d.timestamp === refAreaRight);
+
+      if (leftIndex !== -1 && rightIndex !== -1) {
+        const [startIndex, endIndex] = leftIndex <= rightIndex 
+          ? [leftIndex, rightIndex] 
+          : [rightIndex, leftIndex];
+
+        setFilteredData(priceHistory.slice(startIndex, endIndex + 1));
+      }
+    }
+
+    setRefAreaLeft(null);
+    setRefAreaRight(null);
+  };
+
+  const handleZoomReset = () => {
+    setFilteredData(getFilteredPriceHistory());
+    setLeft(null);
+    setRight(null);
+  };
+
+  const toggleZoomMode = () => {
+    setZoomMode(!zoomMode);
+    if (zoomMode) {
+      handleZoomReset();
+    }
+  };
+
+  const formatTooltipTimestamp = (timestamp: string) => {
+    try {
+      return format(new Date(timestamp), "PPp");
+    } catch (error) {
+      return timestamp;
+    }
+  };
+
+  const formatAxisTimestamp = (timestamp: string) => {
+    try {
+      return format(new Date(timestamp), "HH:mm");
+    } catch (error) {
+      return timestamp;
+    }
+  };
+
   return (
-    <Card className="p-6 mb-6">
+    <Card className="p-6 mb-6 relative">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-semibold text-lg flex items-center">
           <BarChart2 className="h-5 w-5 mr-2 text-amber-600" />
           Price History
+          {isLoading && (
+            <Loader2 className="ml-2 h-4 w-4 animate-spin text-muted-foreground" />
+          )}
         </h3>
         
-        <Tabs 
-          value={timeRange} 
-          onValueChange={onTimeRangeChange} 
-          className="h-8"
-        >
-          <TabsList className="bg-secondary/50">
-            <TabsTrigger value="1h" className="text-xs px-2">1H</TabsTrigger>
-            <TabsTrigger value="6h" className="text-xs px-2">6H</TabsTrigger>
-            <TabsTrigger value="1d" className="text-xs px-2">1D</TabsTrigger>
-            <TabsTrigger value="1w" className="text-xs px-2">1W</TabsTrigger>
-            <TabsTrigger value="1m" className="text-xs px-2">1M</TabsTrigger>
-            <TabsTrigger value="all" className="text-xs px-2">ALL</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={toggleZoomMode}
+            className={zoomMode ? "bg-muted" : ""}
+          >
+            {zoomMode ? (
+              <ZoomOut className="h-4 w-4 mr-1" />
+            ) : (
+              <ZoomIn className="h-4 w-4 mr-1" />
+            )}
+            {zoomMode ? "Exit Zoom" : "Zoom Mode"}
+          </Button>
+          
+          {zoomMode && filteredData.length !== priceHistory.length && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleZoomReset}
+            >
+              Reset Zoom
+            </Button>
+          )}
+          
+          <Tabs 
+            value={timeRange} 
+            onValueChange={(value) => {
+              onTimeRangeChange(value);
+              handleZoomReset();
+            }} 
+            className="h-8"
+          >
+            <TabsList className="bg-secondary/50">
+              <TabsTrigger value="1h" className="text-xs px-2">1H</TabsTrigger>
+              <TabsTrigger value="6h" className="text-xs px-2">6H</TabsTrigger>
+              <TabsTrigger value="1d" className="text-xs px-2">1D</TabsTrigger>
+              <TabsTrigger value="1w" className="text-xs px-2">1W</TabsTrigger>
+              <TabsTrigger value="1m" className="text-xs px-2">1M</TabsTrigger>
+              <TabsTrigger value="all" className="text-xs px-2">ALL</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
       </div>
       
       <div className="h-64">
-        {priceHistory.length > 0 ? (
+        {isLoading ? (
+          <div className="h-full flex items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-amber-600" />
+          </div>
+        ) : filteredData.length > 0 ? (
           <ChartContainer
             className="h-64"
             config={{
@@ -96,7 +220,12 @@ const PolyContestChart = ({
               },
             }}
           >
-            <AreaChart data={getFilteredPriceHistory()}>
+            <AreaChart 
+              data={filteredData}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+            >
               <defs>
                 <linearGradient id="yes-gradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#10B981" stopOpacity={0.2} />
@@ -109,12 +238,11 @@ const PolyContestChart = ({
               </defs>
               <XAxis
                 dataKey="timestamp"
-                tickFormatter={(timestamp) => {
-                  return format(new Date(timestamp), "HH:mm");
-                }}
+                tickFormatter={formatAxisTimestamp}
                 tickLine={false}
                 axisLine={false}
                 dy={10}
+                minTickGap={30}
               />
               <YAxis
                 tickFormatter={(value) => `₹${value.toFixed(2)}`}
@@ -135,9 +263,9 @@ const PolyContestChart = ({
                     typeof payload[1]?.value === "number"
                   ) {
                     return (
-                      <div className="bg-white p-3 border rounded-md shadow-sm">
+                      <div className="bg-card p-3 border rounded-md shadow-sm">
                         <p className="text-xs font-medium mb-1">
-                          {format(new Date(payload[0].payload.timestamp), "PPp")}
+                          {formatTooltipTimestamp(payload[0].payload.timestamp)}
                         </p>
                         <p className="text-sm flex items-center text-green-600">
                           <TrendingUp className="h-3 w-3 mr-1" />
@@ -153,14 +281,23 @@ const PolyContestChart = ({
                   return null;
                 }}
               />
+              {refAreaLeft && refAreaRight && (
+                <ReferenceArea
+                  x1={refAreaLeft}
+                  x2={refAreaRight}
+                  strokeOpacity={0.3}
+                  fill="#8884d8"
+                  fillOpacity={0.1}
+                />
+              )}
               <Area
                 type="monotone"
                 dataKey="yes_price"
                 stroke="#10B981"
                 fill="url(#yes-gradient)"
                 name="Yes"
+                animationDuration={500}
                 activeDot={{ r: 6, fill: "#10B981" }}
-                isAnimationActive={false}
               />
               <Area
                 type="monotone"
@@ -168,14 +305,15 @@ const PolyContestChart = ({
                 stroke="#EF4444"
                 fill="url(#no-gradient)"
                 name="No"
+                animationDuration={500}
                 activeDot={{ r: 6, fill: "#EF4444" }}
-                isAnimationActive={false}
               />
             </AreaChart>
           </ChartContainer>
         ) : (
-          <div className="h-full flex items-center justify-center">
-            <p className="text-muted-foreground">No price history data available</p>
+          <div className="h-full flex flex-col items-center justify-center">
+            <p className="text-muted-foreground mb-2">No price history data available</p>
+            <p className="text-sm text-muted-foreground">Price data will appear here once trades are made</p>
           </div>
         )}
       </div>

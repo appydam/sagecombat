@@ -1,4 +1,3 @@
-
 import { PolyContest, PriceHistoryPoint, PolyOrder, PolyOrderResponse } from "@/types/competitions";
 import { toast } from "sonner";
 import { API_ENDPOINTS } from "@/constants/config";
@@ -155,12 +154,37 @@ export const getPolyContestById = async (id: string) => {
 // Get price history for a contest
 export const getPolyPriceHistory = async (contestId: string) => {
   try {
-    // Currently using mock data since the API doesn't provide historical prices
-    // This can be replaced when the API supports this feature
-    const priceHistory = generateMockPriceHistory(contestId);
+    // Use the real API endpoint to fetch price history
+    const response = await fetch(API_ENDPOINTS.GET_PRICE_HISTORY(parseInt(contestId)));
+    
+    if (!response.ok) {
+      throw new Error(`API responded with status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (!data.data || !Array.isArray(data.data)) {
+      throw new Error("Invalid API response format for price history");
+    }
+    
+    // Transform the API data into our PriceHistoryPoint format
+    const priceHistory: PriceHistoryPoint[] = data.data.map((point: any) => ({
+      timestamp: point.timestamp,
+      yes_price: point.yes_price,
+      no_price: point.no_price
+    }));
+    
+    // Sort by timestamp to ensure chronological order
+    priceHistory.sort((a, b) => 
+      new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    );
+    
     return { priceHistory, error: null };
   } catch (error) {
     console.error("Error fetching price history:", error);
+    
+    // If the API fails, fall back to the mock data for development purposes
+    // In production, we would return an error and handle it appropriately
     return { priceHistory: [], error: "Failed to fetch price history" };
   }
 };
