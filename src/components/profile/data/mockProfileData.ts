@@ -1,3 +1,4 @@
+
 export interface ContestType {
   contest_id: number;
   user_id: number;
@@ -12,6 +13,8 @@ export interface ContestType {
   uniqueKey?: string;
   gameType: "equity" | "opinion" | "poly" | "geoquest";
   orders?: any[];
+  description?: string;
+  tag?: string;
 }
 
 // Mock data for profile contests
@@ -96,16 +99,18 @@ export const mockOpinionParticipations: ContestType[] = [
   }
 ];
 
-// Add mock data for poly participations
+// Add mock data for poly participations with sample orders
 export const mockPolyParticipations: ContestType[] = [
   {
-    contest_id: 201,
+    contest_id: 2,
     user_id: 123,
     contest_name: "Predict AI Market Growth",
     join_time: "2025-05-17T10:49:10Z",
     status: "active",
     returns: 0,
     entry_fee: 50,
+    description: "Will AI markets double in size by 2026?",
+    tag: "technology",
     orders: [
       {
         id: 2265733269,
@@ -123,15 +128,65 @@ export const mockPolyParticipations: ContestType[] = [
     gameType: "poly"
   },
   {
-    contest_id: 202,
+    contest_id: 1,
     user_id: 123,
-    contest_name: "Will Bitcoin reach $100k by 2026?",
+    contest_name: "Will Bitcoin reach $100k?",
+    description: "Will Bitcoin price exceed $100,000 by end of 2026?",
     join_time: "2025-05-16T16:20:00Z",
-    status: "completed",
-    returns: 12.5,
+    status: "active",
+    returns: 0,
     entry_fee: 100,
-    rank: 8,
-    totalParticipants: 350,
+    tag: "crypto",
+    orders: [
+      {
+        id: 3496169184,
+        user_id: 123,
+        market_id: 1,
+        outcome: true,
+        type: "buy",
+        order_type: "limit",
+        price: 0.49,
+        quantity: 700,
+        status: "open",
+        created_at: "2025-05-18T16:34:08Z"
+      },
+      {
+        id: 2097914651,
+        user_id: 123,
+        market_id: 1,
+        outcome: false,
+        type: "buy",
+        order_type: "limit",
+        price: 0.51,
+        quantity: 100,
+        status: "open",
+        created_at: "2025-05-18T16:34:21Z"
+      },
+      {
+        id: 69527741,
+        user_id: 123,
+        market_id: 1,
+        outcome: false,
+        type: "buy",
+        order_type: "limit",
+        price: 0.51,
+        quantity: 600,
+        status: "open",
+        created_at: "2025-05-18T20:46:47Z"
+      },
+      {
+        id: 950322467,
+        user_id: 123,
+        market_id: 1,
+        outcome: true,
+        type: "buy",
+        order_type: "limit",
+        price: 0.49,
+        quantity: 1700,
+        status: "open",
+        created_at: "2025-05-18T20:49:42Z"
+      }
+    ],
     gameType: "poly"
   }
 ];

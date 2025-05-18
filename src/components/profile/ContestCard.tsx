@@ -35,30 +35,59 @@ const ContestCard = ({ contest, onEditStocks }: ContestCardProps) => {
     }
   };
 
+  // Get yes/no counts for poly contests
+  const getPolyOrderCounts = () => {
+    if (!contest.orders || contest.orders.length === 0) return { yes: 0, no: 0, totalQuantity: 0 };
+    
+    return contest.orders.reduce((acc, order) => {
+      if (order.outcome === true) {
+        acc.yes += order.quantity;
+      } else {
+        acc.no += order.quantity;
+      }
+      acc.totalQuantity += order.quantity;
+      return acc;
+    }, { yes: 0, no: 0, totalQuantity: 0 });
+  };
+
   // Function to get order details for poly contests
   const getOrderDetails = () => {
     if (!contest.orders || contest.orders.length === 0) return null;
     
-    const order = contest.orders[0];
+    const { yes, no, totalQuantity } = getPolyOrderCounts();
+    
     return (
-      <div className="flex flex-col text-sm mt-2 space-y-1">
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Type:</span>
-          <Badge variant={order.type === "buy" ? "default" : "destructive"} className="capitalize">
-            {order.type}
-          </Badge>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Outcome:</span>
-          <span>{order.outcome ? "Yes" : "No"}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Price:</span>
-          <span>{order.price}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Quantity:</span>
-          <span>{order.quantity}</span>
+      <div className="mt-3">
+        <div className="flex flex-col text-sm space-y-2">
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Category:</span>
+            <Badge variant="outline" className="capitalize">
+              {contest.tag || "General"}
+            </Badge>
+          </div>
+          
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Orders:</span>
+            <span>{contest.orders.length}</span>
+          </div>
+          
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Position:</span>
+            <div className="flex gap-2">
+              {yes > 0 && (
+                <Badge className="bg-green-500">Yes: {yes}</Badge>
+              )}
+              {no > 0 && (
+                <Badge className="bg-red-500">No: {no}</Badge>
+              )}
+            </div>
+          </div>
+          
+          {contest.description && (
+            <div className="mt-1">
+              <span className="text-xs text-muted-foreground">{contest.description}</span>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -133,6 +162,21 @@ const ContestCard = ({ contest, onEditStocks }: ContestCardProps) => {
             className="w-full"
           >
             <Edit3Icon className="w-4 h-4 mr-2" /> Edit Stocks
+          </Button>
+        </div>
+      )}
+      
+      {contest.status === 'active' && contest.gameType === 'poly' && (
+        <div className="mt-4">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            asChild
+            className="w-full"
+          >
+            <a href={`/competitions/poly/${contest.contest_id}`}>
+              View Details
+            </a>
           </Button>
         </div>
       )}

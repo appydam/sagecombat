@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { ContestType, mockParticipations, mockOpinionParticipations, mockPolyParticipations } from '@/components/profile/data/mockProfileData';
 import { BACKEND_HOST } from '@/constants/config';
@@ -183,7 +184,8 @@ export const useProfileData = () => {
                   rank: 0, // Rank isn't provided
                   totalParticipants: 0, // Total participants isn't provided
                   uniqueKey: `opinion-${contest.competition_id}-${index}`,
-                  gameType: "opinion"
+                  gameType: "opinion",
+                  tag: contest.tag || ""
                 }));
               }
             }
@@ -197,14 +199,15 @@ export const useProfileData = () => {
                   contest_id: contest.market_id,
                   user_id: userId,
                   contest_name: contest.name,
-                  stocks_in_basket: [], // Poly contests don't have stocks
+                  description: contest.description || "",
                   join_time: contest.created_at,
                   status: contest.status === 'open' ? 'active' : 'completed',
                   returns: 0, // No returns info provided yet
                   entry_fee: 50, // Default entry fee
-                  orders: contest.orders,
+                  orders: contest.orders || [],
                   uniqueKey: `poly-${contest.market_id}-${index}`,
-                  gameType: "poly"
+                  gameType: "poly",
+                  tag: contest.tag || ""
                 }));
               }
             }
