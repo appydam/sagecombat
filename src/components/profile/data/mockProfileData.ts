@@ -11,7 +11,7 @@ export interface ContestType {
   rank?: number;
   totalParticipants?: number;
   uniqueKey?: string;
-  gameType: "equity" | "opinion" | "poly" | "geoquest" | "crypto";
+  gameType: "equity" | "opinion" | "poly" | "geoquest";
   orders?: any[];
   description?: string;
   tag?: string;

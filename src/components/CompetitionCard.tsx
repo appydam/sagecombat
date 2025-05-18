@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Clock, Users, Trophy, ArrowRight, TrendingUp, Bitcoin, MessageSquare, BarChart2, Globe } from "lucide-react";
+import { Clock, Users, Trophy, ArrowRight, TrendingUp, Bitcoin, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface CompetitionProps {
@@ -17,7 +17,7 @@ export interface CompetitionProps {
   prizePool: number;
   registerDeadline: string;
   type: "custom" | "predefined" | "opinion";
-  gameType: "equity" | "crypto" | "opinion" | "poly" | "geoquest";
+  gameType: "equity" | "crypto" | "opinion";
   currency_type: "real" | "virtual";
   competition_interval: number;
 }
@@ -80,10 +80,6 @@ const CompetitionCard = ({
       return `/opinion-trading`;
     } else if (gameType === "crypto") {
       return type === "custom" ? `/crypto-basket` : `/predefined-basket`;
-    } else if (gameType === "poly") {
-      return `/poly`;
-    } else if (gameType === "geoquest") {
-      return `/geoquest`;
     } else {
       return type === "custom" ? `/custom-basket` : `/predefined-basket`;
     }
@@ -95,10 +91,6 @@ const CompetitionCard = ({
         return <Bitcoin className="h-4 w-4 text-gold-500" />;
       case "opinion":
         return <MessageSquare className="h-4 w-4 text-mint-600" />;
-      case "poly":
-        return <BarChart2 className="h-4 w-4 text-purple-500" />;
-      case "geoquest":
-        return <Globe className="h-4 w-4 text-orange-500" />;
       default:
         return <TrendingUp className="h-4 w-4 text-primary" />;
     }
@@ -120,7 +112,7 @@ const CompetitionCard = ({
               {renderGameTypeIcon()}
               <Badge variant="outline" className="capitalize">
                 {gameType}
-                {gameType !== "opinion" && gameType !== "poly" && gameType !== "geoquest" && ` - ${type === "custom" ? "Custom" : "Predefined"}`}
+                {gameType !== "opinion" && ` - ${type === "custom" ? "Custom" : "Predefined"}`}
               </Badge>
 
               <Badge
@@ -182,6 +174,9 @@ const CompetitionCard = ({
             "text-xs",
             remainingHours <= 24 && statusDisplay === "open" ? "text-destructive font-medium" : "text-muted-foreground"
           )}>
+            {/* {competition_interval}
+            {registerDeadline} */}
+            {/* {remainingHours} */}
             {statusDisplay === "open" && remainingTime > 0 ? (
               remainingDays > 0 ? (
                 <>
