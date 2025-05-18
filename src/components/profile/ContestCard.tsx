@@ -8,7 +8,9 @@ import {
   Edit3Icon,
   GlobeIcon,
   CloudIcon,
-  TrendingUpIcon
+  TrendingUpIcon,
+  CoinsIcon,
+  CheckCircleIcon
 } from "lucide-react";
 import { Button } from "../ui/button";
 
@@ -30,8 +32,28 @@ const ContestCard = ({ contest, onEditStocks }: ContestCardProps) => {
         return <GlobeIcon className="w-5 h-5" />;
       case "geoquest":
         return <GlobeIcon className="w-5 h-5" />;
+      case "crypto":
+        return <CoinsIcon className="w-5 h-5" />;
       default:
         return <TrendingUpIcon className="w-5 h-5" />;
+    }
+  };
+  
+  // Get category badge based on game type
+  const getCategoryBadge = () => {
+    switch (contest.gameType) {
+      case "equity":
+        return <Badge className="bg-green-500 text-white" aria-label="Equity Basket Competition">Equity</Badge>;
+      case "opinion":
+        return <Badge className="bg-blue-500 text-white" aria-label="Opinion Trading Competition">Opinion</Badge>;
+      case "poly":
+        return <Badge className="bg-purple-500 text-white" aria-label="Poly Contest">Poly</Badge>;
+      case "geoquest":
+        return <Badge className="bg-orange-500 text-white" aria-label="GeoQuest Competition">GeoQuest</Badge>;
+      case "crypto":
+        return <Badge className="bg-amber-400 text-black" aria-label="Crypto Basket Competition">Crypto</Badge>;
+      default:
+        return null;
     }
   };
 
@@ -94,8 +116,13 @@ const ContestCard = ({ contest, onEditStocks }: ContestCardProps) => {
   };
 
   return (
-    <MorphCard className="p-4 animate-fade-in">
-      <div className="flex items-center justify-between">
+    <MorphCard className="p-4 animate-fade-in relative">
+      {/* Add category badge to top-right corner */}
+      <div className="absolute top-2 right-2">
+        {getCategoryBadge()}
+      </div>
+      
+      <div className="flex items-center justify-between mt-1">
         <div className="flex items-center space-x-3">
           <div className="p-2 bg-primary/10 rounded-full">
             {renderGameTypeIcon()}
