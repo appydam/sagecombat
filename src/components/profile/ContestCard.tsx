@@ -1,9 +1,16 @@
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import MorphCard from "@/components/ui/MorphCard";
-import { Edit, TrendingUp, MessageSquare } from "lucide-react";
-import { ContestType } from "@/components/profile/data/mockProfileData";
+import { ContestType } from "./data/mockProfileData";
+import { 
+  ArrowUpIcon, 
+  ArrowDownIcon,
+  Edit3Icon,
+  GlobeIcon,
+  CloudIcon,
+  TrendingUpIcon
+} from "lucide-react";
+import { Button } from "../ui/button";
 
 interface ContestCardProps {
   contest: ContestType;
@@ -11,71 +18,124 @@ interface ContestCardProps {
 }
 
 const ContestCard = ({ contest, onEditStocks }: ContestCardProps) => {
-  const isOpinionContest = contest.gameType === "opinion";
+  const formattedDate = new Date(contest.join_time).toLocaleDateString();
+  
+  const renderGameTypeIcon = () => {
+    switch (contest.gameType) {
+      case "equity":
+        return <TrendingUpIcon className="w-5 h-5" />;
+      case "opinion":
+        return <CloudIcon className="w-5 h-5" />;
+      case "poly":
+        return <GlobeIcon className="w-5 h-5" />;
+      case "geoquest":
+        return <GlobeIcon className="w-5 h-5" />;
+      default:
+        return <TrendingUpIcon className="w-5 h-5" />;
+    }
+  };
+
+  // Function to get order details for poly contests
+  const getOrderDetails = () => {
+    if (!contest.orders || contest.orders.length === 0) return null;
+    
+    const order = contest.orders[0];
+    return (
+      <div className="flex flex-col text-sm mt-2 space-y-1">
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">Type:</span>
+          <Badge variant={order.type === "buy" ? "default" : "destructive"} className="capitalize">
+            {order.type}
+          </Badge>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">Outcome:</span>
+          <span>{order.outcome ? "Yes" : "No"}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">Price:</span>
+          <span>{order.price}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">Quantity:</span>
+          <span>{order.quantity}</span>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <MorphCard key={contest.uniqueKey || `contest-${contest.contest_id}`} className="p-4 animate-fade-in">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          {isOpinionContest ? (
-            <MessageSquare className="h-4 w-4 text-amber-500" />
-          ) : (
-            <TrendingUp className="h-4 w-4 text-blue-500" />
-          )}
-          <h3 className="font-medium">{contest.contest_name}</h3>
+    <MorphCard className="p-4 animate-fade-in">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <div className="p-2 bg-primary/10 rounded-full">
+            {renderGameTypeIcon()}
+          </div>
+          <div>
+            <h4 className="font-medium">{contest.contest_name}</h4>
+            <p className="text-sm text-muted-foreground">Joined on {formattedDate}</p>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          {contest.status === 'active' && !isOpinionContest && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-1 text-blue-500 border-blue-500 hover:bg-blue-50"
-              onClick={() => onEditStocks(contest)}
-            >
-              <Edit className="h-3.5 w-3.5" />
-              Edit Stocks
-            </Button>
-          )}
-          <Badge variant={contest.status === 'active' ? 'secondary' : 'outline'}>
-            {contest.status === 'active' ? 'In Progress' : 'Completed'}
-          </Badge>
-          {isOpinionContest && (
-            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
-              Opinion
-            </Badge>
-          )}
+        <Badge variant={contest.status === 'active' ? 'default' : 'secondary'} className="capitalize">
+          {contest.status}
+        </Badge>
+      </div>
+
+      {contest.gameType === "equity" && contest.stocks_in_basket && contest.stocks_in_basket.length > 0 && (
+        <div className="mt-3">
+          <p className="text-sm font-medium mb-1">Selected Stocks:</p>
+          <div className="flex flex-wrap gap-1">
+            {contest.stocks_in_basket.map((stock, index) => (
+              <Badge key={index} variant="outline" className="bg-secondary/30">
+                {stock}
+              </Badge>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+      
+      {contest.gameType === "poly" && getOrderDetails()}
 
-      <div className="text-sm text-muted-foreground mb-3">
-        Joined: {new Date(contest.join_time).toLocaleDateString()}
-      </div>
-
-      <div className="flex flex-wrap gap-2 mb-3">
-        {contest.stocks_in_basket.map((stock) => (
-          <Badge key={stock} variant="outline" className="bg-background">{stock}</Badge>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-3 gap-4 text-sm">
+      <div className="flex items-center justify-between mt-4">
         <div>
-          <p className="text-muted-foreground">Entry Fee</p>
+          <p className="text-sm text-muted-foreground">Entry Fee</p>
           <p className="font-medium">₹{contest.entry_fee}</p>
         </div>
-        <div>
-          <p className="text-muted-foreground">Return</p>
-          <p className={`font-medium ${contest.returns >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-            {contest.returns >= 0 ? '+' : ''}{contest.returns.toFixed(2)}%
-          </p>
-        </div>
-        <div>
-          <p className="text-muted-foreground">Rank</p>
-          <p className="font-medium">
-            {contest.rank > 0 ? `${contest.rank}` : 'N/A'}
-            {contest.totalParticipants > 0 ? ` / ${contest.totalParticipants}` : ''}
-          </p>
-        </div>
+
+        {(contest.returns !== undefined && contest.returns !== null) && (
+          <div>
+            <p className="text-sm text-muted-foreground">Returns</p>
+            <div className={`flex items-center font-medium ${contest.returns > 0 ? 'text-green-600' : contest.returns < 0 ? 'text-red-600' : 'text-gray-600'}`}>
+              {contest.returns > 0 ? (
+                <ArrowUpIcon className="w-4 h-4 mr-1" />
+              ) : contest.returns < 0 ? (
+                <ArrowDownIcon className="w-4 h-4 mr-1" />
+              ) : null}
+              {contest.returns}%
+            </div>
+          </div>
+        )}
+
+        {(contest.rank !== undefined && contest.totalParticipants !== undefined) && (
+          <div>
+            <p className="text-sm text-muted-foreground">Rank</p>
+            <p className="font-medium">{contest.rank}/{contest.totalParticipants}</p>
+          </div>
+        )}
       </div>
+
+      {contest.status === 'active' && contest.gameType === 'equity' && (
+        <div className="mt-4">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => onEditStocks(contest)} 
+            className="w-full"
+          >
+            <Edit3Icon className="w-4 h-4 mr-2" /> Edit Stocks
+          </Button>
+        </div>
+      )}
     </MorphCard>
   );
 };

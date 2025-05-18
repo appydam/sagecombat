@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { ContestType, mockParticipations, mockOpinionParticipations } from '@/components/profile/data/mockProfileData';
+import { ContestType, mockParticipations, mockOpinionParticipations, mockPolyParticipations } from '@/components/profile/data/mockProfileData';
 import { BACKEND_HOST } from '@/constants/config';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -30,8 +29,8 @@ export const useProfileData = () => {
         setIsAuthenticated(isAuthenticatedUser);
         
         if (!isAuthenticatedUser) {
-          // Use mock data for non-authenticated users (combination of equity and opinion trading contests)
-          const combinedMocks = [...mockParticipations, ...mockOpinionParticipations];
+          // Use mock data for non-authenticated users (combination of equity, opinion, and poly trading contests)
+          const combinedMocks = [...mockParticipations, ...mockOpinionParticipations, ...mockPolyParticipations];
           const mocksWithKeys = combinedMocks.map((item, index) => ({
             ...item,
             uniqueKey: `${item.contest_id}-${index}`
@@ -113,7 +112,7 @@ export const useProfileData = () => {
           console.error("Error fetching GeoQuest profile:", geoError);
         }
         
-        // Fetch data from legacy API for equity/opinion contests
+        // Fetch data from legacy API for equity/opinion/poly contests
         try {
           const apiPath = BACKEND_HOST + 'recentContests';
           const userId = Number(JSON.parse(localStorage.getItem("userId") || "0"));
@@ -138,9 +137,11 @@ export const useProfileData = () => {
           if (result.code === 200) {
             let equityContests: ContestType[] = [];
             let opinionContests: ContestType[] = [];
+            let polyContests: ContestType[] = [];
             let equityTotalProfit = 0;
             let equityCompletedContests = 0;
             let opinionActiveContests = 0;
+            let polyActiveContests = 0;
             
             // Process equity contests data
             if (result.data.EquityRecentData) {
@@ -186,9 +187,30 @@ export const useProfileData = () => {
                 }));
               }
             }
+            
+            // Process orderbook (poly) contests data
+            if (result.data.OrderBookRecentData) {
+              polyActiveContests = result.data.OrderBookRecentData.activeContest || 0;
+              
+              if (result.data.OrderBookRecentData.recentContests && result.data.OrderBookRecentData.recentContests.length > 0) {
+                polyContests = result.data.OrderBookRecentData.recentContests.map((contest: any, index: number) => ({
+                  contest_id: contest.market_id,
+                  user_id: userId,
+                  contest_name: contest.name,
+                  stocks_in_basket: [], // Poly contests don't have stocks
+                  join_time: contest.created_at,
+                  status: contest.status === 'open' ? 'active' : 'completed',
+                  returns: 0, // No returns info provided yet
+                  entry_fee: 50, // Default entry fee
+                  orders: contest.orders,
+                  uniqueKey: `poly-${contest.market_id}-${index}`,
+                  gameType: "poly"
+                }));
+              }
+            }
   
             // Add all contests to participations
-            const allContests = [...equityContests, ...opinionContests];
+            const allContests = [...equityContests, ...opinionContests, ...polyContests];
             if (allContests.length > 0) {
               setParticipations(prev => [...prev, ...allContests]);
               setHasUserContests(true);
@@ -196,7 +218,7 @@ export const useProfileData = () => {
             
             // Update totals
             setTotalProfit(prev => prev + equityTotalProfit);
-            setActiveContestNumber(prev => prev + opinionActiveContests);
+            setActiveContestNumber(prev => prev + opinionActiveContests + polyActiveContests);
             setCompletedContestsNumber(prev => prev + equityCompletedContests);
           }
         } catch (legacyError) {
@@ -211,7 +233,7 @@ export const useProfileData = () => {
           setHasUserContests(false);
         } else {
           // Only use mock data for non-authenticated users
-          const combinedMocks = [...mockParticipations, ...mockOpinionParticipations];
+          const combinedMocks = [...mockParticipations, ...mockOpinionParticipations, ...mockPolyParticipations];
           const mocksWithKeys = combinedMocks.map((item, index) => ({
             ...item,
             uniqueKey: `${item.contest_id}-${index}`
