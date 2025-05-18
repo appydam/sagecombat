@@ -3,14 +3,11 @@ import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import MorphCard from "@/components/ui/MorphCard";
 import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Input } from "@/components/ui/input";
-import { Calendar, Users, Share2, TrendingUp, TrendingDown, Plus, Minus } from "lucide-react";
+import { Calendar, Users, Share2, TrendingUp, TrendingDown } from "lucide-react";
 import { toast } from "sonner";
 import { PolyContest } from "@/types/competitions";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { placePolyBet } from "@/services/polyContestsService";
 
 interface PolyContestCardProps {
   contest: PolyContest;
@@ -19,11 +16,7 @@ interface PolyContestCardProps {
 
 const PolyContestCard = ({ contest, onBetPlaced }: PolyContestCardProps) => {
   const navigate = useNavigate();
-  const [selectedOutcome, setSelectedOutcome] = useState<"yes" | "no" | null>(null);
-  const [betAmount, setBetAmount] = useState<number>(100);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [shareTooltip, setShareTooltip] = useState<boolean>(false);
-  const [showBetForm, setShowBetForm] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   
   useEffect(() => {
@@ -36,54 +29,15 @@ const PolyContestCard = ({ contest, onBetPlaced }: PolyContestCardProps) => {
     checkAuth();
   }, []);
   
-  const handlePlaceBet = async () => {
+  const handlePlaceBet = () => {
     if (!isAuthenticated) {
       toast.error("Please sign in to place a bet");
       navigate("/login");
       return;
     }
-
-    if (selectedOutcome === null) {
-      toast.error("Please select Yes or No before placing your bet.");
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      // Mock user ID
-      const userId = localStorage.getItem('userId') || 'demo-user';
-
-      const { success, message, error } = await placePolyBet(
-        userId,
-        contest.id,
-        selectedOutcome,
-        betAmount
-      );
-
-      if (error) {
-        console.error("Error placing bet:", error);
-        toast.error("Failed to place your bet. Please try again.");
-        setIsSubmitting(false);
-        return;
-      }
-
-      toast.success(`You've successfully placed a ${selectedOutcome.toUpperCase()} bet on this contest.`);
-
-      // Reset selection and call callback if provided
-      setTimeout(() => {
-        setSelectedOutcome(null);
-        setShowBetForm(false);
-        if (onBetPlaced) {
-          onBetPlaced();
-        }
-        setIsSubmitting(false);
-      }, 1000);
-    } catch (error) {
-      console.error("Error placing bet:", error);
-      toast.error("Failed to place your bet. Please try again.");
-      setIsSubmitting(false);
-    }
+    
+    // Navigate directly to the contest detail page
+    navigate(`/competitions/poly/${contest.id}`);
   };
 
   const handleShare = async () => {
@@ -113,23 +67,6 @@ const PolyContestCard = ({ contest, onBetPlaced }: PolyContestCardProps) => {
 
   const handleViewDetails = () => {
     navigate(`/competitions/poly/${contest.id}`);
-  };
-
-  const handleIncreaseBet = () => {
-    setBetAmount(prev => prev + 50);
-  };
-
-  const handleDecreaseBet = () => {
-    setBetAmount(prev => Math.max(50, prev - 50));
-  };
-
-  const handleShowBetForm = () => {
-    if (!isAuthenticated) {
-      toast.error("Please sign in to place a bet");
-      navigate("/login");
-      return;
-    }
-    setShowBetForm(true);
   };
 
   return (
@@ -204,141 +141,50 @@ const PolyContestCard = ({ contest, onBetPlaced }: PolyContestCardProps) => {
           </div>
 
           <div className="flex gap-2">
-            {!showBetForm && (
-              <>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="border-amber-500 text-amber-600 hover:bg-amber-50"
-                  onClick={handleShowBetForm}
-                >
-                  Place Bet
-                </Button>
-                <Button 
-                  variant="outline"
-                  size="sm"
-                  className="border-slate-300 text-slate-600 hover:bg-slate-50 w-9 h-9 p-0"
-                  onClick={handleViewDetails}
-                >
-                  <TrendingUp className="h-4 w-4" />
-                </Button>
-              </>
-            )}
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="border-amber-500 text-amber-600 hover:bg-amber-50"
+              onClick={handlePlaceBet}
+            >
+              Place Bet
+            </Button>
+            <Button 
+              variant="outline"
+              size="sm"
+              className="border-slate-300 text-slate-600 hover:bg-slate-50 w-9 h-9 p-0"
+              onClick={handleViewDetails}
+            >
+              <TrendingUp className="h-4 w-4" />
+            </Button>
           </div>
         </div>
 
-        {/* Expanded Bet Form */}
-        {showBetForm && (
-          <div className="mt-3 border-t pt-3">
-            <p className="text-sm font-medium mb-2">What do you predict?</p>
-            
-            <RadioGroup 
-              value={selectedOutcome || ""} 
-              onValueChange={value => setSelectedOutcome(value as "yes" | "no")}
-              className="flex space-x-2 mb-3"
-            >
-              <div className={`flex-1 flex items-center space-x-2 border rounded-md p-2 ${selectedOutcome === "yes" ? "border-green-600 bg-green-50" : ""}`}>
-                <RadioGroupItem value="yes" id="yes" className={selectedOutcome === "yes" ? "text-green-600" : ""} />
-                <label htmlFor="yes" className="text-sm font-medium flex-grow cursor-pointer">Yes</label>
-                <span className="text-xs text-green-600">{(contest.yes_price * 100).toFixed(0)}%</span>
-              </div>
-              
-              <div className={`flex-1 flex items-center space-x-2 border rounded-md p-2 ${selectedOutcome === "no" ? "border-red-600 bg-red-50" : ""}`}>
-                <RadioGroupItem value="no" id="no" className={selectedOutcome === "no" ? "text-red-600" : ""} />
-                <label htmlFor="no" className="text-sm font-medium flex-grow cursor-pointer">No</label>
-                <span className="text-xs text-red-600">{(contest.no_price * 100).toFixed(0)}%</span>
-              </div>
-            </RadioGroup>
-            
-            <div className="mb-3">
-              <p className="text-sm font-medium mb-1">Bet Amount</p>
-              <div className="flex items-center border rounded-md">
-                <Button 
-                  type="button" 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 rounded-r-none"
-                  onClick={handleDecreaseBet}
-                >
-                  <Minus className="h-3 w-3" />
-                </Button>
-                
-                <Input 
-                  type="number" 
-                  className="h-8 border-0 text-center" 
-                  value={betAmount}
-                  onChange={(e) => setBetAmount(parseInt(e.target.value) || 50)}
-                  min="50"
-                />
-                
-                <Button 
-                  type="button" 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 rounded-l-none"
-                  onClick={handleIncreaseBet}
-                >
-                  <Plus className="h-3 w-3" />
-                </Button>
-              </div>
-            </div>
-            
-            <div className="flex items-center text-xs mb-2">
-              <span className="text-muted-foreground">Potential payout:</span>
-              <span className="ml-auto font-medium">
-                ₹{selectedOutcome ? (betAmount / (selectedOutcome === "yes" ? contest.yes_price : contest.no_price)).toFixed(2) : "0.00"}
-              </span>
-            </div>
-            
-            <div className="flex gap-2">
-              <Button 
-                size="sm"
-                variant="outline"
-                className="text-sm flex-1"
-                onClick={() => setShowBetForm(false)}
-              >
-                Cancel
-              </Button>
-              
-              <Button 
-                size="sm"
-                className="text-sm flex-1 bg-amber-500 hover:bg-amber-600"
-                onClick={handlePlaceBet}
-                disabled={isSubmitting || !selectedOutcome}
-              >
-                {isSubmitting ? "Processing..." : "Confirm"}
-              </Button>
-            </div>
-          </div>
-        )}
-
         {/* Action buttons */}
-        {!showBetForm && (
-          <div className="flex justify-between gap-2 mt-2">
-            <Button
-              size="sm"
-              variant="ghost"
-              className="flex-1 border border-input text-sm rounded-md hover:bg-accent hover:text-amber-600 transition-all"
-              onClick={handleViewDetails}
-            >
-              View Details
-            </Button>
-            
-            <Button
-              size="sm"
-              variant="ghost"
-              className="w-9 h-9 p-0 flex items-center justify-center border border-input rounded-md hover:bg-accent text-amber-600 relative"
-              onClick={handleShare}
-            >
-              <Share2 className="h-4 w-4" />
-              {shareTooltip && (
-                <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded">
-                  Copied!
-                </span>
-              )}
-            </Button>
-          </div>
-        )}
+        <div className="flex justify-between gap-2 mt-2">
+          <Button
+            size="sm"
+            variant="ghost"
+            className="flex-1 border border-input text-sm rounded-md hover:bg-accent hover:text-amber-600 transition-all"
+            onClick={handleViewDetails}
+          >
+            View Details
+          </Button>
+          
+          <Button
+            size="sm"
+            variant="ghost"
+            className="w-9 h-9 p-0 flex items-center justify-center border border-input rounded-md hover:bg-accent text-amber-600 relative"
+            onClick={handleShare}
+          >
+            <Share2 className="h-4 w-4" />
+            {shareTooltip && (
+              <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded">
+                Copied!
+              </span>
+            )}
+          </Button>
+        </div>
       </div>
     </MorphCard>
   );
