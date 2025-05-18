@@ -80,7 +80,7 @@ export interface CompetitionProps {
   prizePool: number; // MISSING in API - Needs clarification or default (using 0 for now)
   registerDeadline: string; // Mapped from register_deadline
   type: "custom" | "predefined"; // Derived from basket_type
-  gameType: "equity" | "crypto" | "opinion"; // Include all possible game types
+  gameType: "equity" | "crypto" | "opinion" | "poly" | "geoquest"; // Include all possible game types
   currency_type: "real" | "virtual";
   competition_interval: number
 }
