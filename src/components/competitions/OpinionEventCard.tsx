@@ -26,8 +26,6 @@ const OpinionEventCard = ({ event, onAnswerSubmitted }: OpinionEventCardProps) =
     setIsSubmitting(true);
     const userId = Number(JSON.parse(localStorage.getItem("userId")));
 
-
-
     try {
       const apiPath = `${BACKEND_HOST}EnterOpinionCompetitions`;
       const response = await fetch(apiPath, {
@@ -43,11 +41,22 @@ const OpinionEventCard = ({ event, onAnswerSubmitted }: OpinionEventCardProps) =
         }),
       });
 
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        data = null;
+      }
+
       if (!response.ok) {
+        if (data && data.code === 500 && data.data === "user already joined this opinion contest") {
+          toast.error("You have already participated in this contest");
+        } else {
+          toast.error("Failed to place the trade. Please try again.");
+        }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
       console.log("API response:", data);
 
       toast.success("You've successfully placed your opinion trade.");
@@ -60,9 +69,10 @@ const OpinionEventCard = ({ event, onAnswerSubmitted }: OpinionEventCardProps) =
 
     } catch (error) {
       console.error("API call failed:", error);
-      toast.error("Failed to place the trade. Please try again.");
+      // Error toast is already shown above for known errors
+    } finally {
+      setIsSubmitting(false);
     }
-
   };
 
   return (
