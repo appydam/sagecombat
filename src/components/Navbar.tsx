@@ -60,9 +60,29 @@ const Navbar = () => {
         credentials: "include",
       });
 
+      // if (response.status === 401) {
+      //   console.log("401 detected, navigating to /login");
+      //   // Redirect to login if unauthorized
+      //   navigate('/login');
+      //   return;
+      // }
+
       if (response.status === 401) {
-        // Redirect to login if unauthorized
+        console.log("401 detected, clearing all storage and cookies, navigating to /login");
+
+        // Clear localStorage and sessionStorage
+        localStorage.clear();
+        sessionStorage.clear();
+
+        // Clear all cookies for current domain
+        document.cookie.split(";").forEach((c) => {
+          document.cookie = c
+            .replace(/^ +/, "")
+            .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        });
+
         navigate('/login');
+        window.location.reload(); // Optional: force reload to ensure state is reset
         return;
       }
 
