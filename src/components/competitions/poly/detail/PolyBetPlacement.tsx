@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,20 +13,20 @@ interface PolyBetPlacementProps {
   onPlaceOrder: (outcome: boolean, orderType: "buy" | "sell", price: number, quantity: number) => Promise<void>;
 }
 
-const PolyBetPlacement = ({ 
+const PolyBetPlacement = ({
   yesPrice,
   noPrice,
   isSubmitting,
-  onPlaceOrder 
+  onPlaceOrder
 }: PolyBetPlacementProps) => {
   const [selectedOutcome, setSelectedOutcome] = useState<boolean>(true); // true = yes, false = no
   const [orderType, setOrderType] = useState<"buy" | "sell">("buy");
   const [quantity, setQuantity] = useState<number>(100);
-  const [price, setPrice] = useState<number>(yesPrice);
+  const [price, setPrice] = useState<string>(yesPrice.toString());
 
   // Update price when outcome or current prices change
   React.useEffect(() => {
-    setPrice(selectedOutcome ? yesPrice : noPrice);
+    setPrice((selectedOutcome ? yesPrice : noPrice).toString());
   }, [selectedOutcome, yesPrice, noPrice]);
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,12 +39,7 @@ const PolyBetPlacement = ({
   };
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    if (isNaN(value) || value <= 0 || value >= 1) {
-      setPrice(selectedOutcome ? yesPrice : noPrice);
-    } else {
-      setPrice(value);
-    }
+    setPrice(e.target.value);
   };
 
   const handleQuickAdd = (amount: number) => {
@@ -61,33 +55,33 @@ const PolyBetPlacement = ({
   };
 
   const calculatePotentialValue = () => {
+    const num = parseFloat(price);
+    if (isNaN(num) || num <= 0 || num >= 1) return "--";
     if (orderType === "buy") {
-      // When buying, potential payout if correct = quantity / price
-      return (quantity / price).toFixed(2);
+      return (quantity / num).toFixed(2);
     } else {
-      // When selling, you get the sale price = quantity * price
-      return (quantity * price).toFixed(2);
+      return (quantity * num).toFixed(2);
     }
   };
 
   const calculateRisk = () => {
+    const num = parseFloat(price);
+    if (isNaN(num) || num <= 0 || num >= 1) return "--";
     if (orderType === "buy") {
-      // When buying, risk is the cost = quantity * price
-      return (quantity * price).toFixed(2);
+      return (quantity * num).toFixed(2);
     } else {
-      // When selling, risk is potential payout if wrong = quantity * (1 - price)
-      return (quantity * (1 - price)).toFixed(2);
+      return (quantity * (1 - num)).toFixed(2);
     }
   };
 
   return (
     <Card className="p-6">
       <h3 className="font-semibold mb-4">Place Your Order</h3>
-      
-      <Tabs 
-        defaultValue="buy" 
-        value={orderType} 
-        onValueChange={(value) => setOrderType(value as "buy" | "sell")} 
+
+      <Tabs
+        defaultValue="buy"
+        value={orderType}
+        onValueChange={(value) => setOrderType(value as "buy" | "sell")}
         className="mb-6"
       >
         <TabsList className="grid w-full grid-cols-2">
@@ -99,32 +93,30 @@ const PolyBetPlacement = ({
           </TabsTrigger>
         </TabsList>
       </Tabs>
-      
+
       <div className="mb-6">
         <p className="text-sm text-muted-foreground mb-2">I think this will happen:</p>
-        
-        <RadioGroup 
-          value={selectedOutcome ? "yes" : "no"} 
+
+        <RadioGroup
+          value={selectedOutcome ? "yes" : "no"}
           onValueChange={(value) => setSelectedOutcome(value === "yes")}
           className="grid grid-cols-2 gap-4"
         >
-          <div className={`flex items-center justify-center gap-2 h-12 rounded-md border ${
-            selectedOutcome 
-              ? "bg-gradient-to-r from-green-600 to-green-500 border-green-600 text-white"
-              : "border-green-600 text-green-700 hover:bg-green-50"
-          } cursor-pointer`}>
+          <div className={`flex items-center justify-center gap-2 h-12 rounded-md border ${selectedOutcome
+            ? "bg-gradient-to-r from-green-600 to-green-500 border-green-600 text-white"
+            : "border-green-600 text-green-700 hover:bg-green-50"
+            } cursor-pointer`}>
             <RadioGroupItem value="yes" id="place-yes" className="sr-only" />
             <label htmlFor="place-yes" className="flex items-center w-full h-full justify-center cursor-pointer">
               <CheckCircle className="h-4 w-4 mr-2" />
               YES
             </label>
           </div>
-          
-          <div className={`flex items-center justify-center gap-2 h-12 rounded-md border ${
-            !selectedOutcome 
-              ? "bg-gradient-to-r from-red-600 to-red-500 border-red-600 text-white"
-              : "border-red-600 text-red-700 hover:bg-red-50"
-          } cursor-pointer`}>
+
+          <div className={`flex items-center justify-center gap-2 h-12 rounded-md border ${!selectedOutcome
+            ? "bg-gradient-to-r from-red-600 to-red-500 border-red-600 text-white"
+            : "border-red-600 text-red-700 hover:bg-red-50"
+            } cursor-pointer`}>
             <RadioGroupItem value="no" id="place-no" className="sr-only" />
             <label htmlFor="place-no" className="flex items-center w-full h-full justify-center cursor-pointer">
               <XCircle className="h-4 w-4 mr-2" />
@@ -133,7 +125,7 @@ const PolyBetPlacement = ({
           </div>
         </RadioGroup>
       </div>
-      
+
       <div className="mb-4">
         <p className="text-sm text-muted-foreground mb-2">Price:</p>
         <div className="flex items-center border rounded-md overflow-hidden">
@@ -153,13 +145,13 @@ const PolyBetPlacement = ({
             variant="ghost"
             size="sm"
             className="h-6 px-2 py-0 text-xs"
-            onClick={() => setPrice(selectedOutcome ? yesPrice : noPrice)}
+            onClick={() => setPrice((selectedOutcome ? yesPrice : noPrice).toString())}
           >
             Use current
           </Button>
         </div>
       </div>
-      
+
       <div className="mb-6">
         <p className="text-sm text-muted-foreground mb-2">Quantity:</p>
         <div className="flex items-center border rounded-md overflow-hidden">
@@ -187,7 +179,7 @@ const PolyBetPlacement = ({
             <Plus className="h-4 w-4" />
           </Button>
         </div>
-        
+
         <div className="grid grid-cols-4 gap-2 mt-2">
           <Button
             variant="outline"
@@ -227,7 +219,7 @@ const PolyBetPlacement = ({
           </Button>
         </div>
       </div>
-      
+
       <div className="bg-secondary/30 rounded-lg p-4 mb-6">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm text-muted-foreground">Order type:</span>
@@ -239,7 +231,7 @@ const PolyBetPlacement = ({
         </div>
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm text-muted-foreground">Price per share:</span>
-          <span className="font-medium">₹{price.toFixed(2)}</span>
+          <span className="font-medium">₹{(() => { const num = parseFloat(price); return (!price || isNaN(num) || num <= 0 || num >= 1) ? "--" : num.toFixed(2); })()}</span>
         </div>
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm text-muted-foreground">
@@ -254,11 +246,15 @@ const PolyBetPlacement = ({
           <span className="font-semibold text-red-600">₹{calculateRisk()}</span>
         </div>
       </div>
-      
+
       <Button
         className="w-full h-12 bg-gradient-to-r from-amber-500 to-amber-400"
-        onClick={() => onPlaceOrder(selectedOutcome, orderType, price, quantity)}
-        disabled={isSubmitting}
+        onClick={() => {
+          const num = parseFloat(price);
+          if (!price || isNaN(num) || num <= 0 || num >= 1) return;
+          onPlaceOrder(selectedOutcome, orderType, num, quantity);
+        }}
+        disabled={isSubmitting || !price || isNaN(parseFloat(price)) || parseFloat(price) <= 0 || parseFloat(price) >= 1}
       >
         {isSubmitting ? "Processing..." : `${orderType === "buy" ? "Buy" : "Sell"} ${selectedOutcome ? "YES" : "NO"}`}
       </Button>
