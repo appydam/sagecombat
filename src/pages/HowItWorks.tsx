@@ -413,7 +413,7 @@ const HowItWorks = () => {
                   </Button>
                 </Link>
                 <Link to="/register">
-                  <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
+                  <Button variant="outline" size="lg" className="border-white text-black hover:bg-white/10">
                     Create Account
                   </Button>
                 </Link>

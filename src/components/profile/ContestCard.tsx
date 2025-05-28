@@ -18,6 +18,22 @@ interface ContestCardProps {
 }
 
 const ContestCard = ({ contest, onEditStocks }: ContestCardProps) => {
+  // Color mapping for contest type badges
+  const getGameTypeBadgeColor = (gameType: string) => {
+    switch (gameType) {
+      case "equity":
+        return "bg-gradient-to-r from-blue-500 to-blue-700 text-white";
+      case "opinion":
+        return "bg-gradient-to-r from-pink-500 to-pink-700 text-white";
+      case "poly":
+        return "bg-gradient-to-r from-emerald-500 to-emerald-700 text-white";
+      case "geoquest":
+        return "bg-gradient-to-r from-purple-500 to-purple-700 text-white";
+      default:
+        return "bg-gradient-to-r from-gray-400 to-gray-600 text-white";
+    }
+  };
+
   const formattedDate = new Date(contest.join_time).toLocaleDateString();
   
   const renderGameTypeIcon = () => {
@@ -94,7 +110,7 @@ const ContestCard = ({ contest, onEditStocks }: ContestCardProps) => {
   };
 
   return (
-    <MorphCard className="p-4 animate-fade-in">
+    <MorphCard className="p-4 animate-fade-in relative">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="p-2 bg-primary/10 rounded-full">
@@ -105,9 +121,17 @@ const ContestCard = ({ contest, onEditStocks }: ContestCardProps) => {
             <p className="text-sm text-muted-foreground">Joined on {formattedDate}</p>
           </div>
         </div>
-        <Badge variant={contest.status === 'active' ? 'default' : 'secondary'} className="capitalize">
-          {contest.status}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Badge variant={contest.status === 'active' ? 'default' : 'secondary'} className="capitalize">
+            {contest.status}
+          </Badge>
+          <Badge
+            variant="outline"
+            className={`capitalize ${getGameTypeBadgeColor(contest.gameType)}`}
+          >
+            {contest.gameType}
+          </Badge>
+        </div>
       </div>
 
       {contest.gameType === "equity" && contest.stocks_in_basket && contest.stocks_in_basket.length > 0 && (

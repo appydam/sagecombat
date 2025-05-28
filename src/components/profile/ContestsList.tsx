@@ -21,7 +21,7 @@ interface ContestsListProps {
   hasUserContests?: boolean;
 }
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 4;
 
 const ContestsList = ({ 
   participations, 

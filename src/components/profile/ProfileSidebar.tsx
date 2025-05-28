@@ -74,7 +74,7 @@ const ProfileSidebar = ({ user, onDepositClick, onWithdrawClick }: ProfileSideba
       
       <div className="relative backdrop-blur-xl bg-white/90 dark:bg-gray-900/90 border border-white/20 rounded-2xl shadow-2xl shadow-black/10 p-4 sticky top-16 overflow-hidden">
         {/* Decorative gradient overlay */}
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-transparent pointer-events-none"></div>
+        <div className="absolute top-0 left-0 right-0 h-36 bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-transparent pointer-events-none"></div>
         
         {/* Profile Section */}
         <div className="relative flex flex-col items-center mb-4">
@@ -100,7 +100,7 @@ const ProfileSidebar = ({ user, onDepositClick, onWithdrawClick }: ProfileSideba
           <h2 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-1">
             {user.name}
           </h2>
-          <span className="text-sm text-gray-500 font-mono bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
+          <span className="text-sm text-gray-500 font-mono bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-transparent dark:bg-gray-800 px-2 py-0.5 rounded-full">
             @{user.username}
           </span>
           
