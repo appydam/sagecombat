@@ -9,8 +9,8 @@ import CompetitionCard from "@/components/CompetitionCard";
 import LeaderboardPreview from "@/components/LeaderboardPreview";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import GameTypeToggle from "@/components/GameTypeToggle";
+import { ArrowRight, TrendingUp, Users, Trophy } from "lucide-react";
+import MorphCard from "@/components/ui/MorphCard";
 
 const Index = () => {
   const [selectedGameType, setSelectedGameType] = useState<"equity" | "crypto" | "opinion">("equity");
@@ -121,6 +121,24 @@ const Index = () => {
     { id: "entry-5", rank: 5, userId: "user-5", username: "StockWhisperer", return: 4.32, prize: 500 }
   ];
 
+  const stats = [
+    {
+      icon: <Users className="h-8 w-8 text-primary" />,
+      value: "50,000+",
+      label: "Active Players"
+    },
+    {
+      icon: <Trophy className="h-8 w-8 text-gold-500" />,
+      value: "₹2.5M+",
+      label: "Prizes Distributed"
+    },
+    {
+      icon: <TrendingUp className="h-8 w-8 text-mint-600" />,
+      value: "1,200+",
+      label: "Competitions Hosted"
+    }
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -128,69 +146,32 @@ const Index = () => {
       <main className="flex-grow">
         <Hero />
         
-        {/* Game Type Toggles */}
-        {/* <section className="py-8 bg-secondary/20">
+        {/* Stats Section */}
+        <section className="py-16 bg-secondary/20">
           <div className="container px-4 mx-auto">
-            <GameTypeToggle 
-              selectedGameType={selectedGameType} 
-              onSelectGameType={setSelectedGameType} 
-            />
-          </div>
-        </section> */}
-        
-        {/* Featured Competitions */}
-        {/* <section className="py-20 relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/30 to-transparent -z-10" />
-          
-          <div className="container px-4 mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
-              <div>
-                <h2 className="font-display text-3xl font-bold mb-2">
-                  {selectedGameType === "equity" && "Featured Equity Competitions"}
-                  {selectedGameType === "crypto" && "Featured Crypto Competitions"}
-                  {selectedGameType === "opinion" && "Featured Opinion Competitions"}
-                </h2>
-                <p className="text-muted-foreground">
-                  {selectedGameType === "equity" && "Join these popular stock competitions and test your prediction skills"}
-                  {selectedGameType === "crypto" && "Participate in crypto competitions and showcase your crypto market knowledge"}
-                  {selectedGameType === "opinion" && "Answer Yes/No questions on real-world events and win rewards"}
-                </p>
-              </div>
-              <Link to="/competitions" className="mt-4 md:mt-0">
-                <Button variant="outline" className="rounded-full">
-                  View All Competitions <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              {stats.map((stat, i) => (
+                <MorphCard
+                  key={i}
+                  className="p-6 text-center animate-fade-up"
+                  style={{animationDelay: `${i * 100}ms`}}
+                >
+                  <div className="flex justify-center mb-4">
+                    {stat.icon}
+                  </div>
+                  <div className="text-3xl font-bold mb-2">{stat.value}</div>
+                  <div className="text-muted-foreground">{stat.label}</div>
+                </MorphCard>
+              ))}
             </div>
-            
-            {filteredCompetitions.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {filteredCompetitions.map(competition => (
-                  <CompetitionCard key={competition.id} {...competition} />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12 my-4 bg-secondary/40 rounded-lg">
-                <h3 className="text-xl font-medium mb-2">No competitions found</h3>
-                <p className="text-muted-foreground">
-                  Check back soon for new competitions
-                </p>
-              </div>
-            )}
           </div>
-        </section> */}
-
-        {/*  */}
-
-        
-
-        
-
+        </section>
 
         {/* Image container for overlay */}
-        <div className="relative -my-36 container mx-auto pb-10"> {/* Added container and adjusted margin/padding */}
+        <div className="relative -my-36 container mx-auto pb-10">
           <img src="/ggg.png" alt="Background Image" className="w-full h-auto" />
         </div>
+        
         <Features />
         
         <GameTypes />
@@ -224,8 +205,6 @@ const Index = () => {
             </div>
           </div>
         </section>
-
-        
         
         {/* CTA Section */}
         <section className="py-24 relative overflow-hidden">
