@@ -31,8 +31,20 @@ const GameTypes = () => {
       cta: "Start Trading Opinions",
       path: "/competitions?gameType=opinion",
       color: "from-[#98BEFC] to-[#C7F8DC]"
+    },
+    {
+      title: "Poly Trading",
+      description: "Advanced prediction markets with dynamic pricing and real-time trading",
+      features: [
+        "Trade on prediction markets with live pricing",
+        "Buy and sell positions as odds change",
+        "Advanced market mechanics and analytics",
+        "Higher profit potential for skilled traders"
+      ],
+      cta: "Explore Poly Markets",
+      path: "/competitions?gameType=poly",
+      color: "from-[#FFE4B5] to-[#FFA07A]"
     }
-    
   ];
 
   return (
@@ -50,7 +62,7 @@ const GameTypes = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {gameTypes.map((game, i) => (
             <MorphCard
               key={i}
