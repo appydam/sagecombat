@@ -47,7 +47,7 @@ useEffect(() => {
 // Call backend to create order
 const createOrder = async (amount: number, email: string) => {
   // Amount in paise
-  const res = await fetch('/api/create-order', {
+  const res = await fetch('https://api.sagecombat.com/create-order', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ amount, email, userId: 1 }), // TODO: Replace with actual userId
@@ -57,7 +57,7 @@ const createOrder = async (amount: number, email: string) => {
 
 // Call backend to verify payment
 const verifyPayment = async (paymentData: any) => {
-  const res = await fetch('/api/verify-payment', {
+  const res = await fetch('https://api.sagecombat.com/verify-payment', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(paymentData),
@@ -81,7 +81,10 @@ const handleDeposit = async () => {
     // Get user email from localStorage (client-side only)
     let userEmail = 'test@example.com';
     if (typeof window !== 'undefined') {
-      userEmail = localStorage.getItem('userEmail') || 'test@example.com';
+      // Ensure email is properly formatted without extra quotes
+      const storedEmail = localStorage.getItem('userEmail');
+      userEmail = storedEmail ? storedEmail.replace(/^"|"$/g, '') : 'test@example.com';
+      console.log('User email:', userEmail);
     }
     const order = await createOrder(Math.round(amountNum * 100), userEmail); // amount in paise
     if (!order || !order.id) {
