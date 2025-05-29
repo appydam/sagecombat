@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MorphCard from "@/components/ui/MorphCard";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Trophy, Medal, Award, Star, Users } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
@@ -18,13 +19,19 @@ interface ContestDetails {
   startDate: string;
   endDate: string;
   participantCount: number;
+  maxParticipants?: number;
   prizePool: number;
   type: "custom" | "predefined";
   entryFee?: number;
+  maxSelectionsAllowed?: number;
+  currencyType?: string;
 }
+
+import { useSearchParams } from "react-router-dom";
 
 const ContestLeaderboard = () => {
   const { contestId } = useParams<{ contestId: string }>();
+  const [searchParams] = useSearchParams();
   const [participants, setParticipants] = useState<LeaderboardEntry[]>([]);
   const [contestDetails, setContestDetails] = useState<ContestDetails | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -33,35 +40,55 @@ const ContestLeaderboard = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // Mock API call to fetch contest details
-        await new Promise(resolve => setTimeout(resolve, 300));
-
-        // Mock contest details
-        const mockContestDetails: ContestDetails = {
-          id: contestId || "contest-1",
-          name: contestId === "comp-2" ? "Banking Sector Prediction" :
-            contestId === "comp-3" ? "Pharma Giants Showdown" :
-              "Tech Stocks Challenge Q2 2023",
-          status: "completed",
-          description: contestId === "comp-2" ?
-            "Will banking stocks go up or down? See who predicted correctly." :
-            contestId === "comp-3" ?
-              "Select pharmaceutical stocks that will outperform the market" :
-              "Compete with the best traders in predicting tech stock movements",
-          startDate: "2023-04-01",
-          endDate: "2023-06-30",
-          participantCount: 128,
-          prizePool: contestId === "comp-2" ? 35000 :
-            contestId === "comp-3" ? 50000 : 25000,
-          type: contestId === "comp-2" ? "predefined" : "custom",
-          entryFee: contestId === "comp-2" ? 50 :
-            contestId === "comp-3" ? 200 : 100
+        // Fetch contest details from backend only; do not use mock data or URL params
+        if (!contestId) {
+          setContestDetails(null);
+          setParticipants([]);
+          toast.error('Contest ID is missing in URL.');
+          setLoading(false);
+          return;
+        }
+        // Fetch all competitions and find the matching contest
+        const { equityCompetitions, error } = await import('@/services/competitionsService').then(mod => mod.fetchCompetitionsData());
+        if (error) {
+          toast.error('Failed to fetch contest details from backend.');
+          setContestDetails(null);
+          setParticipants([]);
+          setLoading(false);
+          return;
+        }
+        const contest = equityCompetitions.find((c: any) => c.id === contestId);
+        if (!contest) {
+          toast.error('Contest not found.');
+          setContestDetails(null);
+          setParticipants([]);
+          setLoading(false);
+          return;
+        }
+        // Map backend contest object to ContestDetails interface, using only valid CompetitionProps fields
+        // Map status: 'open' | 'closed' | 'upcoming' (CompetitionProps) to 'open' | 'closed' | 'completed' (ContestDetails)
+        let mappedStatus: 'open' | 'closed' | 'completed' = 'open';
+        if (contest.status === 'closed') mappedStatus = 'closed';
+        else if (contest.status === 'upcoming') mappedStatus = 'open'; // treat upcoming as open for leaderboard
+        // else if contest is completed, backend should ideally send 'closed' or have a scoring flag
+        const details: ContestDetails = {
+          id: contest.id,
+          name: contest.name,
+          status: mappedStatus,
+          description: contest.description || '',
+          startDate: contest.registerDeadline || '',
+          endDate: contest.registerDeadline || '',
+          participantCount: contest.currentParticipants || 0,
+          maxParticipants: contest.maxParticipants,
+          prizePool: contest.prizePool || 0,
+          type: contest.type || 'custom',
+          entryFee: contest.entryFee,
+          maxSelectionsAllowed: 5,
+          currencyType: contest.currency_type || 'virtual',
         };
-
-        setContestDetails(mockContestDetails);
-
+        setContestDetails(details);
         // Fetch leaderboard data from our service
-        const leaderboardData = await fetchContestLeaderboard(contestId || 1);
+        const leaderboardData = await fetchContestLeaderboard(contestId);
         setParticipants(leaderboardData);
       } catch (error) {
         console.error("Error fetching contest data:", error);
@@ -72,7 +99,7 @@ const ContestLeaderboard = () => {
     };
 
     fetchData();
-  }, [contestId]);
+  }, [contestId, searchParams]);
 
   const renderRankIndicator = (rank: number) => {
     if (rank === 1) return <Trophy className="h-5 w-5 text-gold-500" />;
@@ -109,62 +136,89 @@ const ContestLeaderboard = () => {
           ) : (
             <>
               {contestDetails && (
-                <div className="max-w-4xl mx-auto text-center mb-8">
-                  <div className="inline-flex items-center px-3 py-1 mb-4 rounded-full bg-secondary">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${contestDetails.status === "open" ? "bg-green-100 text-green-800" :
-                      contestDetails.status === "closed" ? "bg-amber-100 text-amber-800" :
-                        "bg-blue-100 text-blue-800"
-                      }`}>
-                      {contestDetails.status.charAt(0).toUpperCase() + contestDetails.status.slice(1)}
-                    </span>
-                    <span className="mx-2 text-muted-foreground">•</span>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${contestDetails.type === "custom" ? "bg-mint-100 text-mint-800" : "bg-gold-100 text-gold-800"
-                      }`}>
-                      {contestDetails.type === "custom" ? "Custom Basket" : "Predefined Basket"}
-                    </span>
-                  </div>
+  <div className="max-w-4xl mx-auto text-center mb-8">
+    <div className="inline-flex items-center px-3 py-1 mb-4 rounded-full bg-secondary">
+      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${contestDetails.status === "open" ? "bg-green-100 text-green-800" :
+        contestDetails.status === "closed" ? "bg-amber-100 text-amber-800" :
+          "bg-blue-100 text-blue-800"
+        }`}>
+        {contestDetails.status.charAt(0).toUpperCase() + contestDetails.status.slice(1)}
+      </span>
+      <span className="mx-2 text-muted-foreground">•</span>
+      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${contestDetails.type === "custom" ? "bg-mint-100 text-mint-800" : "bg-gold-100 text-gold-800"
+        }`}>
+        {contestDetails.type === "custom" ? "Custom Basket" : "Predefined Basket"}
+      </span>
+    </div>
 
-                  <h1 className="font-display text-4xl font-bold mb-4">{contestDetails.name}</h1>
+    <h1 className="font-display text-4xl font-bold mb-4">{contestDetails.name}</h1>
 
-                  <p className="text-muted-foreground text-lg mb-4">
-                    {contestDetails.description}
-                  </p>
+    <p className="text-muted-foreground text-lg mb-4">
+      {contestDetails.description}
+    </p>
 
-                  <div className="flex flex-wrap justify-center gap-6 mb-6">
-                    <div className="text-center">
-                      <p className="text-sm text-muted-foreground">Duration</p>
-                      <p className="font-medium">
-                        {formatDate(contestDetails.startDate)} - {formatDate(contestDetails.endDate)}
-                      </p>
-                    </div>
+    <div className="flex flex-wrap justify-center gap-6 mb-6">
+      <div className="text-center">
+        <p className="text-sm text-muted-foreground">Duration</p>
+        <p className="font-medium">
+          {formatDate(contestDetails.startDate)} - {formatDate(contestDetails.endDate)}
+        </p>
+      </div>
 
-                    <div className="text-center">
-                      <p className="text-sm text-muted-foreground">Participants</p>
-                      <p className="font-medium flex items-center justify-center">
-                        <Users className="w-4 h-4 mr-1" />
-                        {contestDetails.participantCount}
-                      </p>
-                    </div>
+      <div className="text-center">
+        <p className="text-sm text-muted-foreground">Participants</p>
+        <p className="font-medium flex items-center justify-center">
+          <Users className="w-4 h-4 mr-1" />
+          {contestDetails.participantCount}
+          {contestDetails.maxParticipants ? <span className="text-xs ml-1">/ {contestDetails.maxParticipants}</span> : null}
+        </p>
+      </div>
 
-                    <div className="text-center">
-                      <p className="text-sm text-muted-foreground">Prize Pool</p>
-                      <p className="font-medium">₹{contestDetails.prizePool.toLocaleString()}</p>
-                    </div>
+      <div className="text-center">
+        <p className="text-sm text-muted-foreground">Prize Pool</p>
+        <p className="font-medium">{contestDetails.prizePool > 0 ? `₹${contestDetails.prizePool.toLocaleString()}` : <span className="font-semibold">number of players × entry fee</span>}</p>
+      </div>
 
-                    <div className="text-center">
-                      <p className="text-sm text-muted-foreground">Entry Fee</p>
-                      <p className="font-medium">₹{contestDetails.entryFee?.toLocaleString() || "Free"}</p>
-                    </div>
-                  </div>
+      <div className="text-center">
+        <p className="text-sm text-muted-foreground">Entry Fee</p>
+        <p className="font-medium">₹{contestDetails.entryFee?.toLocaleString() || "Free"}</p>
+      </div>
 
-                  <Link to={`/competitions/${contestId}`}>
-                    <Button variant="outline" className="mb-8">
-                      <ArrowLeft className="w-4 h-4 mr-2" />
-                      Back to Contest
-                    </Button>
-                  </Link>
-                </div>
-              )}
+      <div className="text-center">
+        <p className="text-sm text-muted-foreground">Selection Requirement</p>
+        <p className="font-medium">{contestDetails.maxSelectionsAllowed || 5} stocks</p>
+      </div>
+
+      <div className="text-center">
+        <p className="text-sm text-muted-foreground">Currency Type</p>
+        <p className="font-medium capitalize">{contestDetails.currencyType || 'virtual'}</p>
+      </div>
+    </div>
+    <Separator className="my-4" />
+    <div className="space-y-2">
+      <h3 className="font-medium">How Scoring Works</h3>
+      <p className="text-sm text-muted-foreground">
+        Your score is calculated based on the average percentage return of your selected
+        stocks over the competition period. The higher the return, the higher your ranking.
+      </p>
+    </div>
+    <Separator className="my-4" />
+    <div className="space-y-2">
+      <h3 className="font-medium">Prize Distribution</h3>
+      <ul className="text-sm text-muted-foreground">
+        <li>Exponential decay</li>
+        <li>Will add more details soon</li>
+      </ul>
+    </div>
+    {/* Back to Contest button with all contest details */}
+    <Link to={`/custom-basket?id=${contestId}&name=${encodeURIComponent(contestDetails?.name || '')}&description=${encodeURIComponent(contestDetails?.description || '')}&entryFee=${contestDetails?.entryFee || 0}&maxParticipants=${contestDetails?.maxParticipants || 0}&currentParticipants=${contestDetails?.participantCount || 0}&prizePool=${contestDetails?.prizePool || 0}&startDate=${contestDetails?.startDate}&endDate=${contestDetails?.endDate}&currencyType=${contestDetails?.currencyType || 'virtual'}`}>
+      <Button variant="outline" className="mb-8 mt-6">
+        <ArrowLeft className="w-4 h-4 mr-2" />
+        Back to Contest
+      </Button>
+    </Link>
+  </div>
+)}
 
               <MorphCard className="overflow-hidden mb-6">
                 <div className="p-4 bg-secondary/70 flex flex-col sm:flex-row justify-between items-center">
