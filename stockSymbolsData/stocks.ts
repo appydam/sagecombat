@@ -12511,9 +12511,9 @@ export const availableStocks: Stock[] = [
     sector: "NA"
   },
   {
-    id: "ZOMATO",
-    symbol: "ZOMATO",
-    name: "Zomato Limited",
+    id: "ETERNAL",
+    symbol: "ETERNAL",
+    name: "Eternal Ltd",
     sector: "NA"
   },
   {

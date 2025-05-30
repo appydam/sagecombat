@@ -22,14 +22,14 @@ import { mockTransactions } from "@/components/profile/data/mockProfileData";
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [user, setUser] = useState({
-    name: JSON.parse(localStorage.getItem("userName") || '""'),
-    emailId: JSON.parse(localStorage.getItem("userEmail") || '""'),
-    age: JSON.parse(localStorage.getItem("userAge") || '""'),
-    phoneNo: JSON.parse(localStorage.getItem("userPhone") || '""'),
-    username: JSON.parse(localStorage.getItem("userUsername") || '""'),
+    name: localStorage.getItem("userName") ? JSON.parse(localStorage.getItem("userName") || '""') : "",
+    emailId: localStorage.getItem("userEmail") ? JSON.parse(localStorage.getItem("userEmail") || '""') : "",
+    age: localStorage.getItem("userAge") ? JSON.parse(localStorage.getItem("userAge") || '""') : "",
+    phoneNo: localStorage.getItem("userPhone") ? JSON.parse(localStorage.getItem("userPhone") || '""') : "",
+    username: localStorage.getItem("userUsername") ? JSON.parse(localStorage.getItem("userUsername") || '""') : "",
     profileImage: "",
     balance: 2500,
-    virtualBalance: JSON.parse(localStorage.getItem("virtualBalance") || "100000"),
+    virtualBalance: localStorage.getItem("virtualBalance") ? JSON.parse(localStorage.getItem("virtualBalance") || "100000") : 100000,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     isActive: true,
@@ -71,7 +71,8 @@ const Profile = () => {
 
   const handleUpdateStocks = async (contestId, newStocks) => {
     try {
-      const userId = Number(JSON.parse(localStorage.getItem("userId") || "0"));
+      const userIdStr = localStorage.getItem("userId");
+      const userId = userIdStr ? Number(JSON.parse(userIdStr)) : 0;
       if (!userId) {
         throw new Error("User ID not found in localStorage");
       }
