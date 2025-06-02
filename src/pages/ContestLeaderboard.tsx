@@ -6,10 +6,22 @@ import Footer from "@/components/Footer";
 import MorphCard from "@/components/ui/MorphCard";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Trophy, Medal, Award, Star, Users } from "lucide-react";
+import { ArrowLeft, Trophy, Medal, Award, Star, Users, ChevronDown, ChevronUp, Info } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { fetchContestLeaderboard, LeaderboardEntry } from "@/services/leaderboardService";
+import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface ContestDetails {
   id: string;
@@ -35,12 +47,13 @@ const ContestLeaderboard = () => {
   const [participants, setParticipants] = useState<LeaderboardEntry[]>([]);
   const [contestDetails, setContestDetails] = useState<ContestDetails | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [expandedBuckets, setExpandedBuckets] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // Fetch contest details from backend only; do not use mock data or URL params
+        // Fetch contest details from backend only; do not use mock ata or URL params
         if (!contestId) {
           setContestDetails(null);
           setParticipants([]);
@@ -235,11 +248,11 @@ const ContestLeaderboard = () => {
                 {/* Desktop Table Header */}
                 <div className="hidden md:grid md:grid-cols-12 gap-4 py-3 px-6 bg-secondary/30 text-sm font-semibold">
                   <div className="col-span-1 text-center">Rank</div>
-                  {/* <div className="col-span-3">User ID</div> */}
-                  <div className="col-span-3">Name</div>
-                  <div className="col-span-2 text-right">Return %</div>
+                  <div className="col-span-2">Name</div>
+                  <div className="col-span-2 text-right">Equity Basket Return %</div>
+                  <div className="col-span-2 text-right">Winning ROI %</div>
                   <div className="col-span-3 text-right">Bucket</div>
-                  <div className="col-span-3 text-right">Prize Money (₹)</div>
+                  <div className="col-span-2 text-right">Prize Money (₹)</div>
                 </div>
 
                 {/* Table Content */}
@@ -255,37 +268,131 @@ const ContestLeaderboard = () => {
                         {renderRankIndicator(participant.Rank)}
                       </div>
 
-                      {/* User ID */}
-                      <div className="col-span-1 md:col-span-3 flex items-center">
+                      {/* Name */}
+                      <div className="col-span-1 md:col-span-2 flex items-center">
                         <div className="flex flex-col">
                           <span className="font-medium">{participant.Name}</span>
                         </div>
                       </div>
 
-                      {/* Return % (mobile) */}
+                      {/* Mobile view for returns and ROI */}
                       <div className="col-span-1 md:hidden text-right">
-                        <div className="text-xs text-muted-foreground">Return</div>
-                        <div className="font-semibold text-green-600">
-                          +{participant.Avg.toFixed(2)}%
+                        <div className="flex flex-col gap-1">
+                          <div>
+                            <div className="text-xs text-muted-foreground">Equity Return</div>
+                            <div className={`font-semibold ${participant.Avg >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                              {participant.Avg >= 0 ? '+' : ''}{participant.Avg.toFixed(2)}%
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <div className="text-xs text-muted-foreground">ROI</div>
+                            {contestDetails?.entryFee && contestDetails.entryFee > 0 ? (
+                              <div className={`font-semibold ${participant.Prize > contestDetails.entryFee ? 'text-green-600' : participant.Prize < contestDetails.entryFee ? 'text-red-600' : 'text-yellow-600'}`}>
+                                {participant.Prize > 0 && contestDetails.entryFee > 0 ? 
+                                  `${((participant.Prize / contestDetails.entryFee - 1) * 100).toFixed(0)}%` : 
+                                  '0%'}
+                              </div>
+                            ) : (
+                              <div className="text-muted-foreground">N/A</div>
+                            )}
+                          </div>
+                          
+                          <div className="mt-1">
+                            <div className="text-xs text-muted-foreground mb-1">Stocks</div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="outline" size="sm" className="h-6 px-2 text-xs">
+                                  View {participant.Bucket.length} Stocks
+                                  <ChevronDown className="ml-1 h-3 w-3" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-2" align="end">
+                                <div className="flex flex-wrap gap-1 max-w-[250px]">
+                                  {participant.Bucket.map((stock, idx) => (
+                                    <Badge 
+                                      key={`${participant.UserId}-mobile-${stock}-${idx}`}
+                                      variant="outline" 
+                                      className="bg-secondary/30"
+                                    >
+                                      {stock}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
                         </div>
                       </div>
 
                       {/* Return % (desktop) */}
                       <div className="hidden md:block md:col-span-2 text-right self-center">
-                        <div className="font-semibold text-green-600">
-                          +{participant.Avg.toFixed(2)}%
+                        <div className={`font-semibold ${participant.Avg >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {participant.Avg >= 0 ? '+' : ''}{participant.Avg.toFixed(2)}%
                         </div>
+                      </div>
+                      
+                      {/* Winning ROI % (desktop) */}
+                      <div className="hidden md:block md:col-span-2 text-right self-center">
+                        {contestDetails?.entryFee && contestDetails.entryFee > 0 ? (
+                          <div className={`font-semibold ${participant.Prize > contestDetails.entryFee ? 'text-green-600' : participant.Prize < contestDetails.entryFee ? 'text-red-600' : 'text-yellow-600'}`}>
+                            {participant.Prize > 0 && contestDetails.entryFee > 0 ? 
+                              `${((participant.Prize / contestDetails.entryFee - 1) * 100).toFixed(0)}%` : 
+                              '0%'}
+                          </div>
+                        ) : (
+                          <div className="text-muted-foreground">N/A</div>
+                        )}
                       </div>
 
                       {/* Bucket (desktop) */}
                       <div className="hidden md:block md:col-span-3 text-right self-center">
-                        <div className="text-xs text-muted-foreground truncate">
-                          {participant.Bucket.join(", ")}
+                        <div className="flex flex-wrap justify-end gap-1">
+                          {participant.Bucket.length > 3 ? (
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="outline" size="sm" className="h-7 px-2 text-xs">
+                                  View {participant.Bucket.length} Stocks
+                                  <ChevronDown className="ml-1 h-3 w-3" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-2" align="end">
+                                <div className="flex flex-wrap gap-1 max-w-[300px]">
+                                  {participant.Bucket.map((stock, idx) => (
+                                    <TooltipProvider key={`${participant.UserId}-${stock}-${idx}`}>
+                                      <Tooltip>
+                                        <TooltipTrigger>
+                                          <Badge variant="outline" className="bg-secondary/30 hover:bg-secondary/50 cursor-default">
+                                            {stock}
+                                          </Badge>
+                                        </TooltipTrigger>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  ))}
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          ) : (
+                            participant.Bucket.map((stock, idx) => (
+                              <TooltipProvider key={`${participant.UserId}-${stock}-${idx}`}>
+                                <Tooltip>
+                                  <TooltipTrigger>
+                                    <Badge variant="outline" className="bg-secondary/30 hover:bg-secondary/50 cursor-default">
+                                      {stock}
+                                    </Badge>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>{stock}</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            ))
+                          )}
                         </div>
                       </div>
 
                       {/* Prize Money (desktop) */}
-                      <div className="hidden md:block md:col-span-3 text-right self-center">
+                      <div className="hidden md:block md:col-span-2 text-right self-center">
                         <div className="font-semibold text-gold-700">
                           ₹{participant.Prize.toFixed(2)}
                         </div>
