@@ -49,7 +49,8 @@ const ContestLeaderboard = () => {
           return;
         }
         // Fetch all competitions and find the matching contest
-        const { equityCompetitions, error } = await import('@/services/competitionsService').then(mod => mod.fetchCompetitionsData());
+        const competitionsModule = await import('@/services/competitionsService');
+        const { equityCompetitions, error } = await competitionsModule.fetchCompetitionsData();
         if (error) {
           toast.error('Failed to fetch contest details from backend.');
           setContestDetails(null);
