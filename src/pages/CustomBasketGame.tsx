@@ -97,7 +97,8 @@ const CustomBasketGame = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw { status: response.status, data: errorData };
       }
 
       const data = await response.json();
@@ -113,9 +114,21 @@ const CustomBasketGame = () => {
       }, 1500);
     } catch (error) {
       console.error("API call failed:", error);
+
+      // Extract the error message from the API response
+      let errorMessage = "Failed to join the competition. Please try again.";
+
+      // Check if the error contains the data property with the message
+      if (error && typeof error === 'object' && 'data' in error) {
+        const errorData = error.data;
+        if (errorData && errorData.data && errorData.data.message) {
+          errorMessage = errorData.data.message;
+        }
+      }
+
       toast({
         title: "Error",
-        description: "Failed to join the competition. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     }
@@ -364,15 +377,13 @@ const CustomBasketGame = () => {
                             {stock.symbol}
                           </div> */}
                           <div
-  className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-sky-500 
+                            className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-sky-500 
              group-hover:from-sky-600 group-hover:to-sky-600 transition-all duration-300 ease-in-out 
              relative inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
->
-  {stock.symbol}
-  <span
-    className="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-600 transition-all duration-300 group-hover:w-full"
-  ></span>
-</div>
+                          >
+                            {stock.symbol}
+                            <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-600 transition-all duration-300 group-hover:w-full"></span>
+                          </div>
                           <div className="text-sm text-gray-500 truncate max-w-[180px]">
                             {stock.name}
                           </div>
