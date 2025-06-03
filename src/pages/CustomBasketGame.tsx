@@ -6,7 +6,14 @@ import { Stock } from "@/components/StockSelector";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
-import { ArrowLeft, Users, TrendingUp, PlusCircle, X, IndianRupee } from "lucide-react";
+import {
+  ArrowLeft,
+  Users,
+  TrendingUp,
+  PlusCircle,
+  X,
+  IndianRupee,
+} from "lucide-react";
 import MorphCard from "@/components/ui/MorphCard";
 import { Input } from "@/components/ui/input";
 import { availableStocks } from "../../stockSymbolsData/stocks";
@@ -24,25 +31,32 @@ const CustomBasketGame = () => {
   const pageSize = 6;
 
   // Parse competition data from URL parameters
-  const competitionId = searchParams.get('id') || '';
+  const competitionId = searchParams.get("id") || "";
   const competitionData = {
     id: competitionId,
-    title: searchParams.get('name') || "Weekly Competition Challenge",
-    description: searchParams.get('description') || "Select stocks you believe will outperform.",
-    entryFee: parseInt(searchParams.get('entryFee') || "0", 10),
-    prizePool: parseInt(searchParams.get('prizePool') || "0", 10),
-    participants: parseInt(searchParams.get('currentParticipants') || "0", 10),
-    maxParticipants: parseInt(searchParams.get('maxParticipants') || "0", 10),
-    startDate: new Date(searchParams.get('startDate') || new Date().toISOString()).toISOString(),
-    endDate: new Date(searchParams.get('endDate') || new Date().toISOString()).toISOString(),
+    title: searchParams.get("name") || "Weekly Competition Challenge",
+    description:
+      searchParams.get("description") ||
+      "Select stocks you believe will outperform.",
+    entryFee: parseInt(searchParams.get("entryFee") || "0", 10),
+    prizePool: parseInt(searchParams.get("prizePool") || "0", 10),
+    participants: parseInt(searchParams.get("currentParticipants") || "0", 10),
+    maxParticipants: parseInt(searchParams.get("maxParticipants") || "0", 10),
+    startDate: new Date(
+      searchParams.get("startDate") || new Date().toISOString()
+    ).toISOString(),
+    endDate: new Date(
+      searchParams.get("endDate") || new Date().toISOString()
+    ).toISOString(),
     maxSelectionsAllowed: 5, // This seems to be fixed at 5 stocks
-    currencyType: searchParams.get('currencyType') || "virtual"
+    currencyType: searchParams.get("currencyType") || "virtual",
   };
 
   const filteredStocks = useMemo(() => {
-    return availableStocks.filter(stock =>
-      stock.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      stock.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+    return availableStocks.filter(
+      (stock) =>
+        stock.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        stock.symbol.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [searchQuery]);
 
@@ -55,7 +69,7 @@ const CustomBasketGame = () => {
       toast({
         title: "Selection Incomplete",
         description: `Please select ${competitionData.maxSelectionsAllowed} stocks for your basket.`,
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -63,20 +77,22 @@ const CustomBasketGame = () => {
     const userId = Number(JSON.parse(localStorage.getItem("userId") || "0"));
     console.log("userId = ", userId);
 
-    const contestId = Number.isNaN(Number(competitionId)) ? 4 : Number(competitionId);
+    const contestId = Number.isNaN(Number(competitionId))
+      ? 4
+      : Number(competitionId);
 
     try {
-      const apiPath = BACKEND_HOST + 'enterCustomCompetition';
+      const apiPath = BACKEND_HOST + "enterCustomCompetition";
       const response = await fetch(apiPath, {
-        method: 'POST',
+        method: "POST",
         credentials: "include",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           user_id: userId,
           contest_id: contestId,
-          stocks_in_basket: selectedStocks.map(stock => stock.symbol),
+          stocks_in_basket: selectedStocks.map((stock) => stock.symbol),
         }),
       });
 
@@ -95,13 +111,12 @@ const CustomBasketGame = () => {
       setTimeout(() => {
         navigate(`/competition-confirmation`);
       }, 1500);
-
     } catch (error) {
       console.error("API call failed:", error);
       toast({
         title: "Error",
         description: "Failed to join the competition. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
@@ -111,16 +126,16 @@ const CustomBasketGame = () => {
       toast({
         title: "Maximum Selections Reached",
         description: `You can only select ${competitionData.maxSelectionsAllowed} stocks.`,
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
-    if (selectedStocks.some(s => s.symbol === stock.symbol)) {
+    if (selectedStocks.some((s) => s.symbol === stock.symbol)) {
       toast({
         title: "Stock Already Selected",
         description: `You have already selected ${stock.name}.`,
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -131,7 +146,9 @@ const CustomBasketGame = () => {
   };
 
   const handleRemoveStock = (stockId: string) => {
-    const newSelections = selectedStocks.filter(stock => stock.symbol !== stockId);
+    const newSelections = selectedStocks.filter(
+      (stock) => stock.symbol !== stockId
+    );
     setSelectedStocks(newSelections);
     handleStockSelectionsChange(newSelections);
   };
@@ -146,7 +163,7 @@ const CustomBasketGame = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      <main className="flex-grow pt-28 pb-16">
+      <main className="flex-grow pt-32 pb-16">
         <div className="container px-4 md:px-6 mx-auto">
           <Button
             variant="ghost"
@@ -158,10 +175,14 @@ const CustomBasketGame = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-8">
-              <h1 className="text-3xl font-bold mb-4">{competitionData.title}</h1>
-              <p className="text-muted-foreground mb-8">{competitionData.description}</p>
+              <h1 className="text-3xl font-bold mb-4">
+                {competitionData.title}
+              </h1>
+              <p className="text-muted-foreground mb-8">
+                {competitionData.description}
+              </p>
 
-              <div className="space-y-8">
+              {/* <div className="space-y-8">
                 <Input
                   type="search"
                   placeholder="Search for a stock..."
@@ -243,6 +264,146 @@ const CustomBasketGame = () => {
                     Join Competition for ₹{competitionData.entryFee}
                   </Button>
                 </div>
+              </div> */}
+
+              <div className="space-y-6 px-4 py-6 bg-gradient-to-br from-white via-slate-50 to-slate-100 rounded-xl border border-gray-200 shadow-sm">
+                {/* Search Input */}
+                <Input
+                  type="search"
+                  placeholder="Search for a stock..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="rounded-lg py-2 px-4 shadow-sm border border-gray-300 focus:ring-2 focus:ring-blue-500 transition"
+                />
+
+                {/* Futuristic Progress Bar */}
+                <div className="relative h-2 rounded-full overflow-hidden bg-gray-200">
+                  <div
+                    className="absolute h-full bg-gradient-to-r from-blue-300 via-purple-400 to-blue-300 transition-all duration-500"
+                    style={{
+                      width: `${(selectedStocks.length / competitionData.maxSelectionsAllowed) * 100}%`,
+                    }}
+                  />
+                </div>
+
+                {/* Stock List */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  {paginatedStocks.map((stock) => (
+                    <MorphCard
+                      key={stock.id}
+                      className="group flex items-center justify-between px-4 py-3 bg-white rounded-xl border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all duration-300"
+                    >
+                      <div>
+                        <div className="text-lg font-medium text-gray-900 group-hover:text-blue-600 transition">
+                          {stock.symbol}
+                        </div>
+                        <div className="text-sm text-gray-500 truncate max-w-[180px]">
+                          {stock.name}
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 rounded-full hover:bg-blue-100 hover:text-blue-600 transition"
+                        onClick={() => handleAddStock(stock)}
+                      >
+                        <PlusCircle className="h-4 w-4" />
+                      </Button>
+                    </MorphCard>
+                  ))}
+                </div>
+
+                {/* Pagination Controls */}
+                <div className="flex justify-between items-center">
+                  <Button
+                    variant="outline"
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                    className="rounded-md text-gray-700 border-gray-300 hover:bg-gray-100"
+                  >
+                    Previous
+                  </Button>
+
+                  <span className="text-sm text-gray-500">
+                    Page{" "}
+                    <span className="font-medium text-gray-800">
+                      {currentPage}
+                    </span>{" "}
+                    of{" "}
+                    <span className="font-medium text-gray-800">
+                      {totalPages}
+                    </span>
+                  </span>
+
+                  <Button
+                    variant="outline"
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                    className="rounded-md text-gray-700 border-gray-300 hover:bg-gray-100"
+                  >
+                    Next
+                  </Button>
+                </div>
+
+                {/* Selection Count */}
+                <div className="text-sm text-gray-500 text-center">
+                  {selectedStocks.length} of{" "}
+                  {competitionData.maxSelectionsAllowed} stocks selected
+                </div>
+
+                {/* Selected Stocks */}
+                {selectedStocks.length > 0 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {selectedStocks.map((stock) => (
+                      <MorphCard
+                        key={stock.id}
+                        className="group flex items-center justify-between px-4 py-3 bg-gradient-to-tr from-sky-100 to-white rounded-xl border border-gray-200 hover:border-sky-400 hover:shadow-md transition"
+                      >
+                        <div>
+                          {/* <div className="text-lg font-medium text-sky-600 group-hover:text-sky-700 transition">
+                            {stock.symbol}
+                          </div> */}
+                          <div
+  className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-sky-500 
+             group-hover:from-sky-600 group-hover:to-sky-600 transition-all duration-300 ease-in-out 
+             relative inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+>
+  {stock.symbol}
+  <span
+    className="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-600 transition-all duration-300 group-hover:w-full"
+  ></span>
+</div>
+                          <div className="text-sm text-gray-500 truncate max-w-[180px]">
+                            {stock.name}
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 rounded-full hover:bg-pink-100 hover:text-pink-600 transition"
+                          onClick={() => handleRemoveStock(stock.id)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </MorphCard>
+                    ))}
+                  </div>
+                )}
+
+                {/* Join Button */}
+                <div>
+                  <Button
+                    size="lg"
+                    className="w-full md:w-auto bg-gradient-to-r from-blue-300 to-blue-400 text-blue-800 rounded-full px-6 py-3 shadow hover:opacity-90 transition"
+                    onClick={handleJoinCompetition}
+                    disabled={
+                      selectedStocks.length <
+                      competitionData.maxSelectionsAllowed
+                    }
+                  >
+                    <p>🚀 Join Competition for ₹{competitionData.entryFee}</p>
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -261,20 +422,30 @@ const CustomBasketGame = () => {
                   <div className="flex items-start gap-3">
                     <IndianRupee className="h-5 w-5 text-primary mt-1" />
                     <div>
-                      <p className="text-sm text-muted-foreground">Prize Pool</p>
+                      <p className="text-sm text-muted-foreground">
+                        Prize Pool
+                      </p>
                       <p className="text-sm text-foreground font-medium leading-snug">
-                        {competitionData.prizePool > 0 ? 
-                          `₹${competitionData.prizePool.toLocaleString()}` :
-                          <span className="font-semibold">number of players × entry fee</span>
-                        }
+                        {competitionData.prizePool > 0 ? (
+                          `₹${competitionData.prizePool.toLocaleString()}`
+                        ) : (
+                          <span className="font-semibold">
+                            number of players × entry fee
+                          </span>
+                        )}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center">
                     <Users className="h-5 w-5 text-mint-600 mr-2" />
                     <div>
-                      <p className="text-sm text-muted-foreground">Participants</p>
-                      <p className="font-medium">{competitionData.participants}/{competitionData.maxParticipants || '∞'}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Participants
+                      </p>
+                      <p className="font-medium">
+                        {competitionData.participants}/
+                        {competitionData.maxParticipants || "∞"}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center">
@@ -282,23 +453,35 @@ const CustomBasketGame = () => {
                     <div>
                       <p className="text-sm text-muted-foreground">Duration</p>
                       <p className="font-medium">
-                        {new Date(competitionData.startDate).toLocaleDateString()} - {new Date(competitionData.endDate).toLocaleDateString()}
+                        {new Date(
+                          competitionData.startDate
+                        ).toLocaleDateString()}{" "}
+                        -{" "}
+                        {new Date(competitionData.endDate).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center">
                     <TrendingUp className="h-5 w-5 text-gold-500 mr-2" />
                     <div>
-                      <p className="text-sm text-muted-foreground">Selection Requirement</p>
-                      <p className="font-medium">{competitionData.maxSelectionsAllowed} stocks</p>
+                      <p className="text-sm text-muted-foreground">
+                        Selection Requirement
+                      </p>
+                      <p className="font-medium">
+                        {competitionData.maxSelectionsAllowed} stocks
+                      </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center">
                     <IndianRupee className="h-5 w-5 text-blue-500 mr-2" />
                     <div>
-                      <p className="text-sm text-muted-foreground">Currency Type</p>
-                      <p className="font-medium capitalize">{competitionData.currencyType}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Currency Type
+                      </p>
+                      <p className="font-medium capitalize">
+                        {competitionData.currencyType}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -308,8 +491,9 @@ const CustomBasketGame = () => {
                 <div className="space-y-2">
                   <h3 className="font-medium">How Scoring Works</h3>
                   <p className="text-sm text-muted-foreground">
-                    Your score is calculated based on the average percentage return of your selected
-                    stocks over the competition period. The higher the return, the higher your ranking.
+                    Your score is calculated based on the average percentage
+                    return of your selected stocks over the competition period.
+                    The higher the return, the higher your ranking.
                   </p>
                 </div>
 
