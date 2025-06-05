@@ -12,6 +12,7 @@ import PolyContestHeader from "@/components/competitions/poly/detail/PolyContest
 import PolyContestChart from "@/components/competitions/poly/detail/PolyContestChart";
 import PolyPredictionPool from "@/components/competitions/poly/detail/PolyPredictionPool";
 import PolyBetPlacement from "@/components/competitions/poly/detail/PolyBetPlacement";
+import AISummaryView from "@/components/competitions/poly/detail/AISummaryView";
 
 const PolyContestDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -229,6 +230,9 @@ const PolyContestDetail = () => {
                   yesPrice={contest.yes_price}
                   noPrice={contest.no_price}
                 />
+                
+ 
+                <AISummaryView contest={contest} priceHistory={priceHistory}/>
               </div>
               
               <div className="lg:col-span-1">
