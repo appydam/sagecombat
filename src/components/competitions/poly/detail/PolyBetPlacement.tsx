@@ -75,60 +75,77 @@ const PolyBetPlacement = ({
   };
 
   return (
-    <Card className="p-6">
-      <h3 className="font-semibold mb-4">Place Your Order</h3>
+    <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm">
+      <div className="p-5 space-y-4">
+        <h3 className="text-lg font-semibold text-gray-900 tracking-tight">Place Order</h3>
 
-      <Tabs
-        defaultValue="buy"
-        value={orderType}
-        onValueChange={(value) => setOrderType(value as "buy" | "sell")}
-        className="mb-6"
-      >
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="buy" className="data-[state=active]:bg-green-600 data-[state=active]:text-white">
-            Buy
-          </TabsTrigger>
-          <TabsTrigger value="sell" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
-            Sell
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
-
-      <div className="mb-6">
-        <p className="text-sm text-muted-foreground mb-2">I think this will happen:</p>
-
-        <RadioGroup
-          value={selectedOutcome ? "yes" : "no"}
-          onValueChange={(value) => setSelectedOutcome(value === "yes")}
-          className="grid grid-cols-2 gap-4"
+        <Tabs
+          defaultValue="buy"
+          value={orderType}
+          onValueChange={(value) => setOrderType(value as "buy" | "sell")}
         >
-          <div className={`flex items-center justify-center gap-2 h-12 rounded-md border ${selectedOutcome
-            ? "bg-gradient-to-r from-green-600 to-green-500 border-green-600 text-white"
-            : "border-green-600 text-green-700 hover:bg-green-50"
-            } cursor-pointer`}>
-            <RadioGroupItem value="yes" id="place-yes" className="sr-only" />
-            <label htmlFor="place-yes" className="flex items-center w-full h-full justify-center cursor-pointer">
-              <CheckCircle className="h-4 w-4 mr-2" />
-              YES
-            </label>
-          </div>
+          <TabsList className="grid w-full grid-cols-2 bg-gray-100 p-1 h-10 rounded-lg">
+            <TabsTrigger 
+              value="buy" 
+              className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-sm font-medium transition-all duration-200"
+            >
+              Buy
+            </TabsTrigger>
+            <TabsTrigger 
+              value="sell" 
+              className="data-[state=active]:bg-rose-600 data-[state=active]:text-white data-[state=active]:shadow-sm font-medium transition-all duration-200"
+            >
+              Sell
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
 
-          <div className={`flex items-center justify-center gap-2 h-12 rounded-md border ${!selectedOutcome
-            ? "bg-gradient-to-r from-red-600 to-red-500 border-red-600 text-white"
-            : "border-red-600 text-red-700 hover:bg-red-50"
-            } cursor-pointer`}>
-            <RadioGroupItem value="no" id="place-no" className="sr-only" />
-            <label htmlFor="place-no" className="flex items-center w-full h-full justify-center cursor-pointer">
-              <XCircle className="h-4 w-4 mr-2" />
-              NO
-            </label>
-          </div>
-        </RadioGroup>
-      </div>
+        <div className="space-y-3">
+          <p className="text-sm font-medium text-gray-700">Outcome</p>
+          <RadioGroup
+            value={selectedOutcome ? "yes" : "no"}
+            onValueChange={(value) => setSelectedOutcome(value === "yes")}
+            className="grid grid-cols-2 gap-3"
+          >
+            <div className={`relative flex items-center justify-center h-11 rounded-lg border-2 transition-all duration-200 cursor-pointer group ${selectedOutcome
+              ? "bg-emerald-600 border-emerald-600 text-white shadow-md"
+              : "border-emerald-200 text-emerald-700 hover:border-emerald-300 hover:bg-emerald-50"
+              }`}>
+              <RadioGroupItem value="yes" id="place-yes" className="sr-only" />
+              <label htmlFor="place-yes" className="flex items-center w-full h-full justify-center cursor-pointer font-medium">
+                <CheckCircle className="h-4 w-4 mr-2" />
+                YES
+              </label>
+            </div>
 
-      <div className="mb-4">
-        <p className="text-sm text-muted-foreground mb-2">Price:</p>
-        <div className="flex items-center border rounded-md overflow-hidden">
+            <div className={`relative flex items-center justify-center h-11 rounded-lg border-2 transition-all duration-200 cursor-pointer group ${!selectedOutcome
+              ? "bg-rose-600 border-rose-600 text-white shadow-md"
+              : "border-rose-200 text-rose-700 hover:border-rose-300 hover:bg-rose-50"
+              }`}>
+              <RadioGroupItem value="no" id="place-no" className="sr-only" />
+              <label htmlFor="place-no" className="flex items-center w-full h-full justify-center cursor-pointer font-medium">
+                <XCircle className="h-4 w-4 mr-2" />
+                NO
+              </label>
+            </div>
+          </RadioGroup>
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-medium text-gray-700">Price</p>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500">Current: {selectedOutcome ? yesPrice.toFixed(2) : noPrice.toFixed(2)}</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 px-2 text-xs text-gray-600 hover:text-gray-900"
+                onClick={() => setPrice((selectedOutcome ? yesPrice : noPrice).toString())}
+              >
+                Use current
+              </Button>
+            </div>
+          </div>
           <Input
             type="number"
             min={0.01}
@@ -136,128 +153,121 @@ const PolyBetPlacement = ({
             step={0.01}
             value={price}
             onChange={handlePriceChange}
-            className="h-9 text-center"
+            className="h-10 text-center border-gray-200 focus:border-gray-400 focus:ring-0"
           />
         </div>
-        <div className="flex justify-between items-center mt-1">
-          <span className="text-xs text-muted-foreground">Current: {selectedOutcome ? yesPrice.toFixed(2) : noPrice.toFixed(2)}</span>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-6 px-2 py-0 text-xs"
-            onClick={() => setPrice((selectedOutcome ? yesPrice : noPrice).toString())}
-          >
-            Use current
-          </Button>
+
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-gray-700">Quantity</p>
+          <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
+            <Button
+              type="button"
+              variant="ghost"
+              className="h-10 px-3 rounded-none border-r border-gray-200 hover:bg-gray-100"
+              onClick={handleDecreaseBet}
+            >
+              <Minus className="h-4 w-4" />
+            </Button>
+            <Input
+              type="number"
+              min={0}
+              value={quantity}
+              onChange={handleQuantityChange}
+              className="h-10 border-0 text-center bg-transparent focus:ring-0"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              className="h-10 px-3 rounded-none border-l border-gray-200 hover:bg-gray-100"
+              onClick={handleIncreaseBet}
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-4 gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleQuickAdd(10)}
+              className="h-8 text-xs border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+            >
+              <Plus className="h-3 w-3 mr-1" />
+              10
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleQuickAdd(50)}
+              className="h-8 text-xs border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+            >
+              <Plus className="h-3 w-3 mr-1" />
+              50
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleQuickAdd(100)}
+              className="h-8 text-xs border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+            >
+              <Plus className="h-3 w-3 mr-1" />
+              100
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleQuickAdd(500)}
+              className="h-8 text-xs border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+            >
+              <Plus className="h-3 w-3 mr-1" />
+              500
+            </Button>
+          </div>
         </div>
+
+        <div className="bg-gray-50 rounded-xl p-4 space-y-3 border border-gray-100">
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">Order type</span>
+              <span className="font-semibold text-gray-900 capitalize">{orderType} {selectedOutcome ? "YES" : "NO"}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">Quantity</span>
+              <span className="font-semibold text-gray-900">{quantity}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">Price per share</span>
+              <span className="font-semibold text-gray-900">₹{(() => { const num = parseFloat(price); return (!price || isNaN(num) || num <= 0 || num >= 1) ? "--" : num.toFixed(2); })()}</span>
+            </div>
+          </div>
+          <div className="pt-2 border-t border-gray-200 space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">
+                {orderType === "buy" ? "Potential value if YES wins" : "You receive"}
+              </span>
+              <span className="font-bold text-emerald-600">₹{calculatePotentialValue()}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">
+                {orderType === "buy" ? "Cost" : "Maximum loss"}
+              </span>
+              <span className="font-bold text-rose-600">₹{calculateRisk()}</span>
+            </div>
+          </div>
+        </div>
+
+        <Button
+          className="w-full h-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 rounded-lg"
+          onClick={() => {
+            const num = parseFloat(price);
+            if (!price || isNaN(num) || num <= 0 || num >= 1) return;
+            onPlaceOrder(selectedOutcome, orderType, num, quantity);
+          }}
+          disabled={isSubmitting || !price || isNaN(parseFloat(price)) || parseFloat(price) <= 0 || parseFloat(price) >= 1}
+        >
+          {isSubmitting ? "Processing..." : `${orderType === "buy" ? "Buy" : "Sell"} ${selectedOutcome ? "YES" : "NO"}`}
+        </Button>
       </div>
-
-      <div className="mb-6">
-        <p className="text-sm text-muted-foreground mb-2">Quantity:</p>
-        <div className="flex items-center border rounded-md overflow-hidden">
-          <Button
-            type="button"
-            variant="ghost"
-            className="h-9 px-2 rounded-none border-r"
-            onClick={handleDecreaseBet}
-          >
-            <Minus className="h-4 w-4" />
-          </Button>
-          <Input
-            type="number"
-            min={0}
-            value={quantity}
-            onChange={handleQuantityChange}
-            className="h-9 border-0 text-center"
-          />
-          <Button
-            type="button"
-            variant="ghost"
-            className="h-9 px-2 rounded-none border-l"
-            onClick={handleIncreaseBet}
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-4 gap-2 mt-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleQuickAdd(10)}
-            className="text-xs"
-          >
-            <Plus className="h-3.5 w-3.5 mr-1" />
-            10
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleQuickAdd(50)}
-            className="text-xs"
-          >
-            <Plus className="h-3.5 w-3.5 mr-1" />
-            50
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleQuickAdd(100)}
-            className="text-xs"
-          >
-            <Plus className="h-3.5 w-3.5 mr-1" />
-            100
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleQuickAdd(500)}
-            className="text-xs"
-          >
-            <Plus className="h-3.5 w-3.5 mr-1" />
-            500
-          </Button>
-        </div>
-      </div>
-
-      <div className="bg-secondary/30 rounded-lg p-4 mb-6">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-muted-foreground">Order type:</span>
-          <span className="font-medium capitalize">{orderType} {selectedOutcome ? "YES" : "NO"}</span>
-        </div>
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-muted-foreground">Quantity:</span>
-          <span className="font-medium">{quantity}</span>
-        </div>
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-muted-foreground">Price per share:</span>
-          <span className="font-medium">₹{(() => { const num = parseFloat(price); return (!price || isNaN(num) || num <= 0 || num >= 1) ? "--" : num.toFixed(2); })()}</span>
-        </div>
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-muted-foreground">
-            {orderType === "buy" ? "Potential value if YES wins:" : "You receive:"}
-          </span>
-          <span className="font-semibold text-green-600">₹{calculatePotentialValue()}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-muted-foreground">
-            {orderType === "buy" ? "Cost:" : "Maximum loss:"}
-          </span>
-          <span className="font-semibold text-red-600">₹{calculateRisk()}</span>
-        </div>
-      </div>
-
-      <Button
-        className="w-full h-12 bg-gradient-to-r from-amber-500 to-amber-400"
-        onClick={() => {
-          const num = parseFloat(price);
-          if (!price || isNaN(num) || num <= 0 || num >= 1) return;
-          onPlaceOrder(selectedOutcome, orderType, num, quantity);
-        }}
-        disabled={isSubmitting || !price || isNaN(parseFloat(price)) || parseFloat(price) <= 0 || parseFloat(price) >= 1}
-      >
-        {isSubmitting ? "Processing..." : `${orderType === "buy" ? "Buy" : "Sell"} ${selectedOutcome ? "YES" : "NO"}`}
-      </Button>
     </Card>
   );
 };
