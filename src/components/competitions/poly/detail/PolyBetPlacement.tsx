@@ -31,8 +31,8 @@ const PolyBetPlacement = ({
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
-    if (isNaN(value) || value < 10) {
-      setQuantity(10);
+    if (isNaN(value)) {
+      setQuantity(null);
     } else {
       setQuantity(value);
     }
@@ -165,7 +165,7 @@ const PolyBetPlacement = ({
           </Button>
           <Input
             type="number"
-            min={10}
+            min={0}
             value={quantity}
             onChange={handleQuantityChange}
             className="h-9 border-0 text-center"

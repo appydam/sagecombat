@@ -351,7 +351,7 @@ const MoneyManagementDialogs = ({
               onClick={handleDeposit} 
               disabled={depositStatus === 'processing' || !depositAmount || isNaN(parseFloat(depositAmount)) || parseFloat(depositAmount) <= 0}
             >
-              {depositStatus === 'processing' ? 'Processing...' : 'Pay Now'}
+              {depositStatus === 'processing' ? 'Processing...' : 'Deposit'}
             </Button>
           </DialogFooter>
           <div className="flex justify-center mt-4">

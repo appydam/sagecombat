@@ -32,7 +32,7 @@ const Footer = () => {
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
                 <Linkedin className="h-5 w-5" />
               </a>
-              <a href="mailto:appydam@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="mailto:contact@sagecombat.com" className="text-muted-foreground hover:text-primary transition-colors">
                 <Mail className="h-5 w-5" />
               </a>
             </div>

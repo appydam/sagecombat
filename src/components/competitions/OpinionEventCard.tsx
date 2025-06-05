@@ -81,7 +81,10 @@ const OpinionEventCard = ({ event, onAnswerSubmitted }: OpinionEventCardProps) =
         <div>
           <div className="flex items-center gap-2 mb-1 flex-wrap">
             <Badge variant="outline">{event.category}</Badge>
-            <Badge variant={event.status === "active" ? "default" : "secondary"}>
+            <Badge
+            variant={event.status === "active" ? "default" : "secondary"}
+            className={event.status === "active" ? "bg-green-600" : ""}
+            >
               {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
             </Badge>
             <Badge variant="outline" className={event.currency_type === "real" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}>
@@ -113,9 +116,9 @@ const OpinionEventCard = ({ event, onAnswerSubmitted }: OpinionEventCardProps) =
             <span className="text-destructive font-medium">No: {event.currentPool.no} people</span>
           </div>
 
-          <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
+          <div className="w-full h-2 bg-red-400 rounded-full overflow-hidden">
             <div
-              className="h-full bg-primary transition-all duration-300"
+              className="h-full bg-green-500 transition-all duration-300"
               style={{ width: `${event.participants > 0 ? (event.currentPool.yes / event.participants) * 100 : 50}%` }}
             />
           </div>
