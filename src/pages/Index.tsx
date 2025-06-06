@@ -196,11 +196,11 @@ const Index = () => {
         {/* How SageCombat Works Section */}
         <section className="py-16 bg-gradient-to-b from-background to-secondary/10">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-2xl font-bold font-display mt-24 mb-8 text-primary">How SageCombat Works</h2>
+            {/* <h2 className="text-2xl font-bold font-display mt-24 mb-8 text-primary">How SageCombat Works</h2> */}
             <Button 
               size="lg" 
-              className="rounded-full px-6 py-6 text-lg bg-gradient-to-r from-slate-400 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out"
-              onClick={() => navigate('/how-it-works')}
+              className="mt-20 rounded-full px-6 py-6 text-lg bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 text-white shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out"
+              onClick={() => { navigate('/how-it-works'); window.scrollTo(0, 0); }}
             >
               Discover the Mechanics <ArrowRight className="ml-2 h-5 w-5" />
             </Button>

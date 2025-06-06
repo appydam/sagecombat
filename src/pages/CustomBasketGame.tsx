@@ -13,12 +13,15 @@ import {
   PlusCircle,
   X,
   IndianRupee,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import MorphCard from "@/components/ui/MorphCard";
 import { Input } from "@/components/ui/input";
 import { availableStocks } from "../../stockSymbolsData/stocks";
 import { BACKEND_HOST } from "@/constants/config";
 import { Calendar } from "lucide-react";
+import SelectedStocksNewsSummary from '@/components/SelectedStocksNewsSummary';
 import { toast } from "sonner";
 
 const CustomBasketGame = () => {
@@ -180,7 +183,7 @@ const CustomBasketGame = () => {
         <div className="container px-4 md:px-6 mx-auto">
           <Button
             variant="ghost"
-            className="mb-6"
+            className="mb-4"
             onClick={() => navigate("/competitions")}
           >
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Competitions
@@ -188,10 +191,10 @@ const CustomBasketGame = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-8">
-              <h1 className="text-3xl font-bold mb-4">
+              <h1 className="text-3xl font-bold mb-2">
                 {competitionData.title}
               </h1>
-              <p className="text-muted-foreground mb-8">
+              <p className="text-muted-foreground mb-4">
                 {competitionData.description}
               </p>
 
@@ -279,143 +282,136 @@ const CustomBasketGame = () => {
                 </div>
               </div> */}
 
-              <div className="space-y-6 px-4 py-6 bg-gradient-to-br from-white via-slate-50 to-slate-100 rounded-xl border border-gray-200 shadow-sm">
-                {/* Search Input */}
-                <Input
-                  type="search"
-                  placeholder="Search for a stock..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="rounded-lg py-2 px-4 shadow-sm border border-gray-300 focus:ring-2 focus:ring-blue-500 transition"
-                />
 
-                {/* Futuristic Progress Bar */}
-                <div className="relative h-2 rounded-full overflow-hidden bg-gray-200">
-                  <div
-                    className="absolute h-full bg-gradient-to-r from-blue-300 via-purple-400 to-blue-300 transition-all duration-500"
-                    style={{
-                      width: `${(selectedStocks.length / competitionData.maxSelectionsAllowed) * 100}%`,
-                    }}
-                  />
-                </div>
 
-                {/* Stock List */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  {paginatedStocks.map((stock) => (
-                    <MorphCard
-                      key={stock.id}
-                      className="group flex items-center justify-between px-4 py-3 bg-white rounded-xl border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all duration-300"
-                    >
-                      <div>
-                        <div className="text-lg font-medium text-gray-900 group-hover:text-blue-600 transition">
-                          {stock.symbol}
-                        </div>
-                        <div className="text-sm text-gray-500 truncate max-w-[180px]">
-                          {stock.name}
-                        </div>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 rounded-full hover:bg-blue-100 hover:text-blue-600 transition"
-                        onClick={() => handleAddStock(stock)}
-                      >
-                        <PlusCircle className="h-4 w-4" />
-                      </Button>
-                    </MorphCard>
-                  ))}
-                </div>
+<div className="space-y-5 px-3 py-4 bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 shadow-md">
 
-                {/* Pagination Controls */}
-                <div className="flex justify-between items-center">
-                  <Button
-                    variant="outline"
-                    disabled={currentPage === 1}
-                    onClick={() => setCurrentPage(currentPage - 1)}
-                    className="rounded-md text-gray-700 border-gray-300 hover:bg-gray-100"
-                  >
-                    Previous
-                  </Button>
+{/* Search Input */}
+<Input
+  type="search"
+  placeholder="🔍 Search for a stock..."
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  className="rounded-md py-1.5 px-3 text-sm shadow-inner border border-gray-300 focus:ring-2 focus:ring-purple-400 placeholder:text-slate-400"
+/>
 
-                  <span className="text-sm text-gray-500">
-                    Page{" "}
-                    <span className="font-medium text-gray-800">
-                      {currentPage}
-                    </span>{" "}
-                    of{" "}
-                    <span className="font-medium text-gray-800">
-                      {totalPages}
-                    </span>
-                  </span>
+{/* Progress Bar */}
+<div className="relative h-1.5 rounded-full overflow-hidden bg-slate-200">
+  <div
+    className="absolute h-full bg-gradient-to-r from-purple-300 via-indigo-400 to-purple-300 transition-all duration-500"
+    style={{
+      width: `${(selectedStocks.length / competitionData.maxSelectionsAllowed) * 100}%`,
+    }}
+  />
+</div>
 
-                  <Button
-                    variant="outline"
-                    disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(currentPage + 1)}
-                    className="rounded-md text-gray-700 border-gray-300 hover:bg-gray-100"
-                  >
-                    Next
-                  </Button>
-                </div>
+{/* Stock List */}
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+  {paginatedStocks.map((stock) => (
+    <MorphCard
+      key={stock.id}
+      className="group flex items-center justify-between px-3 py-2.5 bg-white/90 backdrop-blur-md rounded-lg border border-slate-200 hover:border-indigo-500 hover:shadow-sm transition-all"
+    >
+      <div>
+        <div className="text-base font-semibold text-slate-800 group-hover:text-indigo-600 transition">
+          {stock.symbol}
+        </div>
+        <div className="text-xs text-gray-500 truncate max-w-[160px]">
+          {stock.name}
+        </div>
+      </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-7 w-7 rounded-full hover:bg-indigo-100 hover:text-indigo-600 transition"
+        onClick={() => handleAddStock(stock)}
+      >
+        <PlusCircle className="h-3.5 w-3.5" />
+      </Button>
+    </MorphCard>
+  ))}
+</div>
 
-                {/* Selection Count */}
-                <div className="text-sm text-gray-500 text-center">
-                  {selectedStocks.length} of{" "}
-                  {competitionData.maxSelectionsAllowed} stocks selected
-                </div>
+{/* Pagination */}
+<div className="flex justify-between items-center text-sm text-slate-600">
+  <Button
+    variant="outline"
+    disabled={currentPage === 1}
+    onClick={() => setCurrentPage(currentPage - 1)}
+    className="px-2 py-1 rounded-md border-slate-300 hover:bg-slate-100 flex items-center"
+  >
+    <ChevronLeft className="h-4 w-4 mr-1" />
+    Previous
+  </Button>
+  <span>
+    Page <span className="font-semibold text-slate-800">{currentPage}</span> of{" "}
+    <span className="font-semibold text-slate-800">{totalPages}</span>
+  </span>
+  <Button
+    variant="outline"
+    disabled={currentPage === totalPages}
+    onClick={() => setCurrentPage(currentPage + 1)}
+    className="px-2 py-1 rounded-md border-slate-300 hover:bg-slate-100 flex items-center"
+  >
+    Next
+    <ChevronRight className="h-4 w-4 ml-1" />
+  </Button>
+</div>
 
-                {/* Selected Stocks */}
-                {selectedStocks.length > 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                    {selectedStocks.map((stock) => (
-                      <MorphCard
-                        key={stock.id}
-                        className="group flex items-center justify-between px-4 py-3 bg-gradient-to-tr from-sky-100 to-white rounded-xl border border-gray-200 hover:border-sky-400 hover:shadow-md transition"
-                      >
-                        <div>
-                          {/* <div className="text-lg font-medium text-sky-600 group-hover:text-sky-700 transition">
-                            {stock.symbol}
-                          </div> */}
-                          <div
-                            className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-sky-500 
-             group-hover:from-sky-600 group-hover:to-sky-600 transition-all duration-300 ease-in-out 
-             relative inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
-                          >
-                            {stock.symbol}
-                            <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-sky-600 transition-all duration-300 group-hover:w-full"></span>
-                          </div>
-                          <div className="text-sm text-gray-500 truncate max-w-[180px]">
-                            {stock.name}
-                          </div>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 rounded-full hover:bg-pink-100 hover:text-pink-600 transition"
-                          onClick={() => handleRemoveStock(stock.id)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </MorphCard>
-                    ))}
-                  </div>
-                )}
+{/* Selection Count */}
+<div className="text-xs text-center text-slate-500">
+  {selectedStocks.length} of {competitionData.maxSelectionsAllowed} stocks selected
+</div>
 
-                {/* Join Button */}
-                <div>
-                  <Button
-                    size="lg"
-                    className="w-full md:w-auto bg-gradient-to-r from-blue-300 to-blue-400 text-blue-800 rounded-full px-6 py-3 shadow hover:opacity-90 transition"
-                    onClick={handleJoinCompetition}
-                    disabled={
-                      selectedStocks.length <
-                      competitionData.maxSelectionsAllowed
-                    }
-                  >
-                    <p>🚀 Join Competition for ₹{competitionData.entryFee}</p>
-                  </Button>
-                </div>
-              </div>
+{/* Selected Stocks */}
+{selectedStocks.length > 0 && (
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+    {selectedStocks.map((stock) => (
+      <MorphCard
+        key={stock.id}
+        className="flex items-center px-2 py-1.5 gap-x-2 bg-gradient-to-tr from-indigo-50 to-white rounded-md border border-slate-300 hover:border-indigo-400 hover:shadow-sm transition"
+      >
+        {/* Symbol Container with strict width */}
+        <div className="w-[80px] truncate text-sm font-medium text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-indigo-400 group-hover:from-indigo-700 group-hover:to-indigo-500">
+          {stock.symbol}
+        </div>
+
+        {/* Remove Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 p-0 ml-auto shrink-0 rounded-full hover:bg-red-100 hover:text-red-500"
+          onClick={() => handleRemoveStock(stock.id)}
+        >
+          <X className="h-3 w-3" />
+        </Button>
+      </MorphCard>
+    ))}
+  </div>
+)}
+
+
+
+
+
+{/* Join Button */}
+<div>
+  <Button
+    size="sm"
+    className="w-full md:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full px-5 py-2.5 shadow-md hover:opacity-90 transition text-sm font-medium"
+    onClick={handleJoinCompetition}
+    disabled={selectedStocks.length < competitionData.maxSelectionsAllowed}
+  >
+    🚀 Join Competition for ₹{competitionData.entryFee}
+  </Button>
+</div>
+</div>
+
+{/* AI News Summary for Selected Stocks */}
+<div className="mt-6">
+  <SelectedStocksNewsSummary selectedStocks={selectedStocks} />
+</div>
+
             </div>
 
             <div className="lg:col-span-4">
