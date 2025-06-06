@@ -197,7 +197,7 @@ const SelectedStocksNewsSummary: React.FC<SelectedStocksNewsSummaryProps> = ({ s
         <CardTitle className="text-base font-semibold flex items-center">
           <Newspaper className="h-5 w-5 mr-2 text-blue-500" />
           AI Market News Snapshot
-          <Sparkles className="h-4 w-4 ml-1.5 text-purple-500 opacity-80" />
+          {/* <Sparkles className="h-4 w-4 ml-1.5 text-purple-500 opacity-80" /> */}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -206,7 +206,8 @@ const SelectedStocksNewsSummary: React.FC<SelectedStocksNewsSummaryProps> = ({ s
           disabled={selectedStocks.length === 0 || isLoading}
           className="w-full bg-gradient-to-r from-[#fdf6e3] to-[#ffd498] text-black transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md"
         >
-          {isLoading ? 'Generating...' : '✨ Generate AI News Snapshot'}
+          
+          {isLoading ? 'Generating...' : <><Sparkles className="h-4 w-4 mr-2" /> Generate AI Analysis</>}
         </Button>
 
         {!summaryVisible && (

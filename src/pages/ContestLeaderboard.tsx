@@ -213,7 +213,7 @@ const ContestLeaderboard = () => {
       <h3 className="font-medium">How Scoring Works</h3>
       <p className="text-sm text-muted-foreground">
         Your score is calculated based on the average percentage return of your selected
-        stocks over the competition period. The higher the return, the higher your ranking.
+        stocks basket over the competition period. The higher the return, the higher your ranking.
       </p>
     </div>
     <Separator className="my-4" />
@@ -221,7 +221,7 @@ const ContestLeaderboard = () => {
       <h3 className="font-medium">Prize Distribution</h3>
       <ul className="text-sm text-muted-foreground">
         <li>Exponential decay</li>
-        <li>Will add more details soon</li>
+        {/* <li>Will add more details soon</li> */}
       </ul>
     </div>
     {/* Back to Contest button with all contest details */}
