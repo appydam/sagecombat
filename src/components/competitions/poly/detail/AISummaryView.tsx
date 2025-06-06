@@ -1,39 +1,65 @@
-import { useState, useEffect, useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { PriceHistoryPoint, PolyContest } from '@/types/competitions';
-import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
-import { Sparkles } from 'lucide-react';
+import { useEffect, useState, useCallback } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
+import { Lightbulb, Sparkles } from 'lucide-react';
+import { PolyContest, PriceHistoryPoint } from '@/types/competitions';
 
 interface AISummaryViewProps {
-  contest: PolyContest | null;
+  contest: PolyContest;
   priceHistory: PriceHistoryPoint[];
 }
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const MODEL_NAME = "gemini-2.0-flash-lite"; // Or your specific "Gemini 2.0 Flash-Lite" model ID
+const MODEL_NAME = "gemini-2.0-flash-lite"; // Consistent with user's recent change
+const TYPING_SPEED_MS = 3;
+const PLACEHOLDER_MESSAGE = "Click 'Generate AI Analysis' to get insights.";
+const API_UNAVAILABLE_MESSAGE = "AI Analysis is unavailable: API Key not configured.";
+const API_ERROR_MESSAGE_PREFIX = "Failed to generate AI analysis";
+
+const decodeHtmlEntities = (html: string): string => {
+  let text = html;
+  if (typeof document !== 'undefined' && typeof window !== 'undefined') {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = html;
+    text = textarea.value;
+  } else {
+    text = text.replace(/&ast;/g, '*')
+               .replace(/&#42;/g, '*')
+               .replace(/&#x2A;/g, '*')
+               .replace(/&#x2a;/g, '*');
+    text = text.replace(/&amp;/g, '&')
+               .replace(/&lt;/g, '<')
+               .replace(/&gt;/g, '>')
+               .replace(/&quot;/g, '"')
+               .replace(/&#039;/g, "'")
+               .replace(/&#39;/g, "'");
+  }
+  return text;
+};
 
 const fetchGeminiSummary = async (contestName: string, contestDescription: string, priceData: PriceHistoryPoint[]): Promise<string> => {
   if (!API_KEY) {
     console.error("Gemini API Key not found. Please set VITE_GEMINI_API_KEY environment variable.");
-    return "AI Summary is unavailable: API Key not configured.";
+    return API_UNAVAILABLE_MESSAGE;
+  }
+  if (priceData.length < 3) { // Require some data points
+    return "Not enough price data to generate a meaningful analysis.";
   }
 
   const genAI = new GoogleGenerativeAI(API_KEY);
   const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
+  const recentPrices = priceData.slice(-10).map(p => `Date: ${new Date(p.timestamp).toLocaleDateString()}, Price: ${p.yes_price.toFixed(2)}`).join('\n');
+
   const prompt = `
-    Analyze the following contest and its recent price activity to provide a concise summary (2-3 sentences) 
-    highlighting key insights or potential trends. 
-    Focus on the interplay between the contest's subject matter and its price movements.
+    Analyze the provided market data for the prediction market contest: "${contestName}".
+    Contest Description: "${contestDescription}"
+    Recent Price Points (last 10):
+    ${recentPrices}
 
-    Contest Name: ${contestName}
-    Contest Description: ${contestDescription}
-    
-    Recent Price Data (last 10 points):
-    ${priceData.slice(-10).map(p => `Timestamp: ${new Date(p.timestamp).toLocaleString()}, Yes Price: ${p.yes_price}, No Price: ${p.no_price}`).join('\n    ')}
-
-    Provide a brief, insightful summary:
+    Provide a concise (3-5 sentences) analysis focusing on potential trends, volatility, or key price levels based *only* on the provided price history. Format the output as a brief, informative paragraph. Highlight key observations using markdown bold (e.g., **significant increase**).
   `;
 
   try {
@@ -41,9 +67,8 @@ const fetchGeminiSummary = async (contestName: string, contestDescription: strin
       temperature: 0.7,
       topK: 1,
       topP: 1,
-      maxOutputTokens: 200,
+      maxOutputTokens: 300, 
     };
-
     const safetySettings = [
       { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
       { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
@@ -51,120 +76,138 @@ const fetchGeminiSummary = async (contestName: string, contestDescription: strin
       { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
     ];
 
-    const result = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig,
-      safetySettings,
-    });
-
-    const response = result.response;
-    if (response.promptFeedback?.blockReason) {
-      console.error('Prompt blocked:', response.promptFeedback.blockReason, response.promptFeedback.safetyRatings);
-      return `AI summary generation failed due to content policy: ${response.promptFeedback.blockReason}.`;
-    }
-    if (!response.candidates || response.candidates.length === 0 || !response.candidates[0].content.parts[0].text) {
-        console.error('No content in Gemini response:', response);
+    const result = await model.generateContent({ contents: [{ role: "user", parts: [{ text: prompt }] }], generationConfig, safetySettings });
+    
+    const rawTextFromApi = result.response?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+    console.log('[AI_SUMMARY_DEBUG_POLY] Raw text from API:', JSON.stringify(rawTextFromApi));
+    if (!rawTextFromApi) {
+        console.error('No content in Gemini response for AISummaryView:', result.response);
         return 'AI summary generation failed: No content received from model.';
     }
-    return response.candidates[0].content.parts[0].text.trim();
+
+    const decodedText = decodeHtmlEntities(rawTextFromApi);
+    console.log('[AI_SUMMARY_DEBUG_POLY] After decodeHtmlEntities:', JSON.stringify(decodedText));
+
+    let processedText = decodedText.replace(/^\s*\*+\s+/gm, ''); // Remove bullets
+    console.log('[AI_SUMMARY_DEBUG_POLY] After bullet removal:', JSON.stringify(processedText));
+
+    processedText = processedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Markdown bold to HTML
+    console.log('[AI_SUMMARY_DEBUG_POLY] Final processed text:', JSON.stringify(processedText));
+
+    return processedText;
 
   } catch (error) {
-    console.error("Error calling Gemini API:", error);
-    return "Failed to generate AI summary due to an API error. Check console for details.";
+    console.error("Error calling Gemini API for AISummaryView:", error);
+    return `${API_ERROR_MESSAGE_PREFIX}: ${error instanceof Error ? error.message : 'Unknown error'}`;
   }
 };
 
-// Helper to check if price history has semantically changed (e.g., new data point)
-// Compares based on the timestamp of the last entry as a heuristic.
-const arePriceHistoriesSemanticallyEqual = (ph1: PriceHistoryPoint[] | undefined, ph2: PriceHistoryPoint[]): boolean => {
-  if (!ph1) return false; // If previous is undefined, treat as different for initial load comparison
-  if (ph1.length === 0 && ph2.length === 0) return true; // Both empty
-  if (ph1.length === 0 || ph2.length === 0) return false; // One empty, one not
-  if (ph1.length !== ph2.length) return false; // Different number of points
-
-  // Compare the last entry's timestamp and prices
-  const last1 = ph1[ph1.length - 1];
-  const last2 = ph2[ph2.length - 1];
-  return last1.timestamp === last2.timestamp && last1.yes_price === last2.yes_price && last1.no_price === last2.no_price;
-};
-
 const AISummaryView: React.FC<AISummaryViewProps> = ({ contest, priceHistory }) => {
-  const [summary, setSummary] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [summary, setSummary] = useState<string>(PLACEHOLDER_MESSAGE);
+  const [displayedSummary, setDisplayedSummary] = useState<string>(PLACEHOLDER_MESSAGE);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [summaryVisible, setSummaryVisible] = useState<boolean>(false);
 
-  const prevContestIdRef = useRef<string | undefined>();
-  const prevPriceHistoryRef = useRef<PriceHistoryPoint[] | undefined>();
-
-  useEffect(() => {
-    if (!contest || !contest.description) {
-      setSummary("Not enough information available to generate a summary.");
-      setIsLoading(false);
-      // Update refs even if no summary is generated, to reflect current state
-      prevContestIdRef.current = contest?.id;
-      prevPriceHistoryRef.current = priceHistory;
+  const handleGenerateSummary = useCallback(async () => {
+    if (!contest || priceHistory.length < 3) {
+      setError("Not enough data to generate AI summary.");
+      setSummary("Not enough data to generate AI summary."); 
+      setSummaryVisible(true);
       return;
     }
-
-    const contestChanged = prevContestIdRef.current !== contest.id;
-    const priceHistorySemanticallyChanged = !arePriceHistoriesSemanticallyEqual(prevPriceHistoryRef.current, priceHistory);
-
-    // Regenerate summary if:
-    // 1. The contest itself has changed.
-    // 2. The price history data has semantically changed.
-    // 3. There's no summary loaded yet for the current contest context (e.g., initial load or after an error).
-    if (contestChanged || priceHistorySemanticallyChanged || !summary) {
-      const generateSummary = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const contestName = contest.title;
-        const contestDescription = contest.description;
-        const summaryText = await fetchGeminiSummary(contestName, contestDescription, priceHistory);
-        setSummary(summaryText);
-        // Store the successfully processed contest ID and price history
-        prevContestIdRef.current = contest.id;
-        prevPriceHistoryRef.current = priceHistory;
-      } catch (err) {
-        console.error("Error generating AI summary:", err);
-        setError("Failed to generate AI summary. Please try again later.");
-        setSummary("Could not load AI summary.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-      generateSummary();
-    } else if (isLoading) {
-      // If no update needed but was previously loading (e.g. quick successive non-changing updates)
-      setIsLoading(false);
+    setIsLoading(true);
+    setError(null);
+    setSummaryVisible(true); 
+    try {
+      const fetchedSummary = await fetchGeminiSummary(contest.name, contest.description, priceHistory);
+      setSummary(fetchedSummary);
+    } catch (e) {
+      const errorMessage = `${API_ERROR_MESSAGE_PREFIX}: ${e instanceof Error ? e.message : 'An unknown error occurred'}`;
+      setError(errorMessage);
+      setSummary(errorMessage); 
     }
-  }, [contest, priceHistory, summary, isLoading]); // Added isLoading to dependencies to handle the else if case
+    setIsLoading(false);
+  }, [contest, priceHistory]);
+
+ useEffect(() => {
+    // Conditions to display summary directly without animation
+    if (isLoading || error || 
+        summary === PLACEHOLDER_MESSAGE || 
+        summary === API_UNAVAILABLE_MESSAGE || 
+        summary.startsWith(API_ERROR_MESSAGE_PREFIX) || 
+        summary === "Not enough price data to generate a meaningful analysis." ||
+        summary === "Not enough data to generate AI summary.") {
+      setDisplayedSummary(summary);
+      return; 
+    }
+
+    // If summary is not visible or empty, reset displayed summary or show placeholder
+    if (!summaryVisible || !summary) {
+        if (!summaryVisible) {
+            setDisplayedSummary(PLACEHOLDER_MESSAGE);
+        } else {
+            setDisplayedSummary(''); // If visible but summary is empty, show nothing before animation
+        }
+        return;
+    }
+    
+    // Start animation for actual content
+    setDisplayedSummary(''); 
+    let charIndex = 0;
+    const intervalId = setInterval(() => {
+      const currentFullSummary = typeof summary === 'string' ? summary : ''; // Ensure summary is a string
+      setDisplayedSummary(prev => currentFullSummary.substring(0, charIndex + 1));
+      charIndex++;
+      if (charIndex >= currentFullSummary.length) {
+        clearInterval(intervalId);
+      }
+    }, TYPING_SPEED_MS);
+
+    return () => clearInterval(intervalId); // Cleanup interval on unmount or dependency change
+  }, [summary, isLoading, error, summaryVisible]); // Added summaryVisible
 
   return (
-    <Card className="mt-4">
-      <CardHeader className="py-3 px-4"> {/* Reduced vertical padding, adjusted horizontal padding slightly if needed */}
-        <CardTitle className="text-base font-semibold flex items-center">
-          <Sparkles className="h-5 w-5 mr-2 text-purple-500" /> {/* Added Sparkles icon */}
-          AI Powered Insights
+    <Card className="mt-6 bg-background/80 backdrop-blur-sm border-border/40 shadow-lg">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 pt-4 px-4">
+        <CardTitle className="text-lg font-semibold flex items-center">
+          <Lightbulb className="h-5 w-5 mr-2 text-yellow-400" />
+          AI Market Analysis
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        {isLoading ? (
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
-          </div>
-        ) : error ? (
-          <p className="text-sm text-red-600">{error}</p>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            {summary}
-          </p>
+      <CardContent className="px-4 pb-4">
+        <Button 
+          onClick={handleGenerateSummary} 
+          disabled={isLoading || !priceHistory || priceHistory.length < 3} 
+          className="w-full mb-4 bg-gradient-to-r from-[#fdf6e3] to-[#ffd498] text-black hover:from-[#ffe7a4] hover:to-[#fdc06a] transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md"
+        >
+          {isLoading ? 'Generating...' : <><Sparkles className="h-4 w-4 mr-2" /> Generate AI Analysis</>}
+        </Button>
+
+        {summaryVisible && (
+          <>
+            {isLoading ? (
+              <div className="space-y-2 mt-3">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-5/6" />
+              </div>
+            ) : error ? (
+              <p className="text-sm text-red-500 mt-3">{error}</p>
+            ) : (
+              <div 
+                className="text-sm text-muted-foreground whitespace-pre-line mt-3 min-h-[60px]"
+                dangerouslySetInnerHTML={{ __html: displayedSummary }}
+              />
+            )}
+          </>
         )}
-        <p className="text-xs text-gray-400 mt-3">
-          Powered by Gemini (Flash Model). For informational purposes only.
+        {!summaryVisible && !isLoading && ( 
+             <p className="text-sm text-muted-foreground mt-3 text-center min-h-[60px]">{PLACEHOLDER_MESSAGE}</p>
+        )}
+        
+        <p className="text-xs text-muted-foreground/70 mt-4 pt-2 border-t border-border/20">
+          AI-generated analysis based on recent price history. For informational purposes only.
         </p>
       </CardContent>
     </Card>
