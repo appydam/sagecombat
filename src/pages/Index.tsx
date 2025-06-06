@@ -8,11 +8,12 @@ import Footer from "@/components/Footer";
 import CompetitionCard from "@/components/CompetitionCard";
 import LeaderboardPreview from "@/components/LeaderboardPreview";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import GameTypeToggle from "@/components/GameTypeToggle";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [selectedGameType, setSelectedGameType] = useState<"equity" | "crypto" | "opinion">("equity");
 
   // Sample data for demo purposes - filtered based on selected game type
@@ -189,9 +190,22 @@ const Index = () => {
 
         {/* Image container for overlay */}
         <div className="relative -my-36 container mx-auto pb-10"> {/* Added container and adjusted margin/padding */}
-          <img src="/ggg.png" alt="Background Image" className="w-full h-auto" />
+          <img src="/tt.png" alt="Background Image" className="w-full h-auto" />
         </div>
-        <Features />
+
+        {/* How SageCombat Works Section */}
+        <section className="py-16 bg-gradient-to-b from-background to-secondary/10">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-2xl font-bold font-display mt-24 mb-8 text-primary">How SageCombat Works</h2>
+            <Button 
+              size="lg" 
+              className="rounded-full px-6 py-6 text-lg bg-gradient-to-r from-slate-400 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out"
+              onClick={() => navigate('/how-it-works')}
+            >
+              Discover the Mechanics <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </div>
+        </section>
         
         <GameTypes />
         
