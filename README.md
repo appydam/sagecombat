@@ -1,1 +1,1 @@
-Fantasy gaming app
+Competitive fantasy gaming platform
