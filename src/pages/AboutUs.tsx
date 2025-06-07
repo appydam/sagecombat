@@ -107,7 +107,7 @@ const AboutUs = () => {
             <div className="max-w-3xl mx-auto text-center">
               <Building2 className="h-12 w-12 text-primary mx-auto mb-6" />
               <h2 className="font-display text-3xl font-bold mb-6">Our Company</h2>
-              <p className="text-muted-foreground mb-6">Launched in 2025, SageCombat is a new fantasy gaming platform based in Delhi, India, designed to make competitive fantasy gaming fun, engaging, and educational. Our small but passionate team, with developers collaborating from across the globe, is building a space where users can test their market instincts through exciting competitions without real-world trading.</p>
+              <p className="text-muted-foreground mb-6">Launched in 2025, SageCombat is a new competitive fantasy gaming platform based in Delhi, India, designed to make competitive fantasy gaming fun, engaging, and educational. Our small but passionate team, with developers collaborating from across the globe, is building a space where users can test their market instincts through exciting competitions without real-world trading.</p>
               <p className="text-muted-foreground mb-8">Our mission is simple: to empower everyone to sharpen their market analysis skills and boost financial literacy through interactive, risk-free challenges. As a startup, we’re driven by our commitment to transparency, fairness, and creating a community where learning and competition go hand in hand. Join us as we grow and redefine how people engage with markets</p>
               <Link to="/contact" className="text-primary font-medium hover:underline">
                 Get in touch with us →

@@ -47,7 +47,7 @@ const TermsOfService = () => {
                 You must be at least 18 years old to use SageCombat. By using SageCombat, you represent and warrant that you are at least 18 years old and have the legal capacity to enter into these terms.
               </p>
               <p>
-                SageCombat is available only in jurisdictions where fantasy gaming is legal as per rules of skill based gaming given by supreme court of India. It is your responsibility to determine whether your use of SageCombat complies with applicable laws in your jurisdiction.
+                SageCombat is available only in jurisdictions where competitive fantasy gaming is legal as per rules of skill based gaming given by supreme court of India. It is your responsibility to determine whether your use of SageCombat complies with applicable laws in your jurisdiction.
               </p>
 
               <h2>3. User Accounts</h2>

@@ -47,7 +47,7 @@ const HelpCenter = () => {
           answer: (
             <div className="space-y-2">
               <p>
-                SageCombat is a fantasy gaming platform that lets you compete with others using your market knowledge, without risking actual money in the stock market.
+                SageCombat is a competitive fantasy gaming platform that lets you compete with others using your market knowledge, without risking actual money in the stock market.
               </p>
               <p>
                 You can join competitions with virtual currency, build portfolios of real stocks, and win prizes based on how well your selections perform against other players.

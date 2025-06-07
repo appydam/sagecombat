@@ -48,7 +48,7 @@ const Features = () => {
             How SageCombat Works
           </h2>
           <p className="text-muted-foreground text-lg">
-            Compete in fantasy gaming competitions where your market knowledge and 
+            Compete in Competitive gaming competitions where your market knowledge and 
             prediction skills determine your success
           </p>
         </div>

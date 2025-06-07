@@ -251,7 +251,7 @@ const Index = () => {
               Ready to Test Your Market Intelligence?
             </h2>
             <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-              Join SageCombat today and start competing in fantasy gaming competitions.
+              Join SageCombat today and start competing in competitive fantasy gaming competitions.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link to="/competitions">
