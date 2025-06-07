@@ -190,7 +190,7 @@ const Index = () => {
 
         {/* Image container for overlay */}
         <div className="relative -my-36 container mx-auto pb-10"> {/* Added container and adjusted margin/padding */}
-          <img src="/tt.png" alt="Background Image" className="w-full h-auto" />
+          <img src="/newhpg.png" alt="Background Image" className="w-full h-auto" />
         </div>
 
         {/* How SageCombat Works Section */}
