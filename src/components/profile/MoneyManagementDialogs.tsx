@@ -1,7 +1,11 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "@/components/ui/use-toast";
+import { Plus, Wallet } from "lucide-react";
 
 interface MoneyManagementDialogsProps {
   isDepositDialogOpen: boolean;
@@ -11,6 +15,12 @@ interface MoneyManagementDialogsProps {
   userBalance: number;
   onDeposit: (amount: string) => void;
   onWithdraw: (amount: string) => void;
+}
+
+interface Beneficiary {
+  userId: number;
+  bId: string;
+  vpa: string;
 }
 
 const MoneyManagementDialogs = ({
@@ -24,6 +34,13 @@ const MoneyManagementDialogs = ({
 }: MoneyManagementDialogsProps) => {
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
+  const [newBeneficiaryVpa, setNewBeneficiaryVpa] = useState("");
+  const [selectedBeneficiary, setSelectedBeneficiary] = useState("");
+  const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
+  const [showAddBeneficiary, setShowAddBeneficiary] = useState(false);
+  const [isLoadingBeneficiaries, setIsLoadingBeneficiaries] = useState(false);
+  const [isAddingBeneficiary, setIsAddingBeneficiary] = useState(false);
+  const [isTransferring, setIsTransferring] = useState(false);
 
   // Replace with your actual Razorpay Key ID
   const [razorpayKeyId, setRazorpayKeyId] = useState('rzp_test_oAhkVTO3FQCfqJ');
@@ -69,6 +86,180 @@ const MoneyManagementDialogs = ({
       if (envKey) setRazorpayKeyId(envKey);
     }
   }, []);
+
+  // Fetch beneficiaries when withdraw dialog opens
+  useEffect(() => {
+    if (isWithdrawDialogOpen) {
+      fetchBeneficiaries();
+    }
+  }, [isWithdrawDialogOpen]);
+
+  const getUserId = () => {
+    const userIdStr = localStorage.getItem("userId");
+    return userIdStr ? Number(JSON.parse(userIdStr)) : 1; // Default to 1 if not found
+  };
+
+  const fetchBeneficiaries = async () => {
+    setIsLoadingBeneficiaries(true);
+    try {
+      const userId = getUserId();
+      const response = await fetch('https://api.sagecombat.com/get-user-beneficiaries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch beneficiaries');
+      }
+
+      const data = await response.json();
+      if (data.code === 200) {
+        setBeneficiaries(data.data || []);
+      } else {
+        throw new Error('Failed to fetch beneficiaries');
+      }
+    } catch (error) {
+      console.error('Error fetching beneficiaries:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load beneficiaries. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingBeneficiaries(false);
+    }
+  };
+
+  const addBeneficiary = async () => {
+    if (!newBeneficiaryVpa.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid VPA.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsAddingBeneficiary(true);
+    try {
+      const userId = getUserId();
+      const response = await fetch('https://api.sagecombat.com/add-beneficiary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          vpa: newBeneficiaryVpa.trim(),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add beneficiary');
+      }
+
+      const data = await response.json();
+      if (data.code === 200) {
+        toast({
+          title: "Success",
+          description: "Beneficiary added successfully",
+          variant: "default",
+        });
+        setNewBeneficiaryVpa("");
+        setShowAddBeneficiary(false);
+        // Refresh beneficiaries list
+        await fetchBeneficiaries();
+      } else {
+        throw new Error('Failed to add beneficiary');
+      }
+    } catch (error) {
+      console.error('Error adding beneficiary:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add beneficiary. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAddingBeneficiary(false);
+    }
+  };
+
+  const transferFunds = async () => {
+    if (!selectedBeneficiary || !withdrawAmount) {
+      toast({
+        title: "Error",
+        description: "Please select a beneficiary and enter an amount.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const amount = parseFloat(withdrawAmount);
+    if (isNaN(amount) || amount <= 0) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid amount.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (amount > userBalance) {
+      toast({
+        title: "Error",
+        description: "Insufficient balance.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsTransferring(true);
+    try {
+      const userId = getUserId();
+      const response = await fetch('https://api.sagecombat.com/transfer-funds', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          benefId: selectedBeneficiary,
+          amount: Math.round(amount * 100), // Convert to paise
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to transfer funds');
+      }
+
+      const data = await response.json();
+      if (data.code === 200) {
+        toast({
+          title: "🎉 Transfer Successful!",
+          description: `₹${amount} has been transferred successfully to your selected beneficiary.`,
+          variant: "default",
+        });
+        onWithdraw(withdrawAmount);
+        setWithdrawAmount("");
+        setSelectedBeneficiary("");
+        setIsWithdrawDialogOpen(false);
+      } else {
+        throw new Error('Failed to transfer funds');
+      }
+    } catch (error) {
+      console.error('Error transferring funds:', error);
+      toast({
+        title: "Transfer Failed",
+        description: "Failed to transfer funds. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsTransferring(false);
+    }
+  };
 
   // Call backend to create order
   const createOrder = async (amount: number, email: string) => {
@@ -280,15 +471,6 @@ const MoneyManagementDialogs = ({
     }
   };
 
-  const handleWithdraw = () => {
-    if (parseFloat(withdrawAmount) <= 0) return;
-    if (parseFloat(withdrawAmount) > userBalance) return;
-    
-    onWithdraw(withdrawAmount);
-    setWithdrawAmount("");
-    setIsWithdrawDialogOpen(false);
-  };
-
   return (
     <>
       <Dialog open={isDepositDialogOpen} onOpenChange={setIsDepositDialogOpen}>
@@ -361,7 +543,7 @@ const MoneyManagementDialogs = ({
       </Dialog>
 
       <Dialog open={isWithdrawDialogOpen} onOpenChange={setIsWithdrawDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <div className="flex flex-col items-center gap-2">
               <span className="text-4xl">🏦</span>
@@ -372,7 +554,69 @@ const MoneyManagementDialogs = ({
               </DialogDescription>
             </div>
           </DialogHeader>
-          <div className="bg-muted rounded-xl shadow-sm px-6 py-8 flex flex-col items-center gap-6">
+          
+          <div className="bg-muted rounded-xl shadow-sm px-6 py-8 flex flex-col gap-6">
+            {/* Beneficiary Selection */}
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-gray-600">Select Beneficiary</label>
+              <div className="flex gap-2">
+                <Select value={selectedBeneficiary} onValueChange={setSelectedBeneficiary} disabled={isLoadingBeneficiaries}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder={isLoadingBeneficiaries ? "Loading..." : "Choose beneficiary"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {beneficiaries.map((beneficiary) => (
+                      <SelectItem key={beneficiary.bId} value={beneficiary.bId}>
+                        {beneficiary.vpa}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setShowAddBeneficiary(true)}
+                  disabled={isLoadingBeneficiaries}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Add New Beneficiary */}
+            {showAddBeneficiary && (
+              <div className="flex flex-col gap-2 p-4 bg-background rounded-lg border">
+                <label className="text-sm font-medium text-gray-600">Add New Beneficiary (UPI ID)</label>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="example@upi"
+                    value={newBeneficiaryVpa}
+                    onChange={(e) => setNewBeneficiaryVpa(e.target.value)}
+                    disabled={isAddingBeneficiary}
+                  />
+                  <Button
+                    size="sm"
+                    onClick={addBeneficiary}
+                    disabled={isAddingBeneficiary || !newBeneficiaryVpa.trim()}
+                  >
+                    {isAddingBeneficiary ? "Adding..." : "Add"}
+                  </Button>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setShowAddBeneficiary(false);
+                    setNewBeneficiaryVpa("");
+                  }}
+                  className="self-start"
+                >
+                  Cancel
+                </Button>
+              </div>
+            )}
+
+            {/* Amount Input */}
             <div className="flex flex-col items-center w-full gap-2">
               <label htmlFor="withdraw-amount" className="text-sm font-medium text-gray-600">Amount</label>
               <div className="flex items-center w-full max-w-xs bg-white rounded-lg px-4 py-3 border border-gray-200 focus-within:ring-2 focus-within:ring-primary">
@@ -386,31 +630,49 @@ const MoneyManagementDialogs = ({
                   className="flex-1 bg-transparent outline-none text-2xl font-semibold text-center"
                   value={withdrawAmount}
                   onChange={(e) => setWithdrawAmount(e.target.value)}
+                  disabled={isTransferring}
                 />
               </div>
             </div>
-            <div className="text-xs text-gray-400 mt-2">
+            
+            <div className="text-xs text-gray-400 text-center">
               Available balance: <span className="font-semibold text-gray-700">₹{userBalance.toLocaleString()}</span>
             </div>
           </div>
+          
           <DialogFooter className="flex flex-row gap-4 justify-center mt-6">
             <Button 
               variant="outline" 
               size="lg" 
               className="rounded-full px-6 py-2 text-base font-medium" 
-              onClick={() => setIsWithdrawDialogOpen(false)}
+              onClick={() => {
+                setIsWithdrawDialogOpen(false);
+                setShowAddBeneficiary(false);
+                setNewBeneficiaryVpa("");
+                setSelectedBeneficiary("");
+                setWithdrawAmount("");
+              }}
+              disabled={isTransferring}
             >
               Cancel
             </Button>
             <Button
               size="lg"
               className="rounded-full px-8 py-2 text-base font-semibold shadow-md"
-              onClick={handleWithdraw}
-              disabled={!withdrawAmount || isNaN(parseFloat(withdrawAmount)) || parseFloat(withdrawAmount) > userBalance || parseFloat(withdrawAmount) <= 0}
+              onClick={transferFunds}
+              disabled={
+                isTransferring || 
+                !selectedBeneficiary || 
+                !withdrawAmount || 
+                isNaN(parseFloat(withdrawAmount)) || 
+                parseFloat(withdrawAmount) > userBalance || 
+                parseFloat(withdrawAmount) <= 0
+              }
             >
-              Withdraw
+              {isTransferring ? 'Processing...' : 'Withdraw'}
             </Button>
           </DialogFooter>
+          
           <div className="flex justify-center mt-4">
             <span className="text-xs text-gray-400">Withdrawals are processed quickly & securely ⚡</span>
           </div>
