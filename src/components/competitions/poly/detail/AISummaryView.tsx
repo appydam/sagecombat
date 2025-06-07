@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -39,7 +40,7 @@ const decodeHtmlEntities = (html: string): string => {
   return text;
 };
 
-const fetchGeminiSummary = async (contestName: string, contestDescription: string, priceData: PriceHistoryPoint[]): Promise<string> => {
+const fetchGeminiSummary = async (contestTitle: string, contestDescription: string, priceData: PriceHistoryPoint[]): Promise<string> => {
   if (!API_KEY) {
     console.error("Gemini API Key not found. Please set VITE_GEMINI_API_KEY environment variable.");
     return API_UNAVAILABLE_MESSAGE;
@@ -54,7 +55,7 @@ const fetchGeminiSummary = async (contestName: string, contestDescription: strin
   const recentPrices = priceData.slice(-10).map(p => `Date: ${new Date(p.timestamp).toLocaleDateString()}, Price: ${p.yes_price.toFixed(2)}`).join('\n');
 
   const prompt = `
-    Analyze the provided market data for the prediction market contest: "${contestName}".
+    Analyze the provided market data for the prediction market contest: "${contestTitle}".
     Contest Description: "${contestDescription}"
     Recent Price Points (last 10):
     ${recentPrices}
@@ -120,7 +121,7 @@ const AISummaryView: React.FC<AISummaryViewProps> = ({ contest, priceHistory }) 
     setError(null);
     setSummaryVisible(true); 
     try {
-      const fetchedSummary = await fetchGeminiSummary(contest.name, contest.description, priceHistory);
+      const fetchedSummary = await fetchGeminiSummary(contest.title, contest.description, priceHistory);
       setSummary(fetchedSummary);
     } catch (e) {
       const errorMessage = `${API_ERROR_MESSAGE_PREFIX}: ${e instanceof Error ? e.message : 'An unknown error occurred'}`;
