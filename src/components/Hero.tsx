@@ -21,7 +21,7 @@ const Hero = () => {
             {/* Original Chip */}
             <div className="inline-flex items-center px-3 py-1 rounded-full bg-secondary border border-border animate-fade-in">
               <span className="text-xs font-medium text-muted-foreground">
-                The Mind Sport of Stock Trading
+                #1 Fantasy Trading Platform - Earn Real Money
               </span>
             </div>
 
@@ -31,6 +31,7 @@ const Hero = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="relative inline-flex items-center px-4 py-1.5 rounded-full border border-border transition-colors cursor-pointer animate-fade-in shadow-sm overflow-hidden bg-gradient"
+              aria-label="Ultimate Paper Trading App - Coming Soon"
             >
               {/* Content */}
               <span className="relative z-10 flex items-center">
@@ -42,82 +43,64 @@ const Hero = () => {
             </a>
           </div>
 
-          {/* Main headline */}
+          {/* Main headline with SEO keywords */}
           <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 animate-fade-up">
-            Win at the Markets with{" "}
+            Best Fantasy Trading Game - Earn Real Money with{" "}
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-mint-600">
               Strategy & Skill
             </span>
           </h1>
 
-          {/* Subheadline */}
+          {/* SEO-optimized subheadline with target keywords */}
           <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-fade-up">
-            Join fantasy competitions where smart predictions earn real rewards.
-            No actual trading required — just your market insights and strategy.
+            Join India's leading fantasy trading platform where smart predictions earn real rewards.
+            Play stock games, crypto competitions, and opinion trading without actual trading risk.
+            Turn your market knowledge into cash prizes through skill-based gaming.
           </p>
+
+          {/* Hidden SEO text for additional keyword coverage */}
+          <div className="sr-only">
+            SageCombat is the best gaming app for real money in India. Our fantasy equity games and opinion trading platform 
+            lets you earn money through games based on stock market predictions. Join thousands playing the top real money 
+            gaming platform that combines fantasy sports mechanics with financial markets. Play equity trading games, 
+            crypto basket competitions, and opinion trading to win cash prizes. The ultimate skill-based gaming platform 
+            for earning real money online through market predictions and fantasy trading competitions.
+          </div>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mb-16 w-full sm:w-auto animate-fade-up">
             <Link to="/competitions" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto rounded-full">
-                Browse Competitions <ArrowRight className="ml-2 h-4 w-4" />
+              <Button size="lg" className="w-full sm:w-auto rounded-full" aria-label="Browse Fantasy Trading Competitions">
+                Start Earning Now <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
             <Link to="/how-it-works" className="w-full sm:w-auto">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-full">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-full" aria-label="Learn How SageCombat Works">
                 How It Works
               </Button>
             </Link>
           </div>
 
-          {/* Game Type cards */}
-          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
-            <Link to="/custom-basket">
-              <MorphCard
-                className="h-full animate-fade-up hover:shadow-md transition-all duration-300"
-                style={{ animationDelay: `100ms` }}
-                highlightBorder={true}
-              >
-                <div className="flex flex-col items-center text-center p-3">
-                  <div className="rounded-full p-3 bg-primary/10 mb-4">
-                    <TrendingUp className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="font-medium text-lg mb-2">Equity Basket</h3>
-                  <p className="text-muted-foreground text-sm">Create custom stock portfolios and compete based on performance</p>
-                </div>
-              </MorphCard>
-            </Link>
+          {/* SEO-enhanced feature highlights */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl mt-8">
+            <div className="text-center p-4 bg-background/50 rounded-lg border border-border/50">
+              <TrendingUp className="h-8 w-8 text-primary mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">Fantasy Stock Trading</h3>
+              <p className="text-sm text-muted-foreground">Best equity games platform for earning real money</p>
+            </div>
             
-            <Link to="/crypto-basket">
-              <MorphCard
-                className="h-full animate-fade-up hover:shadow-md transition-all duration-300"
-                style={{ animationDelay: `200ms` }}
-              >
-                <div className="flex flex-col items-center text-center p-3">
-                  <div className="rounded-full p-3 bg-gold-500/10 mb-4">
-                    <Bitcoin className="h-6 w-6 text-gold-500" />
-                  </div>
-                  <h3 className="font-medium text-lg mb-2">Crypto Basket</h3>
-                  <p className="text-muted-foreground text-sm">Build crypto portfolios and compete in the digital asset market</p>
-                </div>
-              </MorphCard>
-            </Link>
+            <div className="text-center p-4 bg-background/50 rounded-lg border border-border/50">
+              <MessageSquare className="h-8 w-8 text-mint-600 mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">Opinion Trading</h3>
+              <p className="text-sm text-muted-foreground">Top opinion trading platform with real cash rewards</p>
+            </div>
             
-            <Link to="/opinion-trading">
-              <MorphCard
-                className="h-full animate-fade-up hover:shadow-md transition-all duration-300"
-                style={{ animationDelay: `300ms` }}
-              >
-                <div className="flex flex-col items-center text-center p-3">
-                  <div className="rounded-full p-3 bg-mint-600/10 mb-4">
-                    <MessageSquare className="h-6 w-6 text-mint-600" />
-                  </div>
-                  <h3 className="font-medium text-lg mb-2">Opinion Trading</h3>
-                  <p className="text-muted-foreground text-sm">Predict real-world events with yes/no answers and win rewards</p>
-                </div>
-              </MorphCard>
-            </Link>
-          </div> */}
+            <div className="text-center p-4 bg-background/50 rounded-lg border border-border/50">
+              <Trophy className="h-8 w-8 text-gold-500 mx-auto mb-2" />
+              <h3 className="font-semibold mb-1">Real Money Prizes</h3>
+              <p className="text-sm text-muted-foreground">Skill-based gaming with guaranteed payouts</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
