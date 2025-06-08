@@ -6,33 +6,33 @@ const Features = () => {
   const features = [
     {
       icon: <BrainCircuit className="h-8 w-8 text-mint-600" />,
-      title: "Mind Sport",
-      description: "Test your prediction skills and strategic thinking without risking real trades"
+      title: "Best Fantasy Gaming Platform",
+      description: "India's #1 skill-based gaming app where market knowledge earns real money without trading risks"
     },
     {
       icon: <LineChart className="h-8 w-8 text-primary" />,
-      title: "Real Market Data",
-      description: "Compete using actual stock performance from major exchanges"
+      title: "Real Market Data Games",
+      description: "Fantasy equity games using live stock data from NSE, BSE and crypto exchanges for authentic gaming"
     },
     {
       icon: <Clock className="h-8 w-8 text-gold-500" />,
-      title: "Daily Competitions",
-      description: "New contests starting every day with flexible entry fees"
+      title: "Daily Real Money Contests",
+      description: "Multiple earning opportunities daily with fantasy trading competitions and opinion trading markets"
     },
     {
       icon: <Trophy className="h-8 w-8 text-primary" />,
-      title: "Leaderboards & Prizes",
-      description: "Track your performance and win from prize pools based on rankings"
+      title: "Guaranteed Prize Money",
+      description: "Transparent leaderboards with confirmed cash payouts - best real money gaming app in India"
     },
     {
       icon: <CheckCircle2 className="h-8 w-8 text-mint-600" />,
-      title: "Easy to Join",
-      description: "Simple entry process with Google or phone number login"
+      title: "Easy Registration",
+      description: "Quick signup to start earning money through games - join thousands on India's top gaming platform"
     },
     {
       icon: <ShieldCheck className="h-8 w-8 text-gold-500" />,
-      title: "Fair & Transparent",
-      description: "All competitions follow clear rules with transparent outcomes"
+      title: "100% Legal & Safe",
+      description: "RNG certified skill-based games with secure payments - trusted real money gaming platform"
     }
   ];
 
@@ -45,11 +45,11 @@ const Features = () => {
       <div className="container px-4 mx-auto">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
-            How SageCombat Works
+            Why SageCombat is the Best Real Money Gaming Platform
           </h2>
           <p className="text-muted-foreground text-lg">
-            Compete in Competitive gaming competitions where your market knowledge and 
-            prediction skills determine your success
+            Experience India's premier fantasy trading platform combining stock market games, 
+            crypto competitions, and opinion trading for maximum earning potential
           </p>
         </div>
 
@@ -68,6 +68,35 @@ const Features = () => {
               <p className="text-muted-foreground">{feature.description}</p>
             </MorphCard>
           ))}
+        </div>
+
+        {/* Additional SEO content */}
+        <div className="max-w-4xl mx-auto mt-16 text-center">
+          <div className="bg-gradient-to-r from-mint-50 to-gold-50 rounded-2xl p-8 border border-border/50">
+            <h3 className="text-2xl font-bold mb-4">
+              Start Your Journey in Fantasy Trading Games Today
+            </h3>
+            <p className="text-muted-foreground mb-6">
+              Join over 100,000+ players earning real money through skill-based fantasy trading. 
+              Whether you're interested in stock market games, crypto trading competitions, or 
+              opinion trading markets, SageCombat offers the best gaming experience with 
+              guaranteed real money prizes.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div className="bg-white/50 rounded-lg p-4">
+                <strong>₹50L+</strong><br />
+                Prize Money Distributed
+              </div>
+              <div className="bg-white/50 rounded-lg p-4">
+                <strong>100K+</strong><br />
+                Active Players
+              </div>
+              <div className="bg-white/50 rounded-lg p-4">
+                <strong>4.8★</strong><br />
+                User Rating
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
