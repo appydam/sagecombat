@@ -310,6 +310,14 @@ const Competitions = () => {
             />
           )}
 
+          {activeGameType === "geoquest" && (
+            <div className="bg-gradient-to-r from-violet-200 to-pink-200 text-gray-800 text-center p-4 my-6 rounded-lg shadow-lg">
+              <p className="text-2xl font-bold tracking-wider">Coming Soon!</p>
+              <p className="text-sm mt-1">We're preparing new and exciting GeoQuest challenges for you. Stay tuned!</p>
+              <p className="text-sm mt-1">Development is under progress</p>
+            </div>
+          )}
+
           <CompetitionListDisplay
             activeGameType={activeGameType}
             filteredCompetitions={filteredCompetitions}
