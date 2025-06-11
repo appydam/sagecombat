@@ -17,7 +17,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Competitions", path: "/competitions" },
-    { name: "Leaderboard", path: "/leaderboard" },
+    // { name: "Leaderboard", path: "/leaderboard" },
     { name: "How It Works", path: "/how-it-works" },
     { name: "About Us", path: "/about" },
     // { name: "Contact", path: "/contact" },
@@ -168,11 +168,11 @@ const Navbar = () => {
                 <User className="w-5 h-5" />
               </Button>
             </Link>
-            <Link to="/leaderboard">
+            {/* <Link to="/leaderboard">
               <Button variant="ghost" size="icon" className="rounded-full">
                 <Trophy className="w-5 h-5" />
               </Button>
-            </Link>
+            </Link> */}
             {isAuthenticated ? (
               <Button
                 onClick={handleLogout}
