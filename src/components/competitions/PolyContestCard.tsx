@@ -63,6 +63,7 @@ const PolyContestCard = ({ contest, onBetPlaced }: PolyContestCardProps) => {
   };
 
   const timeLeft = formatDistanceToNow(new Date(contest.end_time), { addSuffix: true });
+  const isPast = new Date(contest.end_time) < new Date();
   const activeClass = "bg-gradient-to-r from-amber-500 to-amber-400 text-white border-none";
 
   const handleViewDetails = () => {
@@ -124,7 +125,7 @@ const PolyContestCard = ({ contest, onBetPlaced }: PolyContestCardProps) => {
         <div className="flex items-center justify-between text-sm flex-wrap gap-y-1">
           <div className="flex items-center">
             <Calendar className="h-4 w-4 text-amber-500 mr-1 flex-shrink-0" />
-            <span className="text-muted-foreground">Closes {timeLeft}</span>
+            <span className="text-muted-foreground">{isPast ? "Closed" : "Closes"} {timeLeft}</span>
           </div>
           
           <div className="flex items-center">

@@ -118,7 +118,7 @@ const OpinionEventCard = ({ event, onAnswerSubmitted }: OpinionEventCardProps) =
 
           <div className="w-full h-2 bg-red-400 rounded-full overflow-hidden">
             <div
-              className="h-full bg-green-500 transition-all duration-300"
+              className="h-full bg-green-600 transition-all duration-300"
               style={{ width: `${event.participants > 0 ? (event.currentPool.yes / event.participants) * 100 : 50}%` }}
             />
           </div>
