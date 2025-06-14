@@ -79,13 +79,13 @@ const Index = () => {
               <div className="flex flex-col sm:flex-row items-center gap-4 mb-8 w-full justify-center animate-fade-in">
                 <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-green-50 to-mint-50 border border-green-200 shadow-sm">
                   <Shield className="w-4 h-4 mr-2 text-green-600" />
-                  <span className="text-sm font-medium text-green-700">Secure & Trusted Platform</span>
+                  <span className="font-medium text-green-700 text-xs">Secure & Trusted Platform</span>
                 </div>
                 
                 <a href="https://mindstockpapertrading.vercel.app/" target="_blank" rel="noopener noreferrer" className="relative inline-flex items-center px-4 py-2 rounded-full border border-border transition-all duration-300 cursor-pointer animate-fade-in shadow-sm overflow-hidden bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 hover:shadow-md">
                   <span className="relative z-10 flex items-center">
                     <TrendingUp className="w-4 h-4 mr-2 text-white" />
-                    <span className="text-sm font-semibold text-white">
+                    <span className="font-semibold text-white text-xs">
                       🚀 Paper Trading App — <span className="text-yellow-300">Coming Soon!</span>
                     </span>
                   </span>
@@ -101,21 +101,19 @@ const Index = () => {
               {/* Subheadline */}
               <p style={{
               animationDelay: '200ms'
-            }} className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto animate-fade-up leading-relaxed md:text-xl">
-                Transform your market knowledge into real rewards. Compete in skill-based prediction games without the risk of actual trading.
-              </p>
+            }} className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto animate-fade-up leading-relaxed md:text-xl">Transform your market knowledge into real rewards. Compete in skill-based games without the risk of actual trading.</p>
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 mb-12 w-full sm:w-auto animate-fade-up" style={{
               animationDelay: '400ms'
             }}>
                 <Link to="/competitions" className="w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto rounded-full px-8 py-4 text-lg bg-gradient-to-r from-primary to-mint-600 hover:from-primary/90 hover:to-mint-600/90 shadow-lg transform hover:scale-105 transition-all duration-300">
+                  <Button size="lg" className="w-full sm:w-auto rounded-full px-8 py-4 bg-gradient-to-r from-primary to-mint-600 hover:from-primary/90 hover:to-mint-600/90 shadow-lg transform hover:scale-105 transition-all duration-300 text-base">
                     Start Playing Now <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
                 <Link to="/how-it-works">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-full px-8 py-4 text-lg border-2 hover:bg-accent/50 transform hover:scale-105 transition-all duration-300">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-full px-8 py-4 border-2 hover:bg-accent/50 transform hover:scale-105 transition-all duration-300 text-base">
                     <Play className="mr-2 h-5 w-5" />
                     See How It Works
                   </Button>
