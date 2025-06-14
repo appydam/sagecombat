@@ -50,3 +50,16 @@ export const staggerItem = {
 export const getStaggerDelay = (index: number, base: number = 0.1) => {
   return { animationDelay: `${index * base}s` };
 };
+
+// Floating animation for background elements
+export const floatingAnimation = {
+  '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+  '50%': { transform: 'translateY(-20px) rotate(180deg)' },
+};
+
+// Gradient animation for text
+export const gradientAnimation = {
+  '0%': { backgroundPosition: '0% 50%' },
+  '50%': { backgroundPosition: '100% 50%' },
+  '100%': { backgroundPosition: '0% 50%' },
+};
