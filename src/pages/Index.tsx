@@ -53,29 +53,48 @@ const Index = () => {
     icon: "🏆"
   }];
 
-  return <div className="min-h-screen flex flex-col bg-background">
+  return <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-mint-50/30 relative overflow-hidden">
+      {/* Enhanced Global Background Elements */}
+      <div className="fixed inset-0 -z-20">
+        {/* Primary gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-mint-100/20 to-gold-100/30" />
+        
+        {/* Animated floating orbs */}
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-primary/10 to-mint-200/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-1/2 -right-32 w-80 h-80 bg-gradient-to-l from-gold-200/30 to-mint-300/20 rounded-full blur-3xl animate-bounce" style={{animationDuration: '8s'}} />
+        <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-gradient-to-tr from-mint-300/25 to-primary/15 rounded-full blur-3xl animate-float" />
+        <div className="absolute top-3/4 right-1/4 w-72 h-72 bg-gradient-to-bl from-gold-300/20 to-mint-200/25 rounded-full blur-3xl animate-float" style={{animationDelay: '4s'}} />
+        
+        {/* Geometric patterns */}
+        <div className="absolute top-1/3 left-1/2 w-48 h-48 border border-primary/10 rounded-lg rotate-45 animate-pulse" />
+        <div className="absolute bottom-1/3 right-1/3 w-32 h-32 border border-mint-400/20 rounded-full animate-float" style={{animationDelay: '2s'}} />
+        
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.02]" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgb(0 0 0) 1px, transparent 0)`,
+          backgroundSize: '40px 40px'
+        }} />
+      </div>
+
       <Navbar />
       
-      <main className="flex-grow">
+      <main className="flex-grow relative">
         {/* Enhanced Hero Section */}
-        <section className="relative overflow-hidden pt-24 pb-12 md:pt-32 md:pb-20">
-          {/* Animated Background Elements */}
-          <div className="absolute top-0 -left-40 right-0 h-[500px] bg-gradient-to-br from-mint-100/40 via-secondary/60 to-transparent rounded-full blur-3xl -z-10 animate-pulse" />
-          <div className="absolute top-40 right-20 w-72 h-72 bg-gold-200/30 rounded-full blur-3xl animate-bounce -z-10" style={{
-          animationDuration: '6s'
-        }} />
-          <div className="absolute bottom-20 left-20 w-96 h-96 bg-mint-200/30 rounded-full blur-3xl animate-float -z-10" />
+        <section className="relative overflow-hidden pt-20 pb-8 md:pt-28 md:pb-12">
+          {/* Section-specific background elements */}
+          <div className="absolute top-0 left-0 right-0 h-full bg-gradient-to-b from-mint-50/40 via-transparent to-transparent -z-10" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-gradient-to-r from-primary/5 to-mint-400/10 rounded-full blur-3xl -z-10 animate-pulse" style={{animationDuration: '4s'}} />
 
           <div className="container px-4 mx-auto">
             <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
               {/* Trust Signals */}
               <div className="flex flex-col sm:flex-row items-center gap-4 mb-8 w-full justify-center animate-fade-in">
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-green-50 to-mint-50 border border-green-200">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-green-50 to-mint-50 border border-green-200 shadow-sm">
                   <Shield className="w-4 h-4 mr-2 text-green-600" />
                   <span className="text-sm font-medium text-green-700">Secure & Trusted Platform</span>
                 </div>
                 
-                <a href="https://mindstockpapertrading.vercel.app/" target="_blank" rel="noopener noreferrer" className="relative inline-flex items-center px-4 py-2 rounded-full border border-border transition-all duration-300 cursor-pointer animate-fade-in shadow-sm overflow-hidden bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700">
+                <a href="https://mindstockpapertrading.vercel.app/" target="_blank" rel="noopener noreferrer" className="relative inline-flex items-center px-4 py-2 rounded-full border border-border transition-all duration-300 cursor-pointer animate-fade-in shadow-sm overflow-hidden bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 hover:shadow-md">
                   <span className="relative z-10 flex items-center">
                     <TrendingUp className="w-4 h-4 mr-2 text-white" />
                     <span className="text-sm font-semibold text-white">
@@ -87,32 +106,26 @@ const Index = () => {
 
               {/* Main Headline */}
               <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 animate-fade-up">
-                <span className="block mb-2 text-7xl ">The Future of</span>
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-mint-600 to-gold-500 animate-gradient text-8xl ">Competitive Fantasy Gaming</span>
+                <span className="block mb-2 text-6xl md:text-7xl">The Future of</span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-mint-600 to-gold-500 animate-gradient text-7xl md:text-8xl">Competitive Fantasy Gaming</span>
               </h1>
 
               {/* Subheadline */}
-              <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto animate-fade-up leading-relaxed" style={{
-              animationDelay: '200ms'
-            }}>
+              <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto animate-fade-up leading-relaxed" style={{animationDelay: '200ms'}}>
                 Transform your market knowledge into real rewards. Compete in skill-based prediction games without the risk of actual trading.
               </p>
 
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 mb-16 w-full sm:w-auto animate-fade-up" style={{
-              animationDelay: '400ms'
-            }}>
+              <div className="flex flex-col sm:flex-row gap-4 mb-12 w-full sm:w-auto animate-fade-up" style={{animationDelay: '400ms'}}>
                 <Link to="/competitions" className="w-full sm:w-auto">
                   <Button size="lg" className="w-full sm:w-auto rounded-full px-8 py-4 text-lg bg-gradient-to-r from-primary to-mint-600 hover:from-primary/90 hover:to-mint-600/90 shadow-lg transform hover:scale-105 transition-all duration-300">
                     Start Playing Now <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
                 <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-full px-8 py-4 text-lg border-2 hover:bg-accent/50 transform hover:scale-105 transition-all duration-300" onClick={() => {
-                const element = document.getElementById('how-it-works');
-                element?.scrollIntoView({
-                  behavior: 'smooth'
-                });
-              }}>
+                  const element = document.getElementById('how-it-works');
+                  element?.scrollIntoView({behavior: 'smooth'});
+                }}>
                   <Play className="mr-2 h-5 w-5" />
                   See How It Works
                 </Button>
@@ -122,11 +135,16 @@ const Index = () => {
         </section>
 
         {/* Enhanced Product Demo Image */}
-        <section className="py-16 relative">
+        <section className="py-12 relative">
+          {/* Background elements for this section */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/3 via-transparent to-mint-400/5 -z-10" />
+          <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-gradient-to-br from-mint-200/20 to-gold-200/15 rounded-full blur-3xl -z-10 animate-float" />
+          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-tl from-primary/10 to-mint-300/20 rounded-full blur-3xl -z-10 animate-float" style={{animationDelay: '3s'}} />
+          
           <div className="container mx-auto px-4">
-            <div className="relative max-w-7xl mx-auto">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-mint-600/20 rounded-3xl blur-3xl transform rotate-1"></div>
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/20">
+            <div className="relative max-w-8xl mx-auto">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-mint-600/20 rounded-3xl blur-3xl transform rotate-1 animate-pulse"></div>
+              <div className="relative bg-white/20 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/30">
                 <img 
                   src="/newbg.png" 
                   alt="SageCombat Platform Preview - Equity, Opinion and Poly Contest Interfaces" 
@@ -139,27 +157,25 @@ const Index = () => {
         </section>
 
         {/* How It Works Section */}
-        <section id="how-it-works" className="py-24 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-secondary/30 to-transparent -z-10" />
+        <section id="how-it-works" className="py-20 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-secondary/20 via-mint-50/30 to-transparent -z-10" />
+          <div className="absolute top-1/4 -left-32 w-72 h-72 bg-gradient-to-r from-mint-300/25 to-primary/15 rounded-full blur-3xl -z-10 animate-float" />
+          <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-gradient-to-l from-gold-300/20 to-mint-400/25 rounded-full blur-3xl -z-10 animate-float" style={{animationDelay: '2s'}} />
           
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
               <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 animate-fade-up">
                 How SageCombat Works
               </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-up" style={{
-              animationDelay: '200ms'
-            }}>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-up" style={{animationDelay: '200ms'}}>
                 Three simple steps to start earning with your market predictions
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {howItWorksSteps.map((step, index) => (
-                <div key={index} className="relative text-center animate-fade-up group hover:scale-105 transition-transform duration-300" style={{
-                animationDelay: `${(index + 1) * 200}ms`
-              }}>
-                  <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 h-full">
+                <div key={index} className="relative text-center animate-fade-up group hover:scale-105 transition-transform duration-300" style={{animationDelay: `${(index + 1) * 200}ms`}}>
+                  <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/30 h-full hover:bg-white/70 transition-colors">
                     <div className="text-4xl mb-4">{step.icon}</div>
                     <div className="text-sm font-mono text-primary mb-2">{step.step}</div>
                     <h3 className="text-xl font-semibold mb-4">{step.title}</h3>
@@ -177,9 +193,7 @@ const Index = () => {
 
             <div className="text-center mt-12">
               <Link to="/competitions">
-                <Button size="lg" className="rounded-full px-8 animate-fade-up" style={{
-                animationDelay: '800ms'
-              }}>
+                <Button size="lg" className="rounded-full px-8 animate-fade-up shadow-lg hover:shadow-xl transition-shadow" style={{animationDelay: '800ms'}}>
                   Explore Competitions <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -188,53 +202,54 @@ const Index = () => {
         </section>
 
         {/* Game Types */}
-        <GameTypes />
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-b from-mint-50/20 via-white/50 to-primary/5 -z-10" />
+          <GameTypes />
+        </div>
 
         {/* Features Section */}
-        <section className="py-24 relative overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-mint-100/30 rounded-full blur-3xl -z-10" />
+        <section className="py-20 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-mint-50/30 to-gold-100/20 -z-10" />
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-mint-100/30 rounded-full blur-3xl -z-10 animate-float" />
+          <div className="absolute bottom-0 -left-40 w-80 h-80 bg-gradient-to-tr from-primary/15 to-mint-300/25 rounded-full blur-3xl -z-10 animate-float" style={{animationDelay: '4s'}} />
           
           <div className="container px-4 mx-auto">
             <div className="text-center mb-16">
               <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 animate-fade-up">
                 Why Choose SageCombat?
               </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-up" style={{
-              animationDelay: '200ms'
-            }}>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-up" style={{animationDelay: '200ms'}}>
                 The most advanced fantasy gaming platform for market predictions
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {[{
-              icon: Zap,
-              title: "Instant Rewards",
-              desc: "Get paid immediately when you win competitions"
-            }, {
-              icon: Shield,
-              title: "100% Safe",
-              desc: "No real trading risk - pure skill-based predictions"
-            }, {
-              icon: TrendingUp,
-              title: "Real Market Data",
-              desc: "Compete using live data from major exchanges"
-            }, {
-              icon: Users,
-              title: "Active Community",
-              desc: "Join thousands of active prediction enthusiasts"
-            }, {
-              icon: CheckCircle2,
-              title: "Easy to Start",
-              desc: "Simple registration with Google or phone number"
-            }, {
-              icon: Star,
-              title: "Fair & Transparent",
-              desc: "Clear rules and transparent prize distribution"
-            }].map((feature, index) => (
-                <div key={index} className="text-center p-6 rounded-2xl bg-white/30 backdrop-blur-sm border border-white/20 hover:bg-white/40 transition-all duration-300 animate-fade-up group hover:scale-105" style={{
-                animationDelay: `${index * 100}ms`
-              }}>
+                icon: Zap,
+                title: "Instant Rewards",
+                desc: "Get paid immediately when you win competitions"
+              }, {
+                icon: Shield,
+                title: "100% Safe",
+                desc: "No real trading risk - pure skill-based predictions"
+              }, {
+                icon: TrendingUp,
+                title: "Real Market Data",
+                desc: "Compete using live data from major exchanges"
+              }, {
+                icon: Users,
+                title: "Active Community",
+                desc: "Join thousands of active prediction enthusiasts"
+              }, {
+                icon: CheckCircle2,
+                title: "Easy to Start",
+                desc: "Simple registration with Google or phone number"
+              }, {
+                icon: Star,
+                title: "Fair & Transparent",
+                desc: "Clear rules and transparent prize distribution"
+              }].map((feature, index) => (
+                <div key={index} className="text-center p-6 rounded-2xl bg-white/40 backdrop-blur-sm border border-white/30 hover:bg-white/50 transition-all duration-300 animate-fade-up group hover:scale-105 shadow-lg hover:shadow-xl" style={{animationDelay: `${index * 100}ms`}}>
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4 group-hover:bg-primary/20 transition-colors">
                     <feature.icon className="h-6 w-6 text-primary" />
                   </div>
@@ -247,8 +262,9 @@ const Index = () => {
         </section>
 
         {/* Leaderboard Preview */}
-        <section className="py-20 relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-mint-50/30 to-transparent -z-10" />
+        <section className="py-16 relative">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-mint-50/40 to-transparent -z-10" />
+          <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-gradient-to-r from-primary/10 to-mint-300/20 rounded-full blur-3xl -z-10 animate-float" />
           
           <div className="container px-4 mx-auto">
             <div className="flex flex-col lg:flex-row gap-12 items-center">
@@ -256,29 +272,23 @@ const Index = () => {
                 <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 animate-fade-up">
                   Top Performers Win Big
                 </h2>
-                <p className="text-xl text-muted-foreground mb-8 animate-fade-up" style={{
-                animationDelay: '200ms'
-              }}>
+                <p className="text-xl text-muted-foreground mb-8 animate-fade-up" style={{animationDelay: '200ms'}}>
                   Our leaderboards track performance across all competitions. Top players earn real cash rewards for their market insights and prediction accuracy.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 animate-fade-up" style={{
-                animationDelay: '400ms'
-              }}>
+                <div className="flex flex-col sm:flex-row gap-4 animate-fade-up" style={{animationDelay: '400ms'}}>
                   <Link to="/leaderboard">
-                    <Button size="lg" className="rounded-full px-8">
+                    <Button size="lg" className="rounded-full px-8 shadow-lg hover:shadow-xl transition-shadow">
                       View Global Leaderboard <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
                   <Link to="/competitions">
-                    <Button variant="outline" size="lg" className="rounded-full px-8">
+                    <Button variant="outline" size="lg" className="rounded-full px-8 border-2 hover:bg-white/50 transition-colors">
                       Join Competition
                     </Button>
                   </Link>
                 </div>
               </div>
-              <div className="flex-1 animate-fade-up" style={{
-              animationDelay: '300ms'
-            }}>
+              <div className="flex-1 animate-fade-up" style={{animationDelay: '300ms'}}>
                 <LeaderboardPreview competitionId="global" entries={leaderboardEntries} title="This Week's Champions" />
               </div>
             </div>
@@ -286,9 +296,11 @@ const Index = () => {
         </section>
         
         {/* Final CTA Section */}
-        <section className="py-24 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-mint-100/40 via-secondary/60 to-gold-100/40 -z-10" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl -z-10 animate-pulse" />
+        <section className="py-20 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-mint-100/50 via-secondary/40 to-gold-100/50 -z-10" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-r from-primary/10 to-mint-400/15 rounded-full blur-3xl -z-10 animate-pulse" style={{animationDuration: '6s'}} />
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-gold-300/20 to-primary/15 rounded-full blur-3xl -z-10 animate-float" />
+          <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-gradient-to-tl from-mint-400/25 to-gold-200/20 rounded-full blur-3xl -z-10 animate-float" style={{animationDelay: '3s'}} />
           
           <div className="container px-4 mx-auto text-center">
             <h2 className="font-display text-4xl md:text-6xl font-bold mb-6 max-w-4xl mx-auto animate-fade-up">
@@ -297,30 +309,24 @@ const Index = () => {
                 Real Rewards?
               </span>
             </h2>
-            <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto animate-fade-up" style={{
-            animationDelay: '200ms'
-          }}>
+            <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto animate-fade-up" style={{animationDelay: '200ms'}}>
               Join thousands of players competing in skill-based fantasy gaming competitions. Start winning today.
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-6 animate-fade-up" style={{
-            animationDelay: '400ms'
-          }}>
+            <div className="flex flex-col sm:flex-row justify-center gap-6 animate-fade-up" style={{animationDelay: '400ms'}}>
               <Link to="/competitions">
                 <Button size="lg" className="rounded-full px-12 py-4 text-lg bg-gradient-to-r from-primary to-mint-600 hover:from-primary/90 hover:to-mint-600/90 shadow-lg transform hover:scale-105 transition-all duration-300">
                   Start Playing Now <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link to="/login">
-                <Button variant="outline" size="lg" className="rounded-full px-12 py-4 text-lg border-2 hover:bg-accent/50 transform hover:scale-105 transition-all duration-300">
+                <Button variant="outline" size="lg" className="rounded-full px-12 py-4 text-lg border-2 hover:bg-white/50 transform hover:scale-105 transition-all duration-300">
                   Sign Up Free
                 </Button>
               </Link>
             </div>
             
             {/* Trust badges */}
-            <div className="flex justify-center items-center gap-8 mt-16 opacity-60 animate-fade-up" style={{
-            animationDelay: '600ms'
-          }}>
+            <div className="flex justify-center items-center gap-8 mt-16 opacity-60 animate-fade-up" style={{animationDelay: '600ms'}}>
               <div className="flex items-center gap-2">
                 <Shield className="h-5 w-5" />
                 <span className="text-sm">Secure & Safe</span>
