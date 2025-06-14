@@ -9,6 +9,7 @@ import LeaderboardPreview from "@/components/LeaderboardPreview";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Play, Star, Users, TrendingUp, Shield, CheckCircle2, Zap } from "lucide-react";
+
 const Index = () => {
   const navigate = useNavigate();
   const leaderboardEntries = [{
@@ -33,25 +34,26 @@ const Index = () => {
     return: 8.17,
     prize: 2500
   }];
-  return <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-mint-50/30 relative overflow-hidden">
+  
+  return <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
       {/* Enhanced Global Background Elements */}
       <div className="fixed inset-0 -z-20">
         {/* Primary gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-mint-100/20 to-gold-100/30" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-100/30 via-purple-100/40 to-pink-100/30" />
         
         {/* Animated floating orbs */}
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-primary/10 to-mint-200/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute top-1/2 -right-32 w-80 h-80 bg-gradient-to-l from-gold-200/30 to-mint-300/20 rounded-full blur-3xl animate-bounce" style={{
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-blue-200/40 to-purple-200/30 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-1/2 -right-32 w-80 h-80 bg-gradient-to-l from-pink-200/50 to-purple-300/40 rounded-full blur-3xl animate-bounce" style={{
         animationDuration: '8s'
       }} />
-        <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-gradient-to-tr from-mint-300/25 to-primary/15 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-3/4 right-1/4 w-72 h-72 bg-gradient-to-bl from-gold-300/20 to-mint-200/25 rounded-full blur-3xl animate-float" style={{
+        <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-gradient-to-tr from-green-200/40 to-blue-200/30 rounded-full blur-3xl animate-float" />
+        <div className="absolute top-3/4 right-1/4 w-72 h-72 bg-gradient-to-bl from-yellow-200/40 to-green-200/35 rounded-full blur-3xl animate-float" style={{
         animationDelay: '4s'
       }} />
         
         {/* Geometric patterns */}
-        <div className="absolute top-1/3 left-1/2 w-48 h-48 border border-primary/10 rounded-lg rotate-45 animate-pulse" />
-        <div className="absolute bottom-1/3 right-1/3 w-32 h-32 border border-mint-400/20 rounded-full animate-float" style={{
+        <div className="absolute top-1/3 left-1/2 w-48 h-48 border border-blue-200/30 rounded-lg rotate-45 animate-pulse" />
+        <div className="absolute bottom-1/3 right-1/3 w-32 h-32 border border-purple-300/40 rounded-full animate-float" style={{
         animationDelay: '2s'
       }} />
         
@@ -68,8 +70,8 @@ const Index = () => {
         {/* Enhanced Hero Section */}
         <section className="relative overflow-hidden pt-20 pb-8 md:pt-28 md:pb-12">
           {/* Section-specific background elements */}
-          <div className="absolute top-0 left-0 right-0 h-full bg-gradient-to-b from-mint-50/40 via-transparent to-transparent -z-10" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-gradient-to-r from-primary/5 to-mint-400/10 rounded-full blur-3xl -z-10 animate-pulse" style={{
+          <div className="absolute top-0 left-0 right-0 h-full bg-gradient-to-b from-blue-50/60 via-transparent to-transparent -z-10" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-gradient-to-r from-blue-100/20 to-purple-200/30 rounded-full blur-3xl -z-10 animate-pulse" style={{
           animationDuration: '4s'
         }} />
 
@@ -126,9 +128,9 @@ const Index = () => {
         {/* Enhanced Product Demo Image */}
         <section className="py-12 relative">
           {/* Background elements for this section */}
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/3 via-transparent to-mint-400/5 -z-10" />
-          <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-gradient-to-br from-mint-200/20 to-gold-200/15 rounded-full blur-3xl -z-10 animate-float" />
-          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-tl from-primary/10 to-mint-300/20 rounded-full blur-3xl -z-10 animate-float" style={{
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-100/20 via-transparent to-purple-100/20 -z-10" />
+          <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-gradient-to-br from-green-200/30 to-yellow-200/25 rounded-full blur-3xl -z-10 animate-float" />
+          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-tl from-blue-200/25 to-purple-300/30 rounded-full blur-3xl -z-10 animate-float" style={{
           animationDelay: '3s'
         }} />
           
