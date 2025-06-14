@@ -131,7 +131,16 @@ const Index = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 w-full max-w-2xl animate-fade-up" style={{
               animationDelay: '600ms'
             }}>
-                {stats.map((stat, index) => {})}
+                {stats.map((stat, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col items-center justify-center p-6 rounded-xl bg-white/70 backdrop-blur shadow-md"
+                  >
+                    <stat.icon className="w-7 h-7 text-primary mb-2" />
+                    <div className="text-2xl font-bold mb-1">{stat.value}</div>
+                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
