@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -34,23 +33,6 @@ const Index = () => {
     username: "TradingKing",
     return: 8.17,
     prize: 2500
-  }];
-
-  const howItWorksSteps = [{
-    step: "01",
-    title: "Choose Your Game",
-    description: "Select from equity baskets, crypto predictions, or opinion trading contests",
-    icon: "🎯"
-  }, {
-    step: "02",
-    title: "Make Predictions",
-    description: "Use your market knowledge to predict outcomes and build winning strategies",
-    icon: "🧠"
-  }, {
-    step: "03",
-    title: "Win Prizes",
-    description: "Compete with others and earn real money based on your prediction accuracy",
-    icon: "🏆"
   }];
 
   return <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-mint-50/30 relative overflow-hidden">
@@ -122,13 +104,12 @@ const Index = () => {
                     Start Playing Now <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
-                <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-full px-8 py-4 text-lg border-2 hover:bg-accent/50 transform hover:scale-105 transition-all duration-300" onClick={() => {
-                  const element = document.getElementById('how-it-works');
-                  element?.scrollIntoView({behavior: 'smooth'});
-                }}>
-                  <Play className="mr-2 h-5 w-5" />
-                  See How It Works
-                </Button>
+                <Link to="/how-it-works">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-full px-8 py-4 text-lg border-2 hover:bg-accent/50 transform hover:scale-105 transition-all duration-300">
+                    <Play className="mr-2 h-5 w-5" />
+                    See How It Works
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
@@ -152,51 +133,6 @@ const Index = () => {
                   loading="eager" 
                 />
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* How It Works Section */}
-        <section id="how-it-works" className="py-20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-secondary/20 via-mint-50/30 to-transparent -z-10" />
-          <div className="absolute top-1/4 -left-32 w-72 h-72 bg-gradient-to-r from-mint-300/25 to-primary/15 rounded-full blur-3xl -z-10 animate-float" />
-          <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-gradient-to-l from-gold-300/20 to-mint-400/25 rounded-full blur-3xl -z-10 animate-float" style={{animationDelay: '2s'}} />
-          
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 animate-fade-up">
-                How SageCombat Works
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-up" style={{animationDelay: '200ms'}}>
-                Three simple steps to start earning with your market predictions
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {howItWorksSteps.map((step, index) => (
-                <div key={index} className="relative text-center animate-fade-up group hover:scale-105 transition-transform duration-300" style={{animationDelay: `${(index + 1) * 200}ms`}}>
-                  <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/30 h-full hover:bg-white/70 transition-colors">
-                    <div className="text-4xl mb-4">{step.icon}</div>
-                    <div className="text-sm font-mono text-primary mb-2">{step.step}</div>
-                    <h3 className="text-xl font-semibold mb-4">{step.title}</h3>
-                    <p className="text-muted-foreground">{step.description}</p>
-                  </div>
-                  
-                  {index < howItWorksSteps.length - 1 && (
-                    <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2">
-                      <ArrowRight className="h-6 w-6 text-muted-foreground" />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <div className="text-center mt-12">
-              <Link to="/competitions">
-                <Button size="lg" className="rounded-full px-8 animate-fade-up shadow-lg hover:shadow-xl transition-shadow" style={{animationDelay: '800ms'}}>
-                  Explore Competitions <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
             </div>
           </div>
         </section>
