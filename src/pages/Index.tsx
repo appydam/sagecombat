@@ -131,13 +131,7 @@ const Index = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 w-full max-w-2xl animate-fade-up" style={{
               animationDelay: '600ms'
             }}>
-                {stats.map((stat, index) => <div key={index} className="text-center">
-                    <div className="flex justify-center mb-2">
-                      <stat.icon className="h-6 w-6 text-primary" />
-                    </div>
-                    <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-                    <div className="text-sm text-muted-foreground">{stat.label}</div>
-                  </div>)}
+                {stats.map((stat, index) => {})}
               </div>
             </div>
           </div>
