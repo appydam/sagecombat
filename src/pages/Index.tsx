@@ -163,9 +163,7 @@ const Index = () => {
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-up" style={{
               animationDelay: '200ms'
-            }}>
-                The most advanced fantasy gaming platform for market predictions
-              </p>
+            }}>We're building the world's most advanced competitive fantasy gaming platform - made for the sharpest minds.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
