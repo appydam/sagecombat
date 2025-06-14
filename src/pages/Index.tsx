@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -9,6 +10,7 @@ import LeaderboardPreview from "@/components/LeaderboardPreview";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Play, Star, Users, TrendingUp, Shield, CheckCircle2, Zap } from "lucide-react";
+
 const Index = () => {
   const navigate = useNavigate();
   const leaderboardEntries = [{
@@ -33,19 +35,7 @@ const Index = () => {
     return: 8.17,
     prize: 2500
   }];
-  const stats = [{
-    icon: Users,
-    value: "10K+",
-    label: "Active Players"
-  }, {
-    icon: TrendingUp,
-    value: "₹2.5M+",
-    label: "Prizes Won"
-  }, {
-    icon: Star,
-    value: "4.8/5",
-    label: "User Rating"
-  }];
+
   const howItWorksSteps = [{
     step: "01",
     title: "Choose Your Game",
@@ -62,6 +52,7 @@ const Index = () => {
     description: "Compete with others and earn real money based on your prediction accuracy",
     icon: "🏆"
   }];
+
   return <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       
@@ -81,7 +72,7 @@ const Index = () => {
               <div className="flex flex-col sm:flex-row items-center gap-4 mb-8 w-full justify-center animate-fade-in">
                 <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-green-50 to-mint-50 border border-green-200">
                   <Shield className="w-4 h-4 mr-2 text-green-600" />
-                  <span className="text-sm font-medium text-green-700">Trusted by 10K+ Players</span>
+                  <span className="text-sm font-medium text-green-700">Secure & Trusted Platform</span>
                 </div>
                 
                 <a href="https://mindstockpapertrading.vercel.app/" target="_blank" rel="noopener noreferrer" className="relative inline-flex items-center px-4 py-2 rounded-full border border-border transition-all duration-300 cursor-pointer animate-fade-in shadow-sm overflow-hidden bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700">
@@ -126,33 +117,22 @@ const Index = () => {
                   See How It Works
                 </Button>
               </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 w-full max-w-2xl animate-fade-up" style={{
-              animationDelay: '600ms'
-            }}>
-                {stats.map((stat, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col items-center justify-center p-6 rounded-xl bg-white/70 backdrop-blur shadow-md"
-                  >
-                    <stat.icon className="w-7 h-7 text-primary mb-2" />
-                    <div className="text-2xl font-bold mb-1">{stat.value}</div>
-                    <div className="text-sm text-muted-foreground">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         </section>
 
-        {/* Product Demo Image */}
-        <section className="py-12 relative">
+        {/* Enhanced Product Demo Image */}
+        <section className="py-16 relative">
           <div className="container mx-auto px-4">
-            <div className="relative max-w-6xl mx-auto">
+            <div className="relative max-w-7xl mx-auto">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-mint-600/20 rounded-3xl blur-3xl transform rotate-1"></div>
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-4 shadow-2xl border border-white/20">
-                <img src="/newbg.png" alt="SageCombat Platform Preview - Equity, Opinion and Poly Contest Interfaces" className="w-full h-auto rounded-xl shadow-lg animate-fade-in" loading="eager" />
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/20">
+                <img 
+                  src="/newbg.png" 
+                  alt="SageCombat Platform Preview - Equity, Opinion and Poly Contest Interfaces" 
+                  className="w-full h-auto rounded-2xl shadow-2xl animate-fade-in transform hover:scale-[1.02] transition-all duration-500" 
+                  loading="eager" 
+                />
               </div>
             </div>
           </div>
@@ -175,9 +155,10 @@ const Index = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {howItWorksSteps.map((step, index) => <div key={index} className="relative text-center animate-fade-up group hover:scale-105 transition-transform duration-300" style={{
-              animationDelay: `${(index + 1) * 200}ms`
-            }}>
+              {howItWorksSteps.map((step, index) => (
+                <div key={index} className="relative text-center animate-fade-up group hover:scale-105 transition-transform duration-300" style={{
+                animationDelay: `${(index + 1) * 200}ms`
+              }}>
                   <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 h-full">
                     <div className="text-4xl mb-4">{step.icon}</div>
                     <div className="text-sm font-mono text-primary mb-2">{step.step}</div>
@@ -185,10 +166,13 @@ const Index = () => {
                     <p className="text-muted-foreground">{step.description}</p>
                   </div>
                   
-                  {index < howItWorksSteps.length - 1 && <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2">
+                  {index < howItWorksSteps.length - 1 && (
+                    <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2">
                       <ArrowRight className="h-6 w-6 text-muted-foreground" />
-                    </div>}
-                </div>)}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
 
             <div className="text-center mt-12">
@@ -247,15 +231,17 @@ const Index = () => {
               icon: Star,
               title: "Fair & Transparent",
               desc: "Clear rules and transparent prize distribution"
-            }].map((feature, index) => <div key={index} className="text-center p-6 rounded-2xl bg-white/30 backdrop-blur-sm border border-white/20 hover:bg-white/40 transition-all duration-300 animate-fade-up group hover:scale-105" style={{
-              animationDelay: `${index * 100}ms`
-            }}>
+            }].map((feature, index) => (
+                <div key={index} className="text-center p-6 rounded-2xl bg-white/30 backdrop-blur-sm border border-white/20 hover:bg-white/40 transition-all duration-300 animate-fade-up group hover:scale-105" style={{
+                animationDelay: `${index * 100}ms`
+              }}>
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4 group-hover:bg-primary/20 transition-colors">
                     <feature.icon className="h-6 w-6 text-primary" />
                   </div>
                   <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
                   <p className="text-muted-foreground text-sm">{feature.desc}</p>
-                </div>)}
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -345,7 +331,7 @@ const Index = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Star className="h-5 w-5" />
-                <span className="text-sm">Trusted by 10K+</span>
+                <span className="text-sm">Trusted Platform</span>
               </div>
             </div>
           </div>
@@ -355,4 +341,5 @@ const Index = () => {
       <Footer />
     </div>;
 };
+
 export default Index;
