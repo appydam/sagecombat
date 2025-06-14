@@ -255,7 +255,6 @@ const Profile = () => {
                 <TabsContent value="transactions">
                   <h2 className="text-xl font-bold mb-4">Transaction History</h2>
                   <TransactionsList 
-                    transactions={isAuthenticated ? [] : transactions} 
                     isAuthenticated={isAuthenticated}
                   />
                 </TabsContent>
