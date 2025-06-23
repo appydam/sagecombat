@@ -35,9 +35,13 @@ const Index = () => {
   }];
   return <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-mint-50/30 relative overflow-hidden">
       {/* Enhanced Global Background Elements */}
+ 
       <div className="fixed inset-0 -z-20">
         {/* Primary gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-mint-100/20 to-gold-100/30" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-mint-100/20 to-gold-100/30 bg-[length:400%_400%] motion-safe:animate-backgroundPulse" />
+
+       
+        {/* <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-mint-100/20 to-gold-100/30" /> */}
         
         {/* Animated floating orbs */}
         <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-primary/10 to-mint-200/20 rounded-full blur-3xl animate-pulse" />
@@ -73,6 +77,8 @@ const Index = () => {
           animationDuration: '4s'
         }} />
 
+    
+
           <div className="container px-4 mx-auto">
             <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
               {/* Trust Signals */}
@@ -94,26 +100,27 @@ const Index = () => {
 
               {/* Main Headline */}
               <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 animate-fade-up">
-                <span className="block mb-2 text-6xl md:text-7xl">The Future of</span>
+                <span className="block mb-2 text-6xl md:text-7xl">The future of</span>
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-mint-600 to-gold-500 animate-gradient text-7xl md:text-8xl">Competitive Fantasy Gaming</span>
               </h1>
+
 
               {/* Subheadline */}
               <p style={{
               animationDelay: '200ms'
-            }} className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto animate-fade-up leading-relaxed md:text-xl">Transform your market knowledge into real rewards. Compete in skill-based games without the risk of actual trading.</p>
+            }} className="text-lg text-muted-foreground mb-12 max-w-3xl mx-auto animate-fade-up leading-relaxed md:text-xl">Transform your market knowledge into real rewards. Compete in skill-based games without the risk.</p>
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 mb-12 w-full sm:w-auto animate-fade-up" style={{
               animationDelay: '400ms'
             }}>
                 <Link to="/competitions" className="w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto rounded-full px-8 py-4 bg-gradient-to-r from-primary to-mint-600 hover:from-primary/90 hover:to-mint-600/90 shadow-lg transform hover:scale-105 transition-all duration-300 text-base">
+                  <Button size="sm" className="w-full sm:w-auto rounded-full px-8 py-4 bg-gradient-to-r from-primary to-mint-600 hover:from-primary/90 hover:to-mint-600/90 shadow-lg transform hover:scale-105 transition-all duration-300 text-sm">
                     Start Playing Now <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
                 <Link to="/how-it-works">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-full px-8 py-4 border-2 hover:bg-accent/50 transform hover:scale-105 transition-all duration-300 text-base">
+                  <Button variant="outline" size="sm" className="w-full sm:w-auto rounded-full px-8 py-4 border-2 hover:bg-accent/50 transform hover:scale-105 transition-all duration-300 text-sm">
                     <Play className="mr-2 h-5 w-5" />
                     See How It Works
                   </Button>
@@ -257,8 +264,8 @@ const Index = () => {
           
           <div className="container px-4 mx-auto text-center">
             <h2 className="font-display text-4xl md:text-6xl font-bold mb-6 max-w-4xl mx-auto animate-fade-up">
-              Ready to Turn Your Market Knowledge Into
-              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-primary to-mint-600 mt-2">
+              Ready to turn your market knowledge into
+              <span className="text-5xl md:text-7xl block bg-clip-text text-transparent bg-gradient-to-r from-primary to-mint-600 mt-2">
                 Real Rewards?
               </span>
             </h2>
@@ -302,6 +309,34 @@ const Index = () => {
           </div>
         </section>
       </main>
+
+      <section className="py-16 bg-white relative z-10">
+  <div className="container px-4 mx-auto text-center">
+    <h2 className="text-3xl font-bold mb-10">What Players Are Saying</h2>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      {[
+        {
+          name: "Gaurav K.",
+          quote: "Pretty adictive set of mind sport games. This platform is genius!",
+        },
+        {
+          name: "Mehak D.",
+          quote: "Feels like fantasy sports - but for finance nerds like me.",
+        },
+        {
+          name: "Rahul A.",
+          quote: "Finally, a platform where I can use my knowledge & leaderboard is on merit :)",
+        }
+      ].map((t, i) => (
+        <div key={i} className="bg-slate-50 p-6 rounded-xl shadow-md border">
+          <p className="text-muted-foreground italic mb-3">“{t.quote}”</p>
+          <p className="text-sm font-semibold text-primary">- {t.name}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
       
       <Footer />
     </div>;

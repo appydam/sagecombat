@@ -138,6 +138,11 @@ export default {
 					'0%, 100%': { transform: 'translateY(0)' },
 					'50%': { transform: 'translateY(-10px)' },
 				},
+				backgroundPulse: {
+					'0%': { backgroundPosition: '0% 50%' },
+					'50%': { backgroundPosition: '100% 50%' },
+					'100%': { backgroundPosition: '0% 50%' },
+				  },
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -147,6 +152,7 @@ export default {
 				'fade-up': 'fade-up 0.5s ease-out',
 				'fade-down': 'fade-down 0.5s ease-out',
 				'float': 'float 6s ease-in-out infinite',
+				'backgroundPulse': 'backgroundPulse 15s ease infinite',
 			},
 			backdropFilter: {
 				'none': 'none',
