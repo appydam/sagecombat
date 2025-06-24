@@ -37,30 +37,47 @@ const Index = () => {
   }];
 
   return <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-mint-50/30 relative overflow-hidden">
-      {/* Animated Grid Background */}
+      {/* Enhanced Animated Square Grid Background */}
       <div className="fixed inset-0 -z-30">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-mint-50/30" />
+        
+        {/* Primary Grid Layer - More Visible */}
         <div 
-          className="absolute inset-0 opacity-[0.03] animate-grid-float"
+          className="absolute inset-0 opacity-[0.12] animate-grid-float"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(59, 130, 246, 0.5) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(59, 130, 246, 0.5) 1px, transparent 1px)
+              linear-gradient(rgba(59, 130, 246, 0.8) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(59, 130, 246, 0.8) 1px, transparent 1px)
             `,
-            backgroundSize: '60px 60px',
+            backgroundSize: '40px 40px',
             backgroundPosition: '0 0, 0 0'
           }}
         />
-        {/* Secondary grid layer for depth */}
+        
+        {/* Secondary Grid Layer - Different Size and Color */}
         <div 
-          className="absolute inset-0 opacity-[0.02] animate-grid-float-reverse"
+          className="absolute inset-0 opacity-[0.08] animate-grid-float-reverse"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(16, 185, 129, 0.4) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(16, 185, 129, 0.4) 1px, transparent 1px)
+              linear-gradient(rgba(16, 185, 129, 0.6) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(16, 185, 129, 0.6) 1px, transparent 1px)
+            `,
+            backgroundSize: '80px 80px',
+            backgroundPosition: '20px 20px, 20px 20px'
+          }}
+        />
+        
+        {/* Tertiary Grid Layer - Accent Color */}
+        <div 
+          className="absolute inset-0 opacity-[0.06] animate-grid-float"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(217, 189, 109, 0.7) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(217, 189, 109, 0.7) 1px, transparent 1px)
             `,
             backgroundSize: '120px 120px',
-            backgroundPosition: '30px 30px, 30px 30px'
+            backgroundPosition: '40px 40px, 40px 40px',
+            animationDelay: '1s'
           }}
         />
       </div>
