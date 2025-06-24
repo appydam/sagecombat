@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -36,85 +35,66 @@ const Index = () => {
     prize: 2500
   }];
 
-  return <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-mint-50/30 relative overflow-hidden">
-      {/* Enhanced Animated Square Grid Background */}
-      <div className="fixed inset-0 -z-30">
+  return <div className="min-h-screen flex flex-col relative overflow-hidden">
+      {/* Main Animated Square Grid Background - Higher Z-Index */}
+      <div className="fixed inset-0 z-0">
+        {/* Base background */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-mint-50/30" />
         
-        {/* Primary Grid Layer - More Visible */}
+        {/* Primary Grid Layer */}
         <div 
-          className="absolute inset-0 opacity-[0.12] animate-grid-float"
+          className="absolute inset-0 opacity-20 animate-grid-float"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(59, 130, 246, 0.8) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(59, 130, 246, 0.8) 1px, transparent 1px)
+              linear-gradient(rgba(59, 130, 246, 0.6) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(59, 130, 246, 0.6) 1px, transparent 1px)
             `,
-            backgroundSize: '40px 40px',
-            backgroundPosition: '0 0, 0 0'
+            backgroundSize: '50px 50px',
           }}
         />
         
-        {/* Secondary Grid Layer - Different Size and Color */}
+        {/* Secondary Grid Layer */}
         <div 
-          className="absolute inset-0 opacity-[0.08] animate-grid-float-reverse"
+          className="absolute inset-0 opacity-15 animate-grid-float-reverse"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(16, 185, 129, 0.6) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(16, 185, 129, 0.6) 1px, transparent 1px)
+              linear-gradient(rgba(16, 185, 129, 0.5) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(16, 185, 129, 0.5) 1px, transparent 1px)
             `,
-            backgroundSize: '80px 80px',
-            backgroundPosition: '20px 20px, 20px 20px'
+            backgroundSize: '100px 100px',
+            backgroundPosition: '25px 25px'
           }}
         />
         
-        {/* Tertiary Grid Layer - Accent Color */}
+        {/* Tertiary Grid Layer */}
         <div 
-          className="absolute inset-0 opacity-[0.06] animate-grid-float"
+          className="absolute inset-0 opacity-10 animate-grid-float"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(217, 189, 109, 0.7) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(217, 189, 109, 0.7) 1px, transparent 1px)
+              linear-gradient(rgba(217, 189, 109, 0.4) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(217, 189, 109, 0.4) 1px, transparent 1px)
             `,
-            backgroundSize: '120px 120px',
-            backgroundPosition: '40px 40px, 40px 40px',
-            animationDelay: '1s'
+            backgroundSize: '150px 150px',
+            backgroundPosition: '75px 75px',
+            animationDelay: '2s'
           }}
         />
       </div>
 
-      {/* Enhanced Global Background Elements */}
-      <div className="fixed inset-0 -z-20">
-        {/* Primary gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-mint-100/20 to-gold-100/30 bg-[length:400%_400%] motion-safe:animate-backgroundPulse" />
-        
-        {/* Animated floating orbs */}
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-primary/10 to-mint-200/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute top-1/2 -right-32 w-80 h-80 bg-gradient-to-l from-gold-200/30 to-mint-300/20 rounded-full blur-3xl animate-bounce" style={{
+      {/* Subtle Background Orbs - Lower Z-Index */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-primary/5 to-mint-200/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-1/2 -right-32 w-80 h-80 bg-gradient-to-l from-gold-200/15 to-mint-300/10 rounded-full blur-3xl animate-bounce" style={{
         animationDuration: '8s'
       }} />
-        <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-gradient-to-tr from-mint-300/25 to-primary/15 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-3/4 right-1/4 w-72 h-72 bg-gradient-to-bl from-gold-300/20 to-mint-200/25 rounded-full blur-3xl animate-float" style={{
-        animationDelay: '4s'
-      }} />
-        
-        {/* Geometric patterns */}
-        <div className="absolute top-1/3 left-1/2 w-48 h-48 border border-primary/10 rounded-lg rotate-45 animate-pulse" />
-        <div className="absolute bottom-1/3 right-1/3 w-32 h-32 border border-mint-400/20 rounded-full animate-float" style={{
-        animationDelay: '2s'
-      }} />
+        <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-gradient-to-tr from-mint-300/10 to-primary/8 rounded-full blur-3xl animate-float" />
       </div>
 
       <Navbar />
       
-      <main className="flex-grow relative">
+      <main className="flex-grow relative z-10">
         {/* Enhanced Hero Section */}
         <section className="relative overflow-hidden pt-20 pb-8 md:pt-28 md:pb-12">
-          {/* Section-specific background elements */}
-          <div className="absolute top-0 left-0 right-0 h-full bg-gradient-to-b from-mint-50/40 via-transparent to-transparent -z-10" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-gradient-to-r from-primary/5 to-mint-400/10 rounded-full blur-3xl -z-10 animate-pulse" style={{
-          animationDuration: '4s'
-        }} />
-
           <div className="container px-4 mx-auto">
             <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
               {/* Trust Signals */}
@@ -167,15 +147,9 @@ const Index = () => {
 
         {/* Enhanced Product Demo Image */}
         <section className="py-12 relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/3 via-transparent to-mint-400/5 -z-10" />
-          <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-gradient-to-br from-mint-200/20 to-gold-200/15 rounded-full blur-3xl -z-10 animate-float" />
-          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-tl from-primary/10 to-mint-300/20 rounded-full blur-3xl -z-10 animate-float" style={{
-          animationDelay: '3s'
-        }} />
-          
           <div className="container mx-auto px-4">
             <div className="relative max-w-8xl mx-auto">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-mint-600/20 rounded-3xl blur-3xl transform rotate-1 animate-pulse"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-mint-600/10 rounded-3xl blur-3xl transform rotate-1 animate-pulse"></div>
               <div className="relative bg-white/20 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/30">
                 <img src="/newbg.png" alt="SageCombat Platform Preview - Equity, Opinion and Poly Contest Interfaces" className="w-full h-auto rounded-2xl shadow-2xl animate-fade-in transform hover:scale-[1.02] transition-all duration-500" loading="eager" />
               </div>
@@ -183,18 +157,9 @@ const Index = () => {
           </div>
         </section>
 
-        <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-mint-50/20 via-white/50 to-primary/5 -z-10" />
-          <GameTypes />
-        </div>
+        <GameTypes />
 
         <section className="py-20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-mint-50/30 to-gold-100/20 -z-10" />
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-mint-100/30 rounded-full blur-3xl -z-10 animate-float" />
-          <div className="absolute bottom-0 -left-40 w-80 h-80 bg-gradient-to-tr from-primary/15 to-mint-300/25 rounded-full blur-3xl -z-10 animate-float" style={{
-          animationDelay: '4s'
-        }} />
-          
           <div className="container px-4 mx-auto">
             <div className="text-center mb-16">
               <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 animate-fade-up">
@@ -244,9 +209,6 @@ const Index = () => {
         </section>
 
         <section className="py-16 relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-mint-50/40 to-transparent -z-10" />
-          <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-gradient-to-r from-primary/10 to-mint-300/20 rounded-full blur-3xl -z-10 animate-float" />
-          
           <div className="container px-4 mx-auto">
             <div className="flex flex-col lg:flex-row gap-12 items-center">
               <div className="flex-1 text-center lg:text-left">
@@ -283,15 +245,6 @@ const Index = () => {
         </section>
         
         <section className="py-20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-mint-100/50 via-secondary/40 to-gold-100/50 -z-10" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-r from-primary/10 to-mint-400/15 rounded-full blur-3xl -z-10 animate-pulse" style={{
-          animationDuration: '6s'
-        }} />
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-gold-300/20 to-primary/15 rounded-full blur-3xl -z-10 animate-float" />
-          <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-gradient-to-tl from-mint-400/25 to-gold-200/20 rounded-full blur-3xl -z-10 animate-float" style={{
-          animationDelay: '3s'
-        }} />
-          
           <div className="container px-4 mx-auto text-center">
             <h2 className="font-display text-4xl md:text-6xl font-bold mb-6 max-w-4xl mx-auto animate-fade-up">
               Ready to turn your market knowledge into
