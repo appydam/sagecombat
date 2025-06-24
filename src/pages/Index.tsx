@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -9,6 +10,7 @@ import LeaderboardPreview from "@/components/LeaderboardPreview";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Play, Star, Users, TrendingUp, Shield, CheckCircle2, Zap } from "lucide-react";
+
 const Index = () => {
   const navigate = useNavigate();
   const leaderboardEntries = [{
@@ -33,15 +35,40 @@ const Index = () => {
     return: 8.17,
     prize: 2500
   }];
+
   return <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-mint-50/30 relative overflow-hidden">
+      {/* Animated Grid Background */}
+      <div className="fixed inset-0 -z-30">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-mint-50/30" />
+        <div 
+          className="absolute inset-0 opacity-[0.03] animate-grid-float"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(59, 130, 246, 0.5) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(59, 130, 246, 0.5) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px',
+            backgroundPosition: '0 0, 0 0'
+          }}
+        />
+        {/* Secondary grid layer for depth */}
+        <div 
+          className="absolute inset-0 opacity-[0.02] animate-grid-float-reverse"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(16, 185, 129, 0.4) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(16, 185, 129, 0.4) 1px, transparent 1px)
+            `,
+            backgroundSize: '120px 120px',
+            backgroundPosition: '30px 30px, 30px 30px'
+          }}
+        />
+      </div>
+
       {/* Enhanced Global Background Elements */}
- 
       <div className="fixed inset-0 -z-20">
         {/* Primary gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-mint-100/20 to-gold-100/30 bg-[length:400%_400%] motion-safe:animate-backgroundPulse" />
-
-       
-        {/* <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-mint-100/20 to-gold-100/30" /> */}
         
         {/* Animated floating orbs */}
         <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-primary/10 to-mint-200/20 rounded-full blur-3xl animate-pulse" />
@@ -58,12 +85,6 @@ const Index = () => {
         <div className="absolute bottom-1/3 right-1/3 w-32 h-32 border border-mint-400/20 rounded-full animate-float" style={{
         animationDelay: '2s'
       }} />
-        
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 opacity-[0.02]" style={{
-        backgroundImage: `radial-gradient(circle at 1px 1px, rgb(0 0 0) 1px, transparent 0)`,
-        backgroundSize: '40px 40px'
-      }} />
       </div>
 
       <Navbar />
@@ -76,8 +97,6 @@ const Index = () => {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-gradient-to-r from-primary/5 to-mint-400/10 rounded-full blur-3xl -z-10 animate-pulse" style={{
           animationDuration: '4s'
         }} />
-
-    
 
           <div className="container px-4 mx-auto">
             <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
@@ -103,7 +122,6 @@ const Index = () => {
                 <span className="block mb-2 text-6xl md:text-7xl">The future of</span>
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-mint-600 to-gold-500 animate-gradient text-7xl md:text-8xl">Competitive Fantasy Gaming</span>
               </h1>
-
 
               {/* Subheadline */}
               <p style={{
@@ -132,7 +150,6 @@ const Index = () => {
 
         {/* Enhanced Product Demo Image */}
         <section className="py-12 relative">
-          {/* Background elements for this section */}
           <div className="absolute inset-0 bg-gradient-to-r from-primary/3 via-transparent to-mint-400/5 -z-10" />
           <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-gradient-to-br from-mint-200/20 to-gold-200/15 rounded-full blur-3xl -z-10 animate-float" />
           <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-tl from-primary/10 to-mint-300/20 rounded-full blur-3xl -z-10 animate-float" style={{
@@ -149,13 +166,11 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Game Types */}
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-b from-mint-50/20 via-white/50 to-primary/5 -z-10" />
           <GameTypes />
         </div>
 
-        {/* Features Section */}
         <section className="py-20 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-mint-50/30 to-gold-100/20 -z-10" />
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-mint-100/30 rounded-full blur-3xl -z-10 animate-float" />
@@ -211,7 +226,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Leaderboard Preview */}
         <section className="py-16 relative">
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-mint-50/40 to-transparent -z-10" />
           <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-gradient-to-r from-primary/10 to-mint-300/20 rounded-full blur-3xl -z-10 animate-float" />
@@ -251,7 +265,6 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Final CTA Section */}
         <section className="py-20 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-mint-100/50 via-secondary/40 to-gold-100/50 -z-10" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-r from-primary/10 to-mint-400/15 rounded-full blur-3xl -z-10 animate-pulse" style={{
@@ -289,7 +302,6 @@ const Index = () => {
               </Link>
             </div>
             
-            {/* Trust badges */}
             <div className="flex justify-center items-center gap-8 mt-16 opacity-60 animate-fade-up" style={{
             animationDelay: '600ms'
           }}>
@@ -311,34 +323,34 @@ const Index = () => {
       </main>
 
       <section className="py-16 bg-white relative z-10">
-  <div className="container px-4 mx-auto text-center">
-    <h2 className="text-3xl font-bold mb-10">What Players Are Saying</h2>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-      {[
-        {
-          name: "Gaurav K.",
-          quote: "Pretty adictive set of mind sport games. This platform is genius!",
-        },
-        {
-          name: "Mehak D.",
-          quote: "Feels like fantasy sports - but for finance nerds like me.",
-        },
-        {
-          name: "Rahul A.",
-          quote: "Finally, a platform where I can use my knowledge & leaderboard is on merit :)",
-        }
-      ].map((t, i) => (
-        <div key={i} className="bg-slate-50 p-6 rounded-xl shadow-md border">
-          <p className="text-muted-foreground italic mb-3">“{t.quote}”</p>
-          <p className="text-sm font-semibold text-primary">- {t.name}</p>
+        <div className="container px-4 mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-10">What Players Are Saying</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {[
+              {
+                name: "Gaurav K.",
+                quote: "Pretty adictive set of mind sport games. This platform is genius!",
+              },
+              {
+                name: "Mehak D.",
+                quote: "Feels like fantasy sports - but for finance nerds like me.",
+              },
+              {
+                name: "Rahul A.",
+                quote: "Finally, a platform where I can use my knowledge & leaderboard is on merit :)",
+              }
+            ].map((t, i) => (
+              <div key={i} className="bg-slate-50 p-6 rounded-xl shadow-md border">
+                <p className="text-muted-foreground italic mb-3">"{t.quote}"</p>
+                <p className="text-sm font-semibold text-primary">- {t.name}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
-
+      </section>
       
       <Footer />
     </div>;
 };
+
 export default Index;
