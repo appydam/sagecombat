@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -37,7 +38,7 @@ const Index = () => {
 
   return <div className="min-h-screen flex flex-col relative overflow-hidden">
       {/* Elegant Grid Background */}
-      <div className="fixed inset-0 z-0">
+      <div className="fixed inset-0 -z-10">
         {/* Base background */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-mint-50/30" />
         
@@ -305,7 +306,9 @@ const Index = () => {
         </div>
       </section>
       
-      <Footer />
+      <div className="relative z-20">
+        <Footer />
+      </div>
     </div>;
 };
 
