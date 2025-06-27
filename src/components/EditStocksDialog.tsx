@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { X, Info, CheckCircle, AlertCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import availableStocks from "../../stockSymbolsData/editStocksList";
+import availableStocks from "../../stocksData/generatedStocksList/editStocksList";
 
 
 interface ContestType {

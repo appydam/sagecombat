@@ -55,8 +55,9 @@ def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     
     # Define input and output file paths
-    csv_file1 = os.path.join(script_dir, 'equity.csv')  # First CSV file
-    csv_file2 = os.path.join(script_dir, 'sme.csv')  # Second CSV file
+    data_dir = os.path.join(script_dir, '..', 'nse data')
+    csv_file1 = os.path.join(data_dir, 'equity.csv')  # First CSV file
+    csv_file2 = os.path.join(data_dir, 'sme.csv')  # Second CSV file
     output_file = os.path.join(script_dir, 'stocks.ts')
     
     # Read both CSV files into dictionaries
