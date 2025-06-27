@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import MorphCard from "@/components/ui/MorphCard";
 import { Input } from "@/components/ui/input";
-import { availableStocks } from "../../stockSymbolsData/stocks";
+import { availableStocks } from "../../stocksData/generatedStocksList/stocks";
 import { BACKEND_HOST } from "@/constants/config";
 import { Calendar } from "lucide-react";
 import SelectedStocksNewsSummary from '@/components/SelectedStocksNewsSummary';
