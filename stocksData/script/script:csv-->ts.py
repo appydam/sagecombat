@@ -31,7 +31,15 @@ def read_csv_to_dict(csv_file_path: str) -> Dict[str, dict]:
 
 def convert_to_ts_format(stocks: Dict[str, dict]) -> str:
     """Convert stock dictionary to TypeScript format."""
-    output = "export const availableStocks: Stock[] = [\n"
+    interface_definition = """export interface Stock {
+  id: string;
+  symbol: string;
+  name: string;
+  sector: string;
+}
+
+"""
+    output = interface_definition + "export const availableStocks: Stock[] = [\n"
     
     # Convert dict to list for iteration
     stock_list = list(stocks.values())
@@ -56,16 +64,22 @@ def main():
     
     # Define input and output file paths
     data_dir = os.path.join(script_dir, '..', 'nse data')
-    csv_file1 = os.path.join(data_dir, 'equity.csv')  # First CSV file
-    csv_file2 = os.path.join(data_dir, 'sme.csv')  # Second CSV file
-    output_file = os.path.join(script_dir, 'stocks.ts')
+
+
+    
+    
+    
+    csv_file1 = os.path.join(data_dir, 'sme.csv')  # First CSV file
+    # csv_file2 = os.path.join(data_dir, 'sme.csv')  # Second CSV file
+    output_file = os.path.join(script_dir, '..', 'generatedStocksList', 'sme.ts')
     
     # Read both CSV files into dictionaries
     stocks1 = read_csv_to_dict(csv_file1)
-    stocks2 = read_csv_to_dict(csv_file2)
+    # stocks2 = read_csv_to_dict(csv_file2)
     
     # Merge dictionaries (stocks2 will override stocks1 if there are duplicates)
-    combined_stocks = {**stocks1, **stocks2}
+    # combined_stocks = {**stocks1, **stocks2}
+    combined_stocks = stocks1
     
     if not combined_stocks:
         print("No valid stock data found in either CSV file.")

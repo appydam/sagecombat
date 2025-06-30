@@ -16,6 +16,7 @@ export interface ApiEquityContest {
   current_participants: number;
   currency_type: "real" | "virtual";
   competition_interval: number;
+  contest_category: string;
 }
 
 export interface ApiOpinionContest {
@@ -82,7 +83,8 @@ export interface CompetitionProps {
   type: "custom" | "predefined"; // Derived from basket_type
   gameType: "equity" | "crypto" | "opinion"; // Include all possible game types
   currency_type: "real" | "virtual";
-  competition_interval: number
+  competition_interval: number;
+  contestCategory: string;
 }
 
 // For <OpinionEventCard /> - Derived from ApiOpinionContest

@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import MorphCard from "@/components/ui/MorphCard";
 import { Input } from "@/components/ui/input";
-import { availableStocks } from "../../stocksData/generatedStocksList/stocks";
+import { getStockListByCategory, ContestCategory } from "../../stocksData/mapper/whichStockList";
 import { BACKEND_HOST } from "@/constants/config";
 import { Calendar } from "lucide-react";
 import SelectedStocksNewsSummary from '@/components/SelectedStocksNewsSummary';
@@ -53,15 +53,20 @@ const CustomBasketGame = () => {
     ).toISOString(),
     maxSelectionsAllowed: 5, // This seems to be fixed at 5 stocks
     currencyType: searchParams.get("currencyType") || "virtual",
+    contestCategory: searchParams.get("contestCategory") as ContestCategory || "ALL",
   };
 
+  const stockList = useMemo(() => {
+    return getStockListByCategory(competitionData.contestCategory);
+  }, [competitionData.contestCategory]);
+
   const filteredStocks = useMemo(() => {
-    return availableStocks.filter(
+    return stockList.filter(
       (stock) =>
         stock.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         stock.symbol.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [searchQuery]);
+  }, [searchQuery, stockList]);
 
   const handleStockSelectionsChange = (selections: Stock[]) => {
     setSelectedStocks(selections);
@@ -197,91 +202,6 @@ const CustomBasketGame = () => {
               <p className="text-muted-foreground mb-4">
                 {competitionData.description}
               </p>
-
-              {/* <div className="space-y-8">
-                <Input
-                  type="search"
-                  placeholder="Search for a stock..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="mb-2"
-                />
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-                  {paginatedStocks.map(stock => (
-                    <MorphCard key={stock.id} className="flex items-center justify-between p-3 animate-fade-in">
-                      <div>
-                        <div className="font-medium">{stock.symbol}</div>
-                        <div className="text-sm text-muted-foreground truncate max-w-[180px]">{stock.name}</div>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 rounded-full hover:bg-destructive/10 hover:text-destructive"
-                        onClick={() => handleAddStock(stock)}
-                      >
-                        <PlusCircle className="h-4 w-4" />
-                      </Button>
-                    </MorphCard>
-                  ))}
-                </div>
-
-                <div className="flex justify-between items-center mt-4">
-                  <Button
-                    variant="outline"
-                    disabled={currentPage === 1}
-                    onClick={() => setCurrentPage(currentPage - 1)}
-                  >
-                    Previous
-                  </Button>
-                  <span className="text-sm text-muted-foreground">
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <Button
-                    variant="outline"
-                    disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(currentPage + 1)}
-                  >
-                    Next
-                  </Button>
-                </div>
-
-                <div className="text-sm text-muted-foreground">
-                  {selectedStocks.length} of {competitionData.maxSelectionsAllowed} stocks selected
-                </div>
-
-                {selectedStocks.length > 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-                    {selectedStocks.map(stock => (
-                      <MorphCard key={stock.id} className="flex items-center justify-between p-3 animate-fade-in">
-                        <div>
-                          <div className="font-medium">{stock.symbol}</div>
-                          <div className="text-sm text-muted-foreground truncate max-w-[180px]">{stock.name}</div>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 rounded-full hover:bg-destructive/10 hover:text-destructive"
-                          onClick={() => handleRemoveStock(stock.id)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </MorphCard>
-                    ))}
-                  </div>
-                )}
-
-                <div className="mt-8">
-                  <Button
-                    size="lg"
-                    className="w-full md:w-auto"
-                    onClick={handleJoinCompetition}
-                    disabled={selectedStocks.length < competitionData.maxSelectionsAllowed}
-                  >
-                    Join Competition for ₹{competitionData.entryFee}
-                  </Button>
-                </div>
-              </div> */}
-
 
 
 <div className="space-y-5 px-3 py-4 bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 shadow-md">
