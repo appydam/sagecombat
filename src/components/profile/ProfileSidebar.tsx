@@ -140,6 +140,17 @@ const ProfileSidebar = ({ user, onDepositClick, onWithdrawClick }: ProfileSideba
           </Button>
         </div>
 
+        {/* KYC/Transaction Hold Banner */}
+        <div className="mt-4 p-3 bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-950/50 dark:to-orange-950/50 border border-amber-300 dark:border-amber-800 rounded-xl text-center">
+            <div className="flex items-center justify-center">
+                <Info className="w-5 h-5 mr-2 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                <div className="text-xs text-amber-800 dark:text-amber-200 text-left">
+                  <p className="font-semibold">Coming Soon</p>
+                  <p>We're working on enabling real money features with secure KYC verification. Stay tuned! 🚀</p>
+                </div>
+            </div>
+        </div>
+
         <Separator className="my-4 bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
 
         {/* User Info */}

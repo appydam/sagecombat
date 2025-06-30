@@ -9,29 +9,30 @@ import CompetitionCard from "@/components/CompetitionCard";
 import LeaderboardPreview from "@/components/LeaderboardPreview";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Play, Star, Users, TrendingUp, Shield, CheckCircle2, Zap } from "lucide-react";
+import { ArrowRight, Play, Star, Users, TrendingUp, Shield, CheckCircle2, Zap, X } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
+  const [isBannerVisible, setIsBannerVisible] = useState(true);
   const leaderboardEntries = [{
     id: "entry-1",
     rank: 1,
     userId: "user-1",
-    username: "StockGuru",
+    username: "Arpit",
     return: 12.45,
     prize: 10000
   }, {
     id: "entry-2",
     rank: 2,
     userId: "user-2",
-    username: "MarketMaven",
+    username: "Kash",
     return: 10.22,
     prize: 5000
   }, {
     id: "entry-3",
     rank: 3,
     userId: "user-3",
-    username: "TradingKing",
+    username: "Yuvraj",
     return: 8.17,
     prize: 2500
   }];
@@ -78,6 +79,21 @@ const Index = () => {
       </div>
 
       <Navbar />
+
+      {/* Beta Version Banner */}
+      {isBannerVisible && (
+        <div className="relative overflow-hidden z-20 bg-gradient-to-r from-violet-200 to-pink-200 text-gray-800 text-center p-2.5 text-sm flex items-center justify-center">
+          <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
+          <p className="font-medium relative">🚀 Welcome to the Beta! We're still polishing things up, so please excuse any dust. Your feedback is invaluable! ✨</p>
+          <button 
+            onClick={() => setIsBannerVisible(false)}
+            className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-600 hover:text-gray-900 transition-colors z-10"
+            aria-label="Dismiss banner"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
       
       <main className="flex-grow relative z-10">
         {/* Enhanced Hero Section */}

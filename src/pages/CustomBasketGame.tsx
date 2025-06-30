@@ -211,7 +211,10 @@ const CustomBasketGame = () => {
   type="search"
   placeholder="🔍 Search for a stock..."
   value={searchQuery}
-  onChange={(e) => setSearchQuery(e.target.value)}
+  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentPage(1);
+                  }}
   className="rounded-md py-1.5 px-3 text-sm shadow-inner border border-gray-300 focus:ring-2 focus:ring-purple-400 placeholder:text-slate-400"
 />
 
