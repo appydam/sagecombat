@@ -110,7 +110,7 @@ const CompetitionListDisplay = ({
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredCompetitions.map(competition => (
-              <CompetitionCard key={competition.id} {...competition} />
+              <CompetitionCard key={competition.id} {...competition} contestCategory={competition.contestCategory} />
             ))}
           </div>
         );

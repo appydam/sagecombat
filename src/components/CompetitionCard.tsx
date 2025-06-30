@@ -20,6 +20,7 @@ export interface CompetitionProps {
   gameType: "equity" | "crypto" | "opinion";
   currency_type: "real" | "virtual";
   competition_interval: number;
+  contestCategory: string;
 }
 
 const CompetitionCard = ({
@@ -35,10 +36,24 @@ const CompetitionCard = ({
   type,
   gameType,
   currency_type,
-  competition_interval
+  competition_interval,
+  contestCategory
 }: CompetitionProps) => {
   const percentFilled = (currentParticipants / maxParticipants) * 100;
   const isExpired = new Date(registerDeadline) < new Date();
+
+  const formatCategory = (category: string) => {
+    if (!category) return "";
+    return category
+      .split("_")
+      .map((word) => {
+        if (word.toUpperCase() === word) {
+          return word;
+        }
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      })
+      .join(" ");
+  };
 
   // Parse the register_deadline
   const registerDeadlineDate = new Date(registerDeadline);
@@ -70,6 +85,7 @@ const CompetitionCard = ({
     params.append('startDate', registerDeadlineDate.toISOString());
     params.append('endDate', contestEndTime.toISOString());
     params.append('currencyType', currency_type);
+    params.append('contestCategory', contestCategory);
     
     return `${baseUrl}?${params.toString()}`;
   };
@@ -135,7 +151,14 @@ const CompetitionCard = ({
 
       <CardContent className="p-4 space-y-4">
         <div>
-          <h3 className="font-medium text-lg mb-1">{name}</h3>
+          <div className="flex justify-between items-center mb-1">
+            <h3 className="font-medium text-lg truncate pr-2">{name}</h3>
+            {gameType === 'equity' && contestCategory && (
+              <Badge className="bg-purple-200 text-purple-800 border-purple-300 hover:bg-purple-300 whitespace-nowrap">
+                {formatCategory(contestCategory)}
+              </Badge>
+            )}
+          </div>
           <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
         </div>
 

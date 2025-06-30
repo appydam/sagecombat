@@ -24,7 +24,8 @@ export const mapApiDataToFrontend = (apiData: CompetitionsApiResponseData): {
     type: contest.basket_type === "Custom Basket" ? "custom" as const : "predefined" as const,
     gameType: "equity" as const,
     currency_type: contest.currency_type,
-    competition_interval: contest.competition_interval
+    competition_interval: contest.competition_interval,
+    contestCategory: contest.contest_category
   }));
 
   // Map opinion contests, handle missing key gracefully

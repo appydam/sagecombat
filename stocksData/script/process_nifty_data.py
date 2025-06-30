@@ -50,8 +50,8 @@ def get_company_name(symbol: str) -> str:
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
 
     sources = [
-        {'name': 'finology.in', 'url': f"https://ticker.finology.in/company/{encoded_symbol}", 'parser': _parse_finology},
         {'name': 'screener.in', 'url': f"https://www.screener.in/company/{encoded_symbol}/", 'parser': _parse_screener},
+        {'name': 'finology.in', 'url': f"https://ticker.finology.in/company/{encoded_symbol}", 'parser': _parse_finology},
         {'name': 'finance.yahoo.com', 'url': f"https://finance.yahoo.com/quote/{encoded_symbol}.NS", 'parser': _parse_yahoo}
     ]
 
@@ -87,6 +87,8 @@ def get_company_name(symbol: str) -> str:
 def process_raw_csv(input_file: str, output_file: str):
     """
     Reads the raw NSE data, scrapes company names, and writes to a new CSV.
+    This version is tailored to the specific format of MW-NIFTY-SMALLCAP-50 CSVs
+    which have a multi-line header.
     """
     output_dir = os.path.dirname(output_file)
     if not os.path.exists(output_dir):
@@ -99,31 +101,53 @@ def process_raw_csv(input_file: str, output_file: str):
             reader = csv.reader(infile)
             writer = csv.writer(outfile)
             
+            # Write the header for the new file
             writer.writerow(['SYMBOL', 'NAME_OF_COMPANY', 'SERIES', 'DATE_OF_LISTING', 'PAID_UP_VALUE', 'ISIN_NUMBER', 'FACE_VALUE'])
             
+            # Skip the messy header until we find the start of the data
+            data_started = False
             for row in reader:
-                if row and 'NIFTY 50' in row[0]:
+                if row and "NIFTY SMALLCAP 50" in row[0]:
+                    print("[INFO] Found data start marker. Skipping index row and beginning processing.")
+                    data_started = True
+                    # The next row is the first actual stock
                     break
             
-            for row in reader:
+            if not data_started:
+                print("[ERROR] Could not find the data start marker ('NIFTY SMALLCAP 50') in the CSV.")
+                return
+
+            # Process the rest of the rows for data
+            processed_symbols = 0
+            for i, row in enumerate(reader):
+                # The reader is now at the first stock row
                 if not row or not row[0]:
-                    continue
-                
-                symbol = row[0].strip().replace('"', '')
-                
-                if ' ' in symbol or len(symbol) > 20:
+                    print(f"[DEBUG] Skipping empty row {i+1}.")
                     continue
 
+                # The symbol is in the first column
+                symbol = row[0].strip()
+
+                # Validate the symbol
+                if not symbol or ' ' in symbol or len(symbol) > 20:
+                    print(f"[DEBUG] Skipping invalid or non-stock symbol in row {i+1}: '{symbol}'")
+                    continue
+                
+                print(f"[INFO] Processing symbol: {symbol}")
                 company_name = get_company_name(symbol)
                 
-                if company_name != "Not Found":
+                if company_name and company_name != "Not Found":
                     writer.writerow([
                         symbol, company_name, 'EQ', 'NA', '10', 'NA', '10'
                     ])
+                    processed_symbols += 1
+                    print(f"[SUCCESS] Found and wrote company name for {symbol}: {company_name}")
+                else:
+                    print(f"[FAIL] Could not find company name for {symbol}")
                 
-                time.sleep(1) # Delay to be respectful to servers
+                time.sleep(1) # Be respectful to the servers
 
-        print(f"\nProcessing complete. Output written to {output_file}")
+            print(f"\nProcessing complete. Total symbols processed and written: {processed_symbols}. Output written to {output_file}")
 
     except FileNotFoundError:
         print(f"Error: Input file not found at {input_file}")
@@ -132,6 +156,6 @@ def process_raw_csv(input_file: str, output_file: str):
 
 if __name__ == '__main__':
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    input_csv_path = os.path.join(script_dir, '..', 'rawNSE-data', 'MW-NIFTY-50-27-Jun-2025.csv')
-    output_csv_path = os.path.join(script_dir, '..', 'nse data', 'nifty50_formatted.csv')
+    input_csv_path = os.path.join(script_dir, '..', 'rawNSE-data', 'MW-NIFTY-SMALLCAP-50-29-Jun-2025.csv')
+    output_csv_path = os.path.join(script_dir, '..', 'nse data', 'nifty_smallcap_50_formatted.csv')
     process_raw_csv(input_csv_path, output_csv_path)
