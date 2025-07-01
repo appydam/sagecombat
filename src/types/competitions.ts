@@ -45,6 +45,8 @@ export interface ApiOrderbookContest {
   status: string;
   answer: boolean | null;
   currency_type: string;
+  total_participants: number; 
+  total_volume: number;    
   created_at: string;
   updated_at: string;
 }

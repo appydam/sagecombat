@@ -49,10 +49,10 @@ const transformApiPolyContest = (apiContest: any): PolyContest => {
     category: apiContest.tag || "General",
     status: apiContest.status === "open" ? "active" :
       apiContest.status === "closed" ? "resolved" : "cancelled",
-    participants: 0, // Will be populated from other API or estimations
+    participants: apiContest.total_participants || 0,
     yes_price: 0.5, // Will be fetched separately
     no_price: 0.5, // Will be fetched separately
-    total_volume: 0, // Will be populated from other API or estimations
+    total_volume: apiContest.total_volume || 0,
     end_time: apiContest.registration_deadline || new Date().toISOString(),
     created_at: apiContest.created_at || new Date().toISOString(),
     outcome: apiContest.answer === true ? "yes" :

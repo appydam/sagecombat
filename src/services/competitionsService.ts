@@ -12,7 +12,7 @@ export const mapApiDataToFrontend = (apiData: CompetitionsApiResponseData): {
   const equityCompetitions = (apiData.equity_contests || []).map(contest => ({
     id: String(contest.id),
     name: contest.name,
-    title: contest.name, // Add title property for consistency
+    title: contest.name,
     description: contest.description,
     entryFee: contest.entry_fee,
     maxParticipants: contest.max_participants,
