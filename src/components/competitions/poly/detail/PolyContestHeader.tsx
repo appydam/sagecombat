@@ -68,7 +68,7 @@ const PolyContestHeader = ({ contest, onBack, onShare }: PolyContestHeaderProps)
         
         <div className="flex items-center">
           <IndianRupee className="h-4 w-4 text-amber-500 mr-1" />
-          <span className="text-muted-foreground">₹{contest.total_volume.toLocaleString()} volume</span>
+          <span className="text-muted-foreground">{contest.total_volume.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})} volume</span>
         </div>
       </div>
     </div>
