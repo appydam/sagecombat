@@ -13,7 +13,18 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Search, Trophy, Medal, Award, Calendar } from "lucide-react";
+import { Search, Trophy, Medal, Award, Calendar, Code, Zap } from "lucide-react";
+
+const UnderDevelopmentBanner = () => (
+  <div className="bg-gradient-to-r from-violet-200 to-pink-200 text-gray-800 py-3 px-4 border-b border-blue-400/30">
+    <div className="max-w-7xl mx-auto flex items-center justify-center">
+      <div className="flex items-center space-x-2">
+        <Code className="h-4 w-4" />
+        <span className="text-sm font-medium">Leaderboard is under development. Coming soon! 🚀</span>
+      </div>
+    </div>
+  </div>
+);
 
 interface LeaderboardEntry {
   id: string;
@@ -109,7 +120,7 @@ const Leaderboard = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
+      <UnderDevelopmentBanner />
       <main className="flex-grow pt-24 pb-16">
         <div className="container px-4 mx-auto">
           <div className="max-w-4xl mx-auto text-center mb-12">

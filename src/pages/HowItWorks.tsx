@@ -7,7 +7,9 @@ import {
   LineChart, Users, Sparkles, DollarSign, 
   CheckCircle, BarChart3, BookOpen, Award, 
   ChevronRight, TrendingUp, BookOpenCheck,
-  Globe, Coins, HelpCircle, MapPin, MessageSquareText
+  Globe, Coins, HelpCircle, MapPin, MessageSquareText,
+  Shield,
+  Banknote
 } from "lucide-react";
 import MorphCard from "@/components/ui/MorphCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -35,7 +37,7 @@ const HowItWorks = () => {
     {
       icon: <Users className="h-8 w-8 text-primary" />,
       title: "Sign Up",
-      description: "Create your free account with email or Google",
+      description: "Create your free account with email",
     },
     {
       icon: <LineChart className="h-8 w-8 text-indigo-500" />,
@@ -56,6 +58,16 @@ const HowItWorks = () => {
       icon: <Award className="h-8 w-8 text-teal-500" />,
       title: "Win Prizes",
       description: "Top performers share the prize pool based on final rankings",
+    },
+    {
+      icon: <Shield className="h-8 w-8 text-primary" />,
+      title: "Complete KYC",
+      description: "Verify your identity for secure transactions and compliance",
+    },
+    {
+      icon: <Banknote className="h-8 w-8 text-green-500" />,
+      title: "Withdraw Winnings",
+      description: "Cash out your earnings directly to your bank account or wallet",
     },
   ];
 
@@ -182,8 +194,8 @@ const HowItWorks = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                SageCombat brings market prediction to life through fun, skill-based competitions.
-                Learn how each game works and start your journey to becoming a prediction master.
+                SageCombat brings competitive learning games to life through fun, skill-based competitions.
+                Learn how each game works and start your journey to increase your IQ.
               </motion.p>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -207,30 +219,30 @@ const HowItWorks = () => {
               <h2 className="text-3xl font-bold mb-4">How It Works</h2>
               <p className="text-slate-600">A simple process to start competing and winning</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5 max-w-5xl mx-auto">
-              {processSteps.map((step, i) => (
-                <motion.div
-                  key={i}
-                  custom={i}
-                  variants={fadeIn}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  className="flex flex-col items-center text-center"
-                >
-                  <div className="relative mb-4">
-                    <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center">
-                      {step.icon}
-                    </div>
-                    {i < processSteps.length - 1 && (
-                      <div className="hidden md:block absolute top-8 left-[calc(100%_-_8px)] w-[calc(100%_+_16px)] h-0.5 bg-slate-200"></div>
-                    )}
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
-                  <p className="text-sm text-slate-500">{step.description}</p>
-                </motion.div>
-              ))}
-            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-8 lg:gap-16 max-w-7xl mx-auto">
+  {processSteps.map((step, i) => (
+    <motion.div
+      key={i}
+      custom={i}
+      variants={fadeIn}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      className="flex flex-col items-center text-center"
+    >
+      <div className="relative mb-6">
+        <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-2">
+          {step.icon}
+        </div>
+        {i < processSteps.length - 1 && (
+          <div className="hidden lg:block absolute top-8 left-[calc(100%_-_8px)] w-[calc(100%_+_32px)] h-0.5 bg-slate-200"></div>
+        )}
+      </div>
+      <h3 className="text-lg font-semibold mb-3">{step.title}</h3>
+      <p className="text-sm text-slate-500 leading-relaxed">{step.description}</p>
+    </motion.div>
+  ))}
+</div>
           </div>
         </section>
 
