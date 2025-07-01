@@ -121,10 +121,10 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!isOtpVerified) {
-      setError("Please verify your email before registering.");
-      return;
-    }
+    // if (!isOtpVerified) {
+    //   setError("Please verify your email before registering.");
+    //   return;
+    // }
     setIsLoading(true);
     setError(null);
 
@@ -205,7 +205,7 @@ const Register = () => {
                   disabled={isLoading || isOtpVerified || otpLoading}
                   className="text-sm flex-1"
                 />
-                <Button
+                {/* <Button
                   type="button"
                   size="sm"
                   onClick={handleSendOtp}
@@ -213,7 +213,7 @@ const Register = () => {
                   variant="secondary"
                 >
                   {otpLoading ? "Sending..." : "OTP"}
-                </Button>
+                </Button> */}
               </div>
             </div>
 
@@ -308,10 +308,17 @@ const Register = () => {
           </CardContent>
 
           <CardFooter className="flex flex-col gap-3 pt-2">
-            <Button
+            {/* <Button
               type="submit"
               className="w-full text-sm"
               disabled={isLoading || !isOtpVerified}
+            >
+              {isLoading ? "Registering..." : "Register"}
+            </Button> */}
+            <Button
+              type="submit"
+              className="w-full text-sm"
+              // disabled={isLoading || !isOtpVerified}
             >
               {isLoading ? "Registering..." : "Register"}
             </Button>
