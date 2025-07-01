@@ -161,55 +161,56 @@ const Index = () => {
         </section>
 
         <GameTypes />
-
-        <section className="py-20 relative overflow-hidden">
-          <div className="container px-4 mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 animate-fade-up">
-                Why Choose SageCombat?
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-up" style={{
-              animationDelay: '200ms'
-            }}>We're building the world's most advanced competitive fantasy gaming platform - made for the sharpest minds.</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {[{
-              icon: Zap,
-              title: "Instant Rewards",
-              desc: "Get paid immediately when you win competitions"
-            }, {
-              icon: Shield,
-              title: "100% Safe",
-              desc: "No real trading risk - pure skill-based predictions"
-            }, {
-              icon: TrendingUp,
-              title: "Real Market Data",
-              desc: "Compete using live data from major exchanges"
-            }, {
-              icon: Users,
-              title: "Active Community",
-              desc: "Join thousands of active prediction enthusiasts"
-            }, {
-              icon: CheckCircle2,
-              title: "Easy to Start",
-              desc: "Simple registration with Google or phone number"
-            }, {
-              icon: Star,
-              title: "Fair & Transparent",
-              desc: "Clear rules and transparent prize distribution"
-            }].map((feature, index) => <div key={index} className="text-center p-6 rounded-2xl bg-white/40 backdrop-blur-sm border border-white/30 hover:bg-white/50 transition-all duration-300 animate-fade-up group hover:scale-105 shadow-lg hover:shadow-xl" style={{
-              animationDelay: `${index * 100}ms`
-            }}>
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4 group-hover:bg-primary/20 transition-colors">
-                    <feature.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground text-sm">{feature.desc}</p>
-                </div>)}
-            </div>
+        <section className="py-12 relative overflow-hidden">
+  <div className="container px-4 mx-auto">
+    <div className="text-center mb-8">
+      <h2 className="font-display text-3xl md:text-4xl font-bold mb-3 animate-fade-up">
+        Why Choose SageCombat?
+      </h2>
+      <p className="text-lg text-muted-foreground max-w-xl mx-auto animate-fade-up" style={{
+        animationDelay: '200ms'
+      }}>Advanced competitive fantasy gaming for sharp minds</p>
+    </div>
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-5xl mx-auto">
+      {[{
+        icon: Zap,
+        title: "Instant Rewards",
+        desc: "Immediate payouts"
+      }, {
+        icon: Shield,
+        title: "100% Safe",
+        desc: "No trading risk"
+      }, {
+        icon: TrendingUp,
+        title: "Real Data",
+        desc: "Live market feeds"
+      }, {
+        icon: Users,
+        title: "Active Community",
+        desc: "Thousands of players"
+      }, {
+        icon: CheckCircle2,
+        title: "Easy Start",
+        desc: "Quick registration"
+      }, {
+        icon: Star,
+        title: "Transparent",
+        desc: "Fair & clear rules"
+      }].map((feature, index) => 
+        <div key={index} className="text-center p-4 rounded-xl bg-white/40 backdrop-blur-sm border border-white/30 hover:bg-white/50 transition-all duration-300 animate-fade-up group hover:scale-105" style={{
+          animationDelay: `${index * 100}ms`
+        }}>
+          <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-3 group-hover:bg-primary/20 transition-colors">
+            <feature.icon className="h-5 w-5 text-primary" />
           </div>
-        </section>
+          <h3 className="text-sm font-semibold mb-1">{feature.title}</h3>
+          <p className="text-muted-foreground text-xs">{feature.desc}</p>
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
 
         <section className="py-16 relative">
           <div className="container px-4 mx-auto">
