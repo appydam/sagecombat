@@ -110,7 +110,7 @@ const PolyContestCard = ({ contest, onBetPlaced }: PolyContestCardProps) => {
         <div className="flex justify-between items-center mt-2">
           <div>
             <p className="text-xs text-muted-foreground">Volume</p>
-            <p className="font-medium">{contest.total_volume.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+            <p className="font-medium">₹{contest.total_volume.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
           </div>
 
           <div className="flex gap-2">

@@ -54,11 +54,15 @@ const PolyBetPlacement = ({
     setQuantity(prev => Math.max(50, prev - 50));
   };
 
+
+
+
   const calculatePotentialValue = () => {
     const num = parseFloat(price);
     if (isNaN(num) || num <= 0 || num >= 1) return "--";
     if (orderType === "buy") {
-      return (quantity / num).toFixed(2);
+      // return (quantity / num).toFixed(2);
+      return quantity;
     } else {
       return (quantity * num).toFixed(2);
     }
@@ -69,6 +73,7 @@ const PolyBetPlacement = ({
     if (isNaN(num) || num <= 0 || num >= 1) return "--";
     if (orderType === "buy") {
       return (quantity * num).toFixed(2);
+      // round off this
     } else {
       return (quantity * (1 - num)).toFixed(2);
     }
@@ -235,9 +240,19 @@ const PolyBetPlacement = ({
               <span className="text-sm text-gray-600">Quantity</span>
               <span className="font-semibold text-gray-900">{quantity}</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Price per share</span>
-              <span className="font-semibold text-gray-900">₹{(() => { const num = parseFloat(price); return (!price || isNaN(num) || num <= 0 || num >= 1) ? "--" : num.toFixed(2); })()}</span>
+            <div className="flex flex-col">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Price per share</span>
+                <span className="font-semibold text-gray-900">₹{(() => { const num = parseFloat(price); return (!price || isNaN(num) || num <= 0 || num >= 1) ? "--" : num.toFixed(2); })()}</span>
+              </div>
+              <div className="text-xs text-gray-400 text-right">
+                {(() => {
+                  const num = parseFloat(price);
+                  if (!price || isNaN(num) || num <= 0 || num >= 1) return null;
+                  const rounded = Math.round(num * 20) / 20; // Round to nearest 0.05
+                  return `Rounded to ₹${rounded.toFixed(2)}`;
+                })()}
+              </div>
             </div>
           </div>
           <div className="pt-2 border-t border-gray-200 space-y-2">
@@ -247,12 +262,12 @@ const PolyBetPlacement = ({
               </span>
               <span className="font-bold text-emerald-600">₹{calculatePotentialValue()}</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">
-                {orderType === "buy" ? "Cost" : "Maximum loss"}
-              </span>
-              <span className="font-bold text-rose-600">₹{calculateRisk()}</span>
-            </div>
+            {orderType === "buy" && (
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Cost</span>
+                <span className="font-bold text-rose-600">₹{calculateRisk()}</span>
+              </div>
+            )}
           </div>
         </div>
 

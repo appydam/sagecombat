@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,7 +8,8 @@ import {
   TrendingDown, 
   Loader2,
   ZoomIn,
-  ZoomOut
+  ZoomOut,
+  Check
 } from "lucide-react";
 import { format } from "date-fns";
 import { PriceHistoryPoint } from "@/types/competitions";
@@ -44,6 +44,8 @@ const PolyContestChart = ({
   const [refAreaLeft, setRefAreaLeft] = useState<string | null>(null);
   const [refAreaRight, setRefAreaRight] = useState<string | null>(null);
   const [filteredData, setFilteredData] = useState<PriceHistoryPoint[]>([]);
+  const [showYes, setShowYes] = useState<boolean>(true);
+  const [showNo, setShowNo] = useState<boolean>(true);
 
   useEffect(() => {
     setFilteredData(getFilteredPriceHistory());
@@ -159,29 +161,23 @@ const PolyContestChart = ({
         </h3>
         
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={toggleZoomMode}
-            className={zoomMode ? "bg-muted" : ""}
-          >
-            {zoomMode ? (
-              <ZoomOut className="h-4 w-4 mr-1" />
-            ) : (
-              <ZoomIn className="h-4 w-4 mr-1" />
-            )}
-            {zoomMode ? "Exit Zoom" : "Zoom Mode"}
-          </Button>
-          
-          {zoomMode && filteredData.length !== priceHistory.length && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleZoomReset}
+          <div className="flex items-center border rounded-md overflow-hidden h-8">
+            <button
+              onClick={() => setShowYes(!showYes)}
+              className={`px-3 h-full flex items-center text-xs gap-1 transition-colors ${showYes ? 'bg-green-100 text-green-800' : 'text-gray-500 hover:bg-gray-100'}`}
             >
-              Reset Zoom
-            </Button>
-          )}
+              {showYes && <Check className="h-3 w-3" />}
+              Yes
+            </button>
+            <div className="w-px h-4 bg-gray-200" />
+            <button
+              onClick={() => setShowNo(!showNo)}
+              className={`px-3 h-full flex items-center text-xs gap-1 transition-colors ${showNo ? 'bg-red-100 text-red-800' : 'text-gray-500 hover:bg-gray-100'}`}
+            >
+              {showNo && <Check className="h-3 w-3" />}
+              No
+            </button>
+          </div>
           
           <Tabs 
             value={timeRange} 
@@ -267,14 +263,18 @@ const PolyContestChart = ({
                         <p className="text-xs font-medium mb-1">
                           {formatTooltipTimestamp(payload[0].payload.timestamp)}
                         </p>
-                        <p className="text-sm flex items-center text-green-600">
-                          <TrendingUp className="h-3 w-3 mr-1" />
-                          Yes: ₹{Number(payload[0].value).toFixed(2)}
-                        </p>
-                        <p className="text-sm flex items-center text-red-600">
-                          <TrendingDown className="h-3 w-3 mr-1" />
-                          No: ₹{Number(payload[1].value).toFixed(2)}
-                        </p>
+                        {showYes && (
+                          <p className="text-sm flex items-center text-green-600">
+                            <TrendingUp className="h-3 w-3 mr-1" />
+                            Yes: ₹{Number(payload[0].value).toFixed(2)}
+                          </p>
+                        )}
+                        {showNo && (
+                          <p className="text-sm flex items-center text-red-600">
+                            <TrendingDown className="h-3 w-3 mr-1" />
+                            No: ₹{Number(payload[1]?.value || 0).toFixed(2)}
+                          </p>
+                        )}
                       </div>
                     );
                   }
@@ -290,24 +290,28 @@ const PolyContestChart = ({
                   fillOpacity={0.1}
                 />
               )}
-              <Area
-                type="monotone"
-                dataKey="yes_price"
-                stroke="#10B981"
-                fill="url(#yes-gradient)"
-                name="Yes"
-                animationDuration={500}
-                activeDot={{ r: 6, fill: "#10B981" }}
-              />
-              <Area
-                type="monotone"
-                dataKey="no_price"
-                stroke="#EF4444"
-                fill="url(#no-gradient)"
-                name="No"
-                animationDuration={500}
-                activeDot={{ r: 6, fill: "#EF4444" }}
-              />
+              {showYes && (
+                <Area
+                  type="monotone"
+                  dataKey="yes_price"
+                  stroke="#10B981"
+                  fill="url(#yes-gradient)"
+                  name="Yes"
+                  animationDuration={500}
+                  activeDot={{ r: 6, fill: "#10B981" }}
+                />
+              )}
+              {showNo && (
+                <Area
+                  type="monotone"
+                  dataKey="no_price"
+                  stroke="#EF4444"
+                  fill="url(#no-gradient)"
+                  name="No"
+                  animationDuration={500}
+                  activeDot={{ r: 6, fill: "#EF4444" }}
+                />
+              )}
             </AreaChart>
           </ChartContainer>
         ) : (

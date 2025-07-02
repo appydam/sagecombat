@@ -39,7 +39,18 @@ const CompetitionCard = ({
   competition_interval,
   contestCategory
 }: CompetitionProps) => {
-  const percentFilled = (currentParticipants / maxParticipants) * 100;
+  // Calculate percentage with more precision
+  const percentFilled = maxParticipants > 0 
+    ? Math.min(100, Math.max(0, (currentParticipants / maxParticipants) * 100)) 
+    : 0;
+  
+  // Debug log to verify values
+  console.log('Progress:', {
+    current: currentParticipants,
+    max: maxParticipants,
+    percent: percentFilled,
+    calculatedWidth: `${Math.max(0.5, percentFilled)}%`
+  });
   const isExpired = new Date(registerDeadline) < new Date();
 
   const formatCategory = (category: string) => {
@@ -176,9 +187,25 @@ const CompetitionCard = ({
         <div>
           <div className="flex justify-between items-center mb-1">
             <span className="text-xs text-muted-foreground">Filling up</span>
-            <span className="text-xs font-medium">{percentFilled.toFixed(0)}%</span>
+            <span className="text-xs font-medium">{percentFilled.toFixed(1)}%</span>
           </div>
-          <Progress value={percentFilled} className="h-1.5" />
+          <div className="relative w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className={`absolute top-0 left-0 h-full bg-primary rounded-full transition-all duration-300 ${
+                percentFilled > 0 ? 'min-w-[2px]' : 'w-0'
+              }`}
+              style={{
+                width: `${percentFilled}%`,
+              }}
+              aria-valuenow={percentFilled}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            />
+          </div>
+          {/* Debug info - can be removed later */}
+          <div className="text-[10px] text-gray-400 mt-1">
+            Progress: {percentFilled.toFixed(2)}% ({currentParticipants} of {maxParticipants})
+          </div>
         </div>
       </CardContent>
 
@@ -231,6 +258,7 @@ const CompetitionCard = ({
               variant={statusDisplay === "open" ? "default" : "secondary"}
               size="sm"
               disabled={statusDisplay !== "open"}
+              className="mr-2"
             >
               {statusDisplay === "open" ? "Join Now" : "View Details"}
               <ArrowRight className="h-4 w-4 ml-1" />

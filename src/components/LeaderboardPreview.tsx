@@ -32,7 +32,7 @@ const LeaderboardPreview = ({
           <Trophy className="h-5 w-5 mr-2 text-gold-500" />
           {title}
         </h3>
-        <Link to={`/leaderboard/${competitionId}`}>
+        <Link to={`/leaderboard`}>
           <Button variant="ghost" size="sm" className="text-xs">
             View Full Leaderboard
             <ChevronRight className="h-4 w-4 ml-1" />
