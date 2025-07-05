@@ -36,8 +36,8 @@ const PolyContestCard = ({ contest, onBetPlaced }: PolyContestCardProps) => {
       return;
     }
     
-    // Navigate directly to the contest detail page
-    navigate(`/competitions/poly/${contest.id}`);
+    // Navigate directly to the contest detail page, passing contest data in state
+    navigate(`/competitions/poly/${contest.id}`, { state: { contest } });
   };
 
   const handleShare = async () => {
@@ -67,7 +67,7 @@ const PolyContestCard = ({ contest, onBetPlaced }: PolyContestCardProps) => {
   const activeClass = "bg-gradient-to-r from-amber-500 to-amber-400 text-white border-none";
 
   const handleViewDetails = () => {
-    navigate(`/competitions/poly/${contest.id}`);
+    navigate(`/competitions/poly/${contest.id}`, { state: { contest } });
   };
 
   return (
