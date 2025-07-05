@@ -54,7 +54,6 @@ const Competitions = () => {
 
   const handleGameTypeChange = (value: string) => {
     updateSearchParams({ gameType: value });
-    setIsLoading(true);
   };
 
   const handleEquityTabChange = (value: string) => {
@@ -79,60 +78,69 @@ const Competitions = () => {
   };
 
   useEffect(() => {
-    const fetchCompetitionData = async () => {
+    const fetchAllCompetitionData = async () => {
       setIsLoading(true);
       setError(null);
 
       try {
-        if (activeGameType === "equity") {
-          const { equityCompetitions, error } = await fetchCompetitionsData();
-          if (error) {
-            throw new Error(error);
-          }
-          setCompetitions(equityCompetitions || []);
-        } else if (activeGameType === "opinion") {
-          const { data, categories, error } = await fetchOpinionEvents();
-          if (error) {
-            throw new Error(error);
-          }
-          setOpinionEvents(data || []);
-          if (categories) {
-            setOpinionCategories(categories);
-          }
-        } else if (activeGameType === "poly") {
-          const { data, categories, error } = await getPolyContests();
-          if (error) {
-            throw new Error(error);
-          }
-          setPolyContests(data || []);
-          if (categories) {
-            setPolyCategories(categories);
-          }
-        } else if (activeGameType === "geoquest") {
-          const { data, error } = await getGeoQuestContests();
-          if (error) {
-            throw new Error(error);
-          }
-          
-          if (data && data.length > 0) {
-            const themes = [...new Set(data.map((contest: GeoQuestContest) => contest.theme))];
-            setGeoQuestCategories(themes.filter((theme): theme is string => typeof theme === 'string'));
-            setGeoQuestContests(data);
-          } else {
-            setGeoQuestContests([]);
-            setGeoQuestCategories([]);
-          }
+        const [equityData, opinionData, polyData, geoQuestData] =
+          await Promise.all([
+            fetchCompetitionsData(),
+            fetchOpinionEvents(),
+            getPolyContests(),
+            getGeoQuestContests(),
+          ]);
+
+        if (equityData.error) {
+          throw new Error(`Equity: ${equityData.error}`);
+        }
+        setCompetitions(equityData.equityCompetitions || []);
+
+        if (opinionData.error) {
+          throw new Error(`Opinion: ${opinionData.error}`);
+        }
+        setOpinionEvents(opinionData.data || []);
+        if (opinionData.categories) {
+          setOpinionCategories(opinionData.categories);
+        }
+
+        if (polyData.error) {
+          throw new Error(`Poly: ${polyData.error}`);
+        }
+        setPolyContests(polyData.data || []);
+        if (polyData.categories) {
+          setPolyCategories(polyData.categories);
+        }
+
+        if (geoQuestData.error) {
+          throw new Error(`GeoQuest: ${geoQuestData.error}`);
+        }
+        if (geoQuestData.data && geoQuestData.data.length > 0) {
+          const themes = [
+            ...new Set(
+              geoQuestData.data.map(
+                (contest: GeoQuestContest) => contest.theme
+              )
+            ),
+          ];
+          setGeoQuestCategories(
+            themes.filter((theme): theme is string => typeof theme === "string")
+          );
+          setGeoQuestContests(geoQuestData.data);
+        } else {
+          setGeoQuestContests([]);
+          setGeoQuestCategories([]);
         }
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError(`Failed to load ${activeGameType} competitions. ${err.message}`);
+        setError(`Failed to load competitions. ${err.message}`);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchCompetitionData();
-  }, [activeGameType]);
+    fetchAllCompetitionData();
+  }, []);
 
   const getFilteredCompetitions = () => {
     let filtered = [...competitions];
