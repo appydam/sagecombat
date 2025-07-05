@@ -1,6 +1,7 @@
 import { PolyContest, PriceHistoryPoint, PolyOrder, PolyOrderResponse } from "@/types/competitions";
 import { toast } from "sonner";
 import { API_ENDPOINTS } from "@/constants/config";
+import { fetchAllCompetitionsData } from './apiService';
 
 // Mock price history data generator for chart visualization
 const generateMockPriceHistory = (contestId: string): PriceHistoryPoint[] => {
@@ -64,13 +65,7 @@ const transformApiPolyContest = (apiContest: any): PolyContest => {
 // Get all PolyContests
 export const getPolyContests = async () => {
   try {
-    const response = await fetch(API_ENDPOINTS.GET_ALL_COMP);
-
-    if (!response.ok) {
-      throw new Error(`API responded with status: ${response.status}`);
-    }
-
-    const data = await response.json();
+    const data = await fetchAllCompetitionsData();
 
     if (!data.data || !data.data.orderbook_contests) {
       throw new Error("Invalid API response format");

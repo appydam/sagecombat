@@ -1,7 +1,8 @@
 import { CompetitionsApiResponseData, FullCompetitionsApiResponse, CompetitionProps, OpinionEvent } from "@/types/competitions";
 import { mockCompetitionsData } from "@/components/competitions/data/mockData";
-import { BACKEND_HOST } from "@/constants/config";
 import { toast } from "sonner";
+import { fetchAllCompetitionsData } from './apiService';
+import { BACKEND_HOST } from "@/constants/config";
 
 // Function to transform API data to frontend format
 export const mapApiDataToFrontend = (apiData: CompetitionsApiResponseData): {
@@ -57,27 +58,12 @@ export const fetchCompetitionsData = async (): Promise<{
   error: string | null
 }> => {
   try {
-    const apiPath = `${BACKEND_HOST}getAllComp`;
-
-    const response = await fetch(apiPath, {
-      method: "GET",
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      console.warn(`API returned status ${response.status}. Using mock data instead.`);
-      const mockData = mapApiDataToFrontend(mockCompetitionsData);
-      return { ...mockData, error: null };
-    }
-
-    const data = await response.json() as FullCompetitionsApiResponse;
-
+    const data = await fetchAllCompetitionsData();
     if (data.code === 200 && data.data) {
       return { ...mapApiDataToFrontend(data.data), error: null };
     } else {
-      console.warn("API returned unexpected data format. Using mock data instead.");
-      const mockData = mapApiDataToFrontend(mockCompetitionsData);
-      return { ...mockData, error: null };
+      // This case might not be reachable if fetchAllCompetitionsData handles errors
+      throw new Error('Invalid data format from API');
     }
   } catch (error) {
     console.error("Error fetching competitions:", error);
