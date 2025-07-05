@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,10 +17,11 @@ import AISummaryView from "@/components/competitions/poly/detail/AISummaryView";
 const PolyContestDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   
-  const [contest, setContest] = useState<PolyContest | null>(null);
+  const [contest, setContest] = useState<PolyContest | null>(location.state?.contest || null);
   const [priceHistory, setPriceHistory] = useState<PriceHistoryPoint[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(!location.state?.contest);
   const [isChartLoading, setIsChartLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -30,50 +31,48 @@ const PolyContestDetail = () => {
     const loadContestData = async () => {
       if (!id) {
         setError("Contest ID is missing");
-        setIsLoading(false);
         return;
       }
-      
-      setIsLoading(true);
-      setError(null);
-      
-      try {
-        const { contest: contestData, error: contestError } = await getPolyContestById(id);
-        
-        if (contestError || !contestData) {
-          setError(contestError || "Failed to load contest details");
+
+      // If contest data was not passed via state, fetch it
+      if (!contest) {
+        setIsLoading(true);
+        setError(null);
+        try {
+          const { contest: contestData, error: contestError } = await getPolyContestById(id);
+          if (contestError || !contestData) {
+            setError(contestError || "Failed to load contest details");
+            return;
+          }
+          setContest(contestData);
+        } catch (err) {
+          console.error("Error loading contest details:", err);
+          setError("Failed to load contest details");
+        } finally {
           setIsLoading(false);
-          return;
         }
-        
-        setContest(contestData);
-        setIsLoading(false);
-        
-        // Load price history separately to prevent blocking the main content
-        setIsChartLoading(true);
+      }
+
+      // Always fetch the latest price history
+      setIsChartLoading(true);
+      try {
         const { priceHistory: historyData, error: historyError } = await getPolyPriceHistory(id);
-        
         if (historyError) {
           console.error("Error loading price history:", historyError);
           toast.error("Could not load price history data");
         }
-        
         if (historyData) {
           setPriceHistory(historyData);
         }
-        
-        setIsChartLoading(false);
-        
       } catch (err) {
-        console.error("Error loading contest details:", err);
-        setError("Failed to load contest details");
-        setIsLoading(false);
+        console.error("Error fetching price history:", err);
+      } finally {
         setIsChartLoading(false);
       }
     };
-    
+
     loadContestData();
-  }, [id]);
+  }, [id, contest]);
 
   // Set up a polling interval to periodically refresh the price history
   useEffect(() => {
