@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Home } from "lucide-react";
+import { Home, Info } from "lucide-react";
 import { BACKEND_HOST } from "@/constants/config";
 
 const Register = () => {
@@ -322,8 +322,14 @@ const Register = () => {
             >
               {isLoading ? "Registering..." : "Register"}
             </Button>
+            <div className="flex items-start gap-2 text-xs text-muted-foreground px-2">
+              <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
+              <p>
+                Please submit correct details. It will be verified during KYC if you choose to deposit/withdraw real money.
+              </p>
+            </div>
 
-            <div className="w-full flex justify-between items-center text-xs text-muted-foreground">
+            <div className="w-full flex justify-between items-center text-xs text-muted-foreground mt-4">
               <p>
                 Already registered?{" "}
                 <Link to="/login" className="text-primary hover:underline">
