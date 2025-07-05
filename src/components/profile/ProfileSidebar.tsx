@@ -8,7 +8,9 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Wallet, Info, User, Mail, Phone, Clock, PlusCircle, MinusCircle, Share2, Copy, ExternalLink, TrendingUp, Sparkles } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Wallet, Info, User as UserIcon, Mail, Phone, Clock, PlusCircle, MinusCircle, Share2, Copy, ExternalLink, TrendingUp, Sparkles, Shield, Check } from "lucide-react";
+import { KYCDialog } from "./kyc/KYCDialog";
 
 interface User {
   name: string;
@@ -29,10 +31,23 @@ interface ProfileSidebarProps {
   onWithdrawClick: () => void;
 }
 
+
+
+const InfoRow = ({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) => (
+  <div className="flex items-center text-sm">
+    <div className="w-6 mr-2 text-gray-500 dark:text-gray-400">{icon}</div>
+    <div className="flex-1">
+      <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
+      <p className="font-medium text-gray-800 dark:text-gray-200">{value}</p>
+    </div>
+  </div>
+);
+
 const ProfileSidebar = ({ user, onDepositClick, onWithdrawClick }: ProfileSidebarProps) => {
   const [isSharingEnabled, setIsSharingEnabled] = useState(false);
   const [shareLink, setShareLink] = useState("");
   const [isLinkGenerated, setIsLinkGenerated] = useState(false);
+  const [kycDialogOpen, setKycDialogOpen] = useState(false);
 
   const handleShareLink = () => {
     if (!isLinkGenerated) {
@@ -66,6 +81,8 @@ const ProfileSidebar = ({ user, onDepositClick, onWithdrawClick }: ProfileSideba
       variant: "default",
     });
   };
+
+
 
   return (
     <div className="relative">
@@ -151,6 +168,22 @@ const ProfileSidebar = ({ user, onDepositClick, onWithdrawClick }: ProfileSideba
             </div>
         </div>
 
+        {/* KYC Button */}
+        <div className="mt-3">
+          <Dialog open={kycDialogOpen} onOpenChange={setKycDialogOpen}>
+            <DialogTrigger asChild>
+              <Button 
+                className="w-full bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-950/50 dark:to-orange-950/50 border-amber-300 dark:border-amber-800 text-amber-600 dark:text-amber-400 border-0 shadow-lg hover:shadow-xl transition-all duration-100 rounded-xl h-12"
+                onClick={() => setKycDialogOpen(true)}
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                KYC
+              </Button>
+            </DialogTrigger>
+            {kycDialogOpen && <KYCDialog onClose={() => setKycDialogOpen(false)} />}
+          </Dialog>
+        </div>
+
         <Separator className="my-4 bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
 
         {/* User Info */}
@@ -160,30 +193,10 @@ const ProfileSidebar = ({ user, onDepositClick, onWithdrawClick }: ProfileSideba
             Profile Information
           </div>
           
-          <ModernInfoItem 
-            icon={<User className="w-4 h-4" />} 
-            label="Full Name" 
-            value={user.name}
-            gradient="from-gray-100 to-gray-200"
-          />
-          <ModernInfoItem 
-            icon={<Mail className="w-4 h-4" />} 
-            label="Email Address" 
-            value={user.emailId}
-            gradient="from-gray-100 to-gray-200"
-          />
-          <ModernInfoItem 
-            icon={<Phone className="w-4 h-4" />} 
-            label="Phone Number" 
-            value={user.phoneNo || 'Not provided'}
-            gradient="from-gray-100 to-gray-200"
-          />
-          <ModernInfoItem 
-            icon={<Clock className="w-4 h-4" />} 
-            label="Member Since" 
-            value={new Date(user.createdAt).toLocaleDateString()}
-            gradient="from-gray-100 to-gray-200"
-          />
+          <InfoRow icon={<Mail className="w-4 h-4" />} label="Email" value={user.emailId} />
+          <InfoRow icon={<Phone className="w-4 h-4" />} label="Phone" value={user.phoneNo} />
+          <InfoRow icon={<UserIcon className="w-4 h-4" />} label="Age" value={user.age} />
+          <InfoRow icon={<Clock className="w-4 h-4" />} label="Joined" value={new Date(user.createdAt).toLocaleDateString()} />
         </div>
 
         <Separator className="my-4 bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
@@ -288,31 +301,6 @@ const ProfileSidebar = ({ user, onDepositClick, onWithdrawClick }: ProfileSideba
   );
 };
 
-// Modern info item component with gradient accents
-const ModernInfoItem = ({ 
-  icon, 
-  label, 
-  value, 
-  gradient 
-}: { 
-  icon: React.ReactNode; 
-  label: string; 
-  value: string;
-  gradient: string;
-}) => (
-  <div className="group flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-200">
-    <div className={`p-2 rounded-lg bg-gradient-to-br ${gradient} text-gray-600 dark:text-gray-400 shadow-sm group-hover:shadow-md transition-shadow`}>
-      {icon}
-    </div>
-    <div className="flex-1 min-w-0">
-      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-        {label}
-      </p>
-      <p className="text-sm font-semibold text-gray-800 dark:text-gray-200 truncate">
-        {value}
-      </p>
-    </div>
-  </div>
-);
+
 
 export default ProfileSidebar;
