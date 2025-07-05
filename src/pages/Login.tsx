@@ -30,7 +30,26 @@ const Login = () => {
             }
         };
         checkLoginStatus();
-    }, [navigate]);
+        }, [navigate]);
+
+    const FloatingHomeButton = () => (
+        <div className="fixed bottom-4 left-4 z-50">
+          <Link to="/">
+            <div className="p-[2px] rounded-full bg-gradient-to-r from-pink-500 via-blue-500 to-purple-500 animate-spin-slow">
+              <div className="rounded-full bg-background p-3">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-14 w-14 rounded-full text-foreground hover:scale-105 transition-transform"
+                >
+                  <Home size={32} />
+    
+                </Button>
+              </div>
+            </div>
+          </Link>
+        </div>
+      );
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -107,7 +126,8 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="min-h-screen relative flex items-center justify-center bg-background px-2">
+            <FloatingHomeButton />
             <Card className="w-full max-w-md">
                 <CardHeader>
                     <CardTitle className="text-2xl">Login</CardTitle>
@@ -153,12 +173,7 @@ const Login = () => {
                             <p className="text-sm text-muted-foreground">
                                 Don't have an account? <Link to="/register" className="text-primary hover:underline">Register</Link>
                             </p>
-                            <Link to="/">
-                                <Button variant="outline" className="rounded-full" disabled={isLoading}>
-                                    <Home className="w-4 h-4 mr-2" />
-                                    Return to Home
-                                </Button>
-                            </Link>
+
                         </div>
                     </CardFooter>
                 </form>
