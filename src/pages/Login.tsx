@@ -65,6 +65,8 @@ const Login = () => {
                 localStorage.setItem("userAge", JSON.stringify(data.data.age));
                 localStorage.setItem("userPhone", JSON.stringify(data.data.phoneNo));
                 localStorage.setItem("userUsername", JSON.stringify(data.data.username));
+                localStorage.setItem("aadharStatus", JSON.stringify(data.data.aadharStatus));
+                localStorage.setItem("panStatus", JSON.stringify(data.data.panStatus));
 
 
                 toast({ title: "Login successful", description: `Welcome back, ${data.data.name}!` });

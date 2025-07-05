@@ -10,7 +10,7 @@ import PolyContestTabs from "@/components/competitions/PolyContestTabs";
 import GeoQuestTabs from "@/components/competitions/GeoQuestTabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, ListPlus, TrendingUp, Trophy } from 'lucide-react';
 import { CompetitionProps, OpinionEvent, PolyContest } from "@/types/competitions";
 import { fetchCompetitionsData } from "@/services/competitionsService";
 import { fetchOpinionEvents } from "@/services/competitionsService";
@@ -284,6 +284,38 @@ const Competitions = () => {
               activeTab={activeEquityTab}
               onTabChange={handleEquityTabChange}
             />
+          )}
+
+          {activeGameType === "equity" && (
+            <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 p-4 my-6 rounded-lg">
+              <h3 className="text-lg font-semibold mb-3 text-center text-gray-700 dark:text-gray-300">How to Play Equity Competitions</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="bg-blue-100 dark:bg-blue-900/50 p-3 rounded-full">
+                    <Search className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">1. Browse available equity competitions</p>
+                </div>
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="bg-green-100 dark:bg-green-900/50 p-3 rounded-full">
+                    <ListPlus className="w-5 h-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">2. Make a basket of <b>5 stocks</b> from our curated list of all NSE listed companies</p>
+                </div>
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="bg-orange-100 dark:bg-orange-900/50 p-3 rounded-full">
+                    <TrendingUp className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">3. Monitor your portfolio's performance over the competition <b>period</b></p>
+                </div>
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="bg-yellow-100 dark:bg-yellow-900/50 p-3 rounded-full">
+                    <Trophy className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">4. Winners are determined by highest average returns of their stock basket</p>
+                </div>
+              </div>
+            </div>
           )}
 
           {activeGameType === "opinion" && (
