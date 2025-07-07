@@ -4,7 +4,8 @@ import { Input } from '@/components/ui/input';
 import { DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Shield, FileText, CreditCard, Loader2, Check } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
-import { AadhaarVerificationInitiationReq, AadhaarVerificationInitiationResp, KYC_STEPS, OTPGenerationReq, OTPGenerationResp } from './types';
+import { AadhaarVerificationInitiationReq, AadhaarVerificationInitiationResp, OTPGenerationReq, OTPGenerationResp, AADHAAR_KYC_STEPS, PAN_KYC_STEPS, KycStep } from './types';
+import { PanVerification } from './PanVerification';
 import { KYCProgressBar } from './KYCProgressBar';
 
 interface KYCDialogProps {
@@ -12,7 +13,8 @@ interface KYCDialogProps {
 }
 
 export const KYCDialog = ({ onClose }: KYCDialogProps) => {
-  const [kycStep, setKycStep] = useState<typeof KYC_STEPS[number]>('selection');
+  const [kycStep, setKycStep] = useState<KycStep>('selection');
+  const [activeSteps, setActiveSteps] = useState<readonly KycStep[]>(AADHAAR_KYC_STEPS);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,14 +52,13 @@ export const KYCDialog = ({ onClose }: KYCDialogProps) => {
 
       if (response.ok) {
         const data = await response.json();
-        // The API now returns a nested structure
-        if (data.code === 200 && data.data.resp_code === "00") {
+        // The API returns a nested structure, check for success codes
+        if (data.code === 200 && data.data.respcode === "200") {
           setCaptchaImage(data.data.captcha);
           setToken(data.data.token);
-          setRefNo(data.data.rrn);
           setKycStep('captcha');
         } else {
-          setError(data.data.resp_desc || "Failed to generate captcha");
+          setError(data.data.respdesc || "Failed to generate captcha");
         }
       } else {
         const errorData = await response.json();
@@ -89,11 +90,11 @@ export const KYCDialog = ({ onClose }: KYCDialogProps) => {
 
       if (response.ok) {
           const data = await response.json();
-          if (data.code === 200 && data.data.resp_code === "00") { // Assuming this is the success indicator from backend
+          if (data.code === 200 && data.data.respcode === "200") {
             setKycStep('otp');
-            toast({ title: "OTP Sent", description: "An OTP has been sent to your registered mobile number." });
+            toast({ title: "OTP Sent", description: data.data.respdesc });
           } else {
-             setError(data.data.resp_desc || "Failed to generate OTP");
+             setError(data.data.respdesc || "Failed to generate OTP");
           }
       } else {
         const errorData = await response.json();
@@ -112,7 +113,7 @@ export const KYCDialog = ({ onClose }: KYCDialogProps) => {
     try {
       const userId = getUserId();
       const requestData = {
-        userId: String(userId),
+        userId,
         token: token,
         otp: otp
       };
@@ -125,14 +126,18 @@ export const KYCDialog = ({ onClose }: KYCDialogProps) => {
 
       const data = await response.json();
 
-      if (data.Verfied === true) {
+      if (data.code === 200 && data.data.respcode === "200") {
         localStorage.setItem('aadharStatus', 'VERIFIED');
         setKycStep('success');
-        // You might want to fetch and display user data here if needed
-        setVerificationResult({ name: 'Verified', dob: '-', address: '-' }); // Placeholder
+        // Populate the verification result with data from the API response
+        setVerificationResult({ 
+          name: data.data.name || 'N/A', 
+          dob: data.data.dob || 'N/A', 
+          address: data.data.address || 'N/A' 
+        });
       } else {
         localStorage.setItem('aadharStatus', 'REJECTED');
-        setError("Aadhaar verification failed. Please check the OTP and try again.");
+        setError(data.data.respdesc || "Aadhaar verification failed. Please check the OTP and try again.");
       }
     } catch (error) {
       setError("An unexpected error occurred during verification.");
@@ -149,7 +154,9 @@ export const KYCDialog = ({ onClose }: KYCDialogProps) => {
           <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">KYC Verification</span>
         </DialogTitle>
         <div className="!mt-4">
-          <KYCProgressBar currentStep={kycStep} />
+          {kycStep !== 'selection' && kycStep !== 'pan-verification' && kycStep !== 'success' && (
+            <KYCProgressBar currentStep={kycStep} steps={activeSteps} />
+          )}
         </div>
       </DialogHeader>
       
@@ -165,16 +172,23 @@ export const KYCDialog = ({ onClose }: KYCDialogProps) => {
           <div className="space-y-3">
             <p className="text-sm text-gray-600 dark:text-gray-400">Verification methods [both are required]:</p>
             <div className="grid grid-cols-1 gap-3">
-              <Button onClick={() => setKycStep('aadhaar-input')} className="flex items-center justify-center h-12 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white">
+              <Button onClick={() => { setKycStep('aadhaar-input'); setActiveSteps(AADHAAR_KYC_STEPS); }} className="flex items-center justify-center h-12 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white">
                 <FileText className="w-4 h-4 mr-2" />
                 Aadhaar Verification
               </Button>
-              <Button variant="outline" className="flex items-center justify-center h-12 border-2" disabled>
+              <Button onClick={() => { setKycStep('pan-verification'); setActiveSteps(PAN_KYC_STEPS); }} className="flex items-center justify-center h-12 bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white">
                 <CreditCard className="w-4 h-4 mr-2" />
-                PAN Verification (Coming Soon)
+                PAN Verification
               </Button>
             </div>
           </div>
+        )}
+
+        {kycStep === 'pan-verification' && (
+          <PanVerification 
+            onSuccess={() => setKycStep('success')} 
+            onBack={() => { setKycStep('selection'); setActiveSteps(AADHAAR_KYC_STEPS); }} 
+          />
         )}
 
         {kycStep === 'aadhaar-input' && (
@@ -183,9 +197,12 @@ export const KYCDialog = ({ onClose }: KYCDialogProps) => {
               <label htmlFor="aadhaar" className="text-sm font-medium">Aadhaar Number</label>
               <Input id="aadhaar" value={aadhaarNumber} onChange={(e) => setAadhaarNumber(e.target.value)} placeholder="Enter your 12-digit Aadhaar" className="mt-1" />
             </div>
-            <Button onClick={getAadhaarCaptcha} disabled={loading || aadhaarNumber.length !== 12} className="w-full">
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Get Captcha
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => setKycStep('selection')} variant="outline" className="w-full">Back</Button>
+              <Button onClick={getAadhaarCaptcha} disabled={loading || aadhaarNumber.length !== 12} className="w-full">
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Get Captcha
+              </Button>
+            </div>
           </div>
         )}
 
@@ -198,9 +215,12 @@ export const KYCDialog = ({ onClose }: KYCDialogProps) => {
               <label htmlFor="captcha" className="text-sm font-medium">Captcha</label>
               <Input id="captcha" value={captchaInput} onChange={(e) => setCaptchaInput(e.target.value)} placeholder="Enter captcha from image" className="mt-1" />
             </div>
-            <Button onClick={generateOTP} disabled={loading || !captchaInput} className="w-full">
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Generate OTP
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => setKycStep('selection')} variant="outline" className="w-full">Back</Button>
+              <Button onClick={generateOTP} disabled={loading || !captchaInput} className="w-full">
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Generate OTP
+              </Button>
+            </div>
           </div>
         )}
 
@@ -210,9 +230,12 @@ export const KYCDialog = ({ onClose }: KYCDialogProps) => {
               <label htmlFor="otp" className="text-sm font-medium">Enter OTP</label>
               <Input id="otp" value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="Enter 6-digit OTP" className="mt-1" />
             </div>
-            <Button onClick={verifyAadhaar} disabled={loading || otp.length !== 6} className="w-full">
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Verify OTP
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => setKycStep('selection')} variant="outline" className="w-full">Back</Button>
+              <Button onClick={verifyAadhaar} disabled={loading || otp.length !== 6} className="w-full">
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Verify OTP
+              </Button>
+            </div>
           </div>
         )}
 
