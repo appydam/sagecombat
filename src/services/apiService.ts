@@ -2,6 +2,12 @@ import { FullCompetitionsApiResponse } from "@/types/competitions";
 import { API_ENDPOINTS } from "@/constants/config";
 
 let cachedData: FullCompetitionsApiResponse | null = null;
+
+export const invalidateCompetitionsCache = (): void => {
+  cachedData = null;
+  ongoingRequest = null;
+  console.log("[CACHE_DEBUG] Competitions cache invalidated.");
+};
 let ongoingRequest: Promise<FullCompetitionsApiResponse> | null = null;
 
 export const fetchAllCompetitionsData = async (): Promise<FullCompetitionsApiResponse> => {

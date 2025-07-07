@@ -9,7 +9,7 @@ import CompetitionCard from "@/components/CompetitionCard";
 import LeaderboardPreview from "@/components/LeaderboardPreview";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Play, Star, Users, TrendingUp, Shield, CheckCircle2, Zap, X } from "lucide-react";
+import { ArrowRight, Play, Star, Users, TrendingUp, Shield, CheckCircle2, Zap, X, Lightbulb } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -120,7 +120,11 @@ const Index = () => {
               {/* Main Headline */}
               <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 animate-fade-up">
                 <span className="block mb-2 text-6xl md:text-7xl">The future of</span>
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-mint-600 to-gold-500 animate-gradient text-7xl md:text-8xl">Competitive Fantasy Gaming</span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-mint-600 to-gold-500 animate-gradient text-7xl md:text-8xl"><span className="whitespace-nowrap">Competitive Skill-based</span><br />Gaming</span>
+                <div className="block px-3 py-1 mt-4 text-xs font-medium tracking-wide text-violet-800 bg-violet-100 border border-violet-200 rounded-full shadow-sm animate-fade-up md:text-sm mx-auto" style={{ animationDelay: '400ms', maxWidth: 'fit-content' }}>
+                  <Lightbulb className="inline-block w-4 h-4 mr-1.5 -mt-0.5 text-violet-500" />
+                  Reimagining Gaming for Financial Intelligence
+                </div>
               </h1>
 
               {/* Subheadline */}

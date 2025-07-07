@@ -38,4 +38,7 @@ export interface AadhaarVerificationResp {
   Verfied: boolean;
 }
 
-export const KYC_STEPS = ['selection', 'aadhaar-input', 'captcha', 'otp', 'success'];
+export const AADHAAR_KYC_STEPS = ['selection', 'aadhaar-input', 'captcha', 'otp', 'success'] as const;
+export const PAN_KYC_STEPS = ['selection', 'pan-verification', 'success'] as const;
+
+export type KycStep = typeof AADHAAR_KYC_STEPS[number] | typeof PAN_KYC_STEPS[number];

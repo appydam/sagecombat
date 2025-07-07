@@ -1,12 +1,17 @@
 import { Check } from 'lucide-react';
-import { KYC_STEPS } from './types';
+import { KycStep } from './types';
 
-export const KYCProgressBar = ({ currentStep }: { currentStep: typeof KYC_STEPS[number] }) => {
-  const currentIndex = KYC_STEPS.indexOf(currentStep);
+interface KYCProgressBarProps {
+  currentStep: KycStep;
+  steps: readonly KycStep[];
+}
+
+export const KYCProgressBar = ({ currentStep, steps }: KYCProgressBarProps) => {
+  const currentIndex = steps.indexOf(currentStep);
 
   return (
     <div className="flex items-center w-full px-2">
-      {KYC_STEPS.map((step, index) => {
+      {steps.map((step, index) => {
         const isCompleted = currentIndex > index;
         const isCurrent = currentIndex === index;
 
@@ -31,7 +36,7 @@ export const KYCProgressBar = ({ currentStep }: { currentStep: typeof KYC_STEPS[
                 {step.replace('-input', '')}
               </p>
             </div>
-            {index < KYC_STEPS.length - 2 && (
+            {index < steps.length - 2 && (
               <div className={`flex-1 h-1 mx-2 transition-colors duration-300 ${
                 isCompleted ? 'bg-blue-500' : 'bg-gray-200'
               }`}/>

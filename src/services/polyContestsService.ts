@@ -1,7 +1,7 @@
 import { PolyContest, PriceHistoryPoint, PolyOrder, PolyOrderResponse } from "@/types/competitions";
 import { toast } from "sonner";
 import { API_ENDPOINTS } from "@/constants/config";
-import { fetchAllCompetitionsData } from './apiService';
+import { fetchAllCompetitionsData, invalidateCompetitionsCache } from './apiService';
 
 // Mock price history data generator for chart visualization
 const generateMockPriceHistory = (contestId: string): PriceHistoryPoint[] => {
@@ -109,7 +109,7 @@ export const fetchPolyContests = getPolyContests;
 // Get a single PolyContest by ID
 export const getPolyContestById = async (id: string) => {
   try {
-    const response = await fetch(API_ENDPOINTS.GET_ALL_COMP);
+    const response = await fetch(API_ENDPOINTS.GET_CONTEST_BY_ID(parseInt(id)));
 
     if (!response.ok) {
       throw new Error(`API responded with status: ${response.status}`);
@@ -117,26 +117,26 @@ export const getPolyContestById = async (id: string) => {
 
     const data = await response.json();
 
-    if (!data.data || !data.data.orderbook_contests) {
-      throw new Error("Invalid API response format");
+    if (!data.data) {
+      throw new Error("Invalid API response format: 'data' field missing.");
     }
 
-    // Find the requested contest
-    const apiContest = data.data.orderbook_contests.find((c: any) => c.id.toString() === id);
-
-    if (!apiContest) {
-      throw new Error(`Contest with ID ${id} not found`);
-    }
+    const apiContest = data.data;
 
     // Transform into our model
     const contest = transformApiPolyContest(apiContest);
 
-    // Fetch the current price
-    const priceResponse = await fetch(API_ENDPOINTS.GET_MARKET_PRICE(parseInt(id)));
-    if (priceResponse.ok) {
-      const priceData = await priceResponse.json();
-      contest.yes_price = priceData.yes_price;
-      contest.no_price = priceData.no_price;
+    // Fetch the current price to ensure it's the absolute latest
+    try {
+      const priceResponse = await fetch(API_ENDPOINTS.GET_MARKET_PRICE(parseInt(id)));
+      if (priceResponse.ok) {
+        const priceData = await priceResponse.json();
+        contest.yes_price = priceData.yes_price;
+        contest.no_price = priceData.no_price;
+      }
+    } catch (priceError) {
+      console.error(`Could not fetch latest price for contest ${id}:`, priceError);
+      // We can proceed without the latest price if the main object already has it
     }
 
     return { contest, error: null };
@@ -221,6 +221,9 @@ export const placePolyOrder = async (
     }
 
     const data = await response.json() as PolyOrderResponse;
+
+    // Invalidate the cache since an order can affect the overall contest data (e.g., volume)
+    invalidateCompetitionsCache();
 
     return {
       success: true,
