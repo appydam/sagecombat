@@ -126,7 +126,7 @@ export const KYCDialog = ({ onClose }: KYCDialogProps) => {
 
       const data = await response.json();
 
-      if (data.code === 200 && data.data.respcode === "200") {
+      if (data.code === 200 && data.data.Verfied === 'true') {
         localStorage.setItem('aadharStatus', 'VERIFIED');
         setKycStep('success');
         // Populate the verification result with data from the API response
