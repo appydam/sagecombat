@@ -13,6 +13,7 @@ interface KYCDialogProps {
 }
 
 export const KYCDialog = ({ onClose }: KYCDialogProps) => {
+  const authStatus = localStorage.getItem('isAuthenticated') === 'true';
   const [kycStep, setKycStep] = useState<KycStep>('selection');
   const [activeSteps, setActiveSteps] = useState<readonly KycStep[]>(AADHAAR_KYC_STEPS);
   const [loading, setLoading] = useState(false);
@@ -170,13 +171,27 @@ export const KYCDialog = ({ onClose }: KYCDialogProps) => {
 
         {kycStep === 'selection' && (
           <div className="space-y-3">
+            {!authStatus && (
+              <div className="bg-amber-100/50 border-l-4 border-amber-500 text-amber-700 p-3 rounded-md dark:bg-amber-950/30 dark:text-amber-300" role="alert">
+                <p className="font-bold">Authentication Required</p>
+                <p>Please log in to proceed with KYC verification.</p>
+              </div>
+            )}
             <p className="text-sm text-gray-600 dark:text-gray-400">Verification methods [both are required]:</p>
             <div className="grid grid-cols-1 gap-3">
-              <Button onClick={() => { setKycStep('aadhaar-input'); setActiveSteps(AADHAAR_KYC_STEPS); }} className="flex items-center justify-center h-12 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white">
+              <Button 
+                onClick={() => { setKycStep('aadhaar-input'); setActiveSteps(AADHAAR_KYC_STEPS); }}
+                disabled={!authStatus}
+                className="flex items-center justify-center h-12 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <FileText className="w-4 h-4 mr-2" />
                 Aadhaar Verification
               </Button>
-              <Button onClick={() => { setKycStep('pan-verification'); setActiveSteps(PAN_KYC_STEPS); }} className="flex items-center justify-center h-12 bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white">
+              <Button 
+                onClick={() => { setKycStep('pan-verification'); setActiveSteps(PAN_KYC_STEPS); }}
+                disabled={!authStatus}
+                className="flex items-center justify-center h-12 bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <CreditCard className="w-4 h-4 mr-2" />
                 PAN Verification
               </Button>
