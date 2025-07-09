@@ -7,7 +7,7 @@ import MorphCard from "@/components/ui/MorphCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Trophy, TrendingUp, TrendingDown, ArrowUpRight } from "lucide-react";
+import { Trophy, TrendingUp, TrendingDown, ArrowUpRight, Info } from "lucide-react";
 import { Link } from "react-router-dom";
 
 // Mock data structure for the shared profile
@@ -41,10 +41,10 @@ const SharedProfile = () => {
           username: userId || "trader",
           name: "Trader Profile",
           profileImage: "",
-          totalPnL: 1250.75,
-          contestsCount: 15,
+          totalPnL: 0,
+          contestsCount: 0,
           activeContestsCount: 3,
-          winRate: 68,
+          winRate: 0,
         };
         
         setProfileData(mockData);
@@ -99,6 +99,15 @@ const SharedProfile = () => {
       
       <main className="flex-grow pt-28 pb-16">
         <div className="container px-4 md:px-6 mx-auto">
+          <div className="max-w-3xl mx-auto mb-6 p-4 bg-blue-100 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg flex items-start space-x-3">
+            <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <h3 className="font-semibold text-blue-800 dark:text-blue-200">Feature Coming Soon</h3>
+              <p className="text-sm text-blue-700 dark:text-blue-300">
+                Public profile sharing is currently in development. The data shown on this page is for demonstration purposes only.
+              </p>
+            </div>
+          </div>
           <MorphCard className="max-w-3xl mx-auto p-8">
             <div className="text-center mb-8">
               <Avatar className="h-24 w-24 mx-auto mb-4">

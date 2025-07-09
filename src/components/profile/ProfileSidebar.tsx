@@ -162,8 +162,8 @@ const ProfileSidebar = ({ user, onDepositClick, onWithdrawClick }: ProfileSideba
             <div className="flex items-center justify-center">
                 <Info className="w-5 h-5 mr-2 text-amber-600 dark:text-amber-400 flex-shrink-0" />
                 <div className="text-xs text-amber-800 dark:text-amber-200 text-left">
-                  <p className="font-semibold">Coming Soon</p>
-                  <p>We're working on enabling real money features with secure KYC verification. Stay tuned! 🚀</p>
+                  <p className="font-semibold">Payments Coming Soon</p>
+                  <p>We're working on enabling real money features with secure KYC verification. Payments are in dev mode. Stay tuned! 🚀</p>
                 </div>
             </div>
         </div>
@@ -173,7 +173,8 @@ const ProfileSidebar = ({ user, onDepositClick, onWithdrawClick }: ProfileSideba
           <Dialog open={kycDialogOpen} onOpenChange={setKycDialogOpen}>
             <DialogTrigger asChild>
               <Button 
-                className="w-full bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-950/50 dark:to-orange-950/50 border-amber-300 dark:border-amber-800 text-amber-600 dark:text-amber-400 border-0 shadow-lg hover:shadow-xl transition-all duration-100 rounded-xl h-12"
+                variant="outline"
+                className="w-full border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 text-gray-700 dark:text-gray-300 shadow-sm hover:shadow-md transition-all duration-300 rounded-xl h-12"
                 onClick={() => setKycDialogOpen(true)}
               >
                 <Shield className="w-4 h-4 mr-2" />
@@ -182,6 +183,34 @@ const ProfileSidebar = ({ user, onDepositClick, onWithdrawClick }: ProfileSideba
             </DialogTrigger>
             {kycDialogOpen && <KYCDialog onClose={() => setKycDialogOpen(false)} />}
           </Dialog>
+        </div>
+        <div className="mt-4 space-y-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between text-sm">
+            <span className="font-medium text-gray-600 dark:text-gray-400">Aadhaar Card</span>
+            {localStorage.getItem("aadharStatus") === "VERIFIED" ? (
+              <Badge variant="outline" className="border-green-500/30 bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-400">
+                <Check className="w-3 h-3 mr-1.5" />
+                Verified
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="border-amber-500/30 bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-400">
+                Not Verified
+              </Badge>
+            )}
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="font-medium text-gray-600 dark:text-gray-400">PAN Card</span>
+            {localStorage.getItem("panStatus") === "VERIFIED" ? (
+              <Badge variant="outline" className="border-green-500/30 bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-400">
+                <Check className="w-3 h-3 mr-1.5" />
+                Verified
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="border-amber-500/30 bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-400">
+                Not Verified
+              </Badge>
+            )}
+          </div>
         </div>
 
         <Separator className="my-4 bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
