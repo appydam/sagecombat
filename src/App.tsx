@@ -29,6 +29,7 @@ import SharedProfile from "./pages/SharedProfile";
 import GeoQuest from "./pages/GeoQuest";
 import GeoQuestLeaderboard from "./pages/GeoQuestLeaderboard";
 import ScrollToTop from "@/components/ScrollToTop";
+import { Analytics } from "@vercel/analytics/react";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
+        <Analytics />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/competitions" element={<Competitions />} />
