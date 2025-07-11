@@ -164,8 +164,12 @@ const Navbar = () => {
 
           <div className="hidden md:flex items-center space-x-4">
             <Link to="/profile">
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <User className="w-5 h-5" />
+              <Button
+                variant="outline"
+                className="group rounded-full flex items-center space-x-2 px-4 transition-all duration-200 ease-in-out hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20"
+              >
+                <User className="h-5 w-5 transition-transform duration-200 ease-in-out group-hover:rotate-12" />
+                <span>Profile</span>
               </Button>
             </Link>
             {/* <Link to="/leaderboard">
