@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import GameTypes from "@/components/GameTypes";
+import ContestInfo from "@/components/ContestInfo";
 import Footer from "@/components/Footer";
 import CompetitionCard from "@/components/CompetitionCard";
 import LeaderboardPreview from "@/components/LeaderboardPreview";
@@ -152,17 +153,7 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Enhanced Product Demo Image */}
-        <section className="py-12 relative">
-          <div className="container mx-auto px-4">
-            <div className="relative max-w-8xl mx-auto">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-mint-600/10 rounded-3xl blur-3xl transform rotate-1 animate-pulse"></div>
-              <div className="relative bg-white/20 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/30">
-                <img src="/newbg.png" alt="SageCombat Platform Preview - Equity, Opinion and Poly Contest Interfaces" className="w-full h-auto rounded-2xl shadow-2xl animate-fade-in transform hover:scale-[1.02] transition-all duration-500" loading="eager" />
-              </div>
-            </div>
-          </div>
-        </section>
+        <ContestInfo />
 
         <GameTypes />
         <section className="py-12 relative overflow-hidden">
