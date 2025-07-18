@@ -19,7 +19,7 @@ const Footer = () => {
 
             </Link>
             <p className="text-muted-foreground mb-6 max-w-md">
-              A competitive fantasy gaming platform that lets you compete with your market
+              A competitive skill-based gaming platform that lets you compete with your market
               knowledge without the risk of actual trading.
             </p>
             <div className="flex space-x-4">

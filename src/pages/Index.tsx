@@ -164,7 +164,7 @@ const Index = () => {
       </h2>
       <p className="text-lg text-muted-foreground max-w-xl mx-auto animate-fade-up" style={{
         animationDelay: '200ms'
-      }}>Advanced competitive fantasy gaming for sharp minds</p>
+      }}>Advanced competitive skill-based gaming for sharp minds</p>
     </div>
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-5xl mx-auto">
       {[{
@@ -254,7 +254,7 @@ const Index = () => {
             <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto animate-fade-up" style={{
             animationDelay: '200ms'
           }}>
-              Join thousands of players competing in skill-based fantasy gaming competitions. Start winning today.
+              Join thousands of players competing in skill-based skill-based gaming competitions. Start winning today.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6 animate-fade-up" style={{
             animationDelay: '400ms'
@@ -302,7 +302,7 @@ const Index = () => {
               },
               {
                 name: "Mehak D.",
-                quote: "Feels like fantasy sports - but for finance nerds like me.",
+                quote: "Feels like skill-based sports - but for finance nerds like me.",
               },
               {
                 name: "Rahul A.",

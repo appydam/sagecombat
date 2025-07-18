@@ -1,1 +1,1 @@
-Competitive fantasy gaming platform
+Competitive skill-based gaming platform.

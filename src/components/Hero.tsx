@@ -52,7 +52,7 @@ const Hero = () => {
 
           {/* Subheadline */}
           <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-fade-up">
-            Join fantasy competitions where smart predictions earn real rewards.
+            Join skill-based competitions where smart predictions earn real rewards.
             No actual trading required — just your market insights and strategy.
           </p>
 
