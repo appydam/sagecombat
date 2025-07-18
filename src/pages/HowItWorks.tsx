@@ -167,7 +167,7 @@ const HowItWorks = () => {
     },
     {
       question: "Is SageCombat a real trading platform?",
-      answer: "No, SageCombat is a fantasy competition platform based on market performance. No actual stocks or assets are purchased when you participate."
+      answer: "No, SageCombat is a skill-based competition platform based on market performance. No actual stocks or assets are purchased when you participate."
     },
   ];
 
@@ -329,7 +329,7 @@ const HowItWorks = () => {
           <div className="container px-4 md:px-6 mx-auto">
             <div className="max-w-3xl mx-auto text-center mb-12">
               <h2 className="text-3xl font-bold mb-4">Why Choose SageCombat</h2>
-              <p className="text-slate-600">A fantasy platform designed for skill and entertainment</p>
+              <p className="text-slate-600">A skill-based platform designed for skill and entertainment</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">

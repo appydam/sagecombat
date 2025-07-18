@@ -21,7 +21,7 @@ export interface ApiEquityContest {
 
 export interface ApiOpinionContest {
   id: number;
-  name: string; // e.g., "IPL Fantasy League"
+  name: string; // e.g., "IPL skill-based League"
   description: string; // e.g., "Will MI win against CSK?"
   registeration_deadline: string; // ISO string
   tag: string; // e.g., "Sports"

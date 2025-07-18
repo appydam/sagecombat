@@ -5,7 +5,7 @@ export const mockCompetitionsData: CompetitionsApiResponseData = {
   opinions_contests: [
     {
       id: 1,
-      name: "IPL Fantasy League",
+      name: "IPL skill-based League",
       description: "Will MI win against CSK?",
       registeration_deadline: "2025-04-09T23:59:59Z",
       tag: "Sports",
