@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -12,12 +12,28 @@ interface KYCDialogProps {
   onClose: () => void;
 }
 
+// Helper function to convert PEM key to ArrayBuffer
+function pemToArrayBuffer(pem: string) {
+  const b64 = pem
+    .replace(/-----BEGIN PUBLIC KEY-----/, "")
+    .replace(/-----END PUBLIC KEY-----/, "")
+    .replace(/\s+/g, "");
+  const binary = atob(b64);
+  const buffer = new ArrayBuffer(binary.length);
+  const view = new Uint8Array(buffer);
+  for (let i = 0; i < binary.length; i++) {
+    view[i] = binary.charCodeAt(i);
+  }
+  return buffer;
+}
+
 export const KYCDialog = ({ onClose }: KYCDialogProps) => {
   const authStatus = localStorage.getItem('isAuthenticated') === 'true';
   const [kycStep, setKycStep] = useState<KycStep>('selection');
   const [activeSteps, setActiveSteps] = useState<readonly KycStep[]>(AADHAAR_KYC_STEPS);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [publicKey, setPublicKey] = useState<CryptoKey | null>(null);
 
   const [aadhaarNumber, setAadhaarNumber] = useState('');
   const [captchaImage, setCaptchaImage] = useState('');
@@ -35,20 +51,73 @@ export const KYCDialog = ({ onClose }: KYCDialogProps) => {
     }
   };
 
+  useEffect(() => {
+    const importPublicKey = async () => {
+        try {
+            const publicKeyPem = import.meta.env.VITE_PUBLIC_KEY_ENCRYPTION;
+            if (!publicKeyPem) {
+                console.error("Public key not found in environment variables.");
+                setError("Configuration error: Cannot perform verification.");
+                return;
+            }
+
+            const keyBuffer = pemToArrayBuffer(atob(publicKeyPem));
+            const cryptoKey = await window.crypto.subtle.importKey(
+                "spki",
+                keyBuffer,
+                {
+                    name: "RSA-OAEP",
+                    hash: "SHA-256",
+                },
+                true,
+                ["encrypt"]
+            );
+            setPublicKey(cryptoKey);
+        } catch (err) {
+            console.error("Error importing public key:", err);
+            setError("Failed to initialize security features.");
+        }
+    };
+
+    importPublicKey();
+  }, []);
+
   const getAadhaarCaptcha = async () => {
     setLoading(true);
     setError(null);
+
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      setError('User not authenticated');
+      setLoading(false);
+      return;
+    }
+
+    if (!publicKey) {
+      setError("Security features not initialized. Please try again.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const userId = getUserId();
-      const requestData = {
-        userId,
-        aadhaarnumber: aadhaarNumber
-      };
+      const requestData = { userId, aadhaarnumber: aadhaarNumber };
+      const encodedPayload = new TextEncoder().encode(JSON.stringify(requestData));
+
+      const encryptedBuffer = await window.crypto.subtle.encrypt(
+          { name: "RSA-OAEP" },
+          publicKey,
+          encodedPayload
+      );
+  
+      const encryptedArray = new Uint8Array(encryptedBuffer);
+      const b64Encrypted = btoa(String.fromCharCode.apply(null, Array.from(encryptedArray)));
+  
+      const encryptedPayload = { data: b64Encrypted };
 
       const response = await fetch('https://api.sagecombat.com/getAadhaarCaptcha', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestData)
+        body: JSON.stringify(encryptedPayload),
       });
 
       if (response.ok) {
@@ -65,7 +134,8 @@ export const KYCDialog = ({ onClose }: KYCDialogProps) => {
         const errorData = await response.json();
         setError(errorData.message || "Failed to generate captcha");
       }
-    } catch (error) {
+    } catch (err) {
+      setError('An unexpected error occurred.');
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);

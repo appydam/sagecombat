@@ -1,4 +1,19 @@
 import { useState, useEffect } from 'react';
+
+// Helper function to convert PEM key to ArrayBuffer
+function pemToArrayBuffer(pem: string) {
+  const b64 = pem
+    .replace(/-----BEGIN PUBLIC KEY-----/, "")
+    .replace(/-----END PUBLIC KEY-----/, "")
+    .replace(/\s+/g, "");
+  const binary = atob(b64);
+  const buffer = new ArrayBuffer(binary.length);
+  const view = new Uint8Array(buffer);
+  for (let i = 0; i < binary.length; i++) {
+    view[i] = binary.charCodeAt(i);
+  }
+  return buffer;
+}
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, Check } from 'lucide-react';
@@ -16,6 +31,38 @@ export const PanVerification = ({ onSuccess, onBack }: PanVerificationProps) => 
   const [nameOnCard, setNameOnCard] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [publicKey, setPublicKey] = useState<CryptoKey | null>(null);
+
+  useEffect(() => {
+    const importPublicKey = async () => {
+        try {
+            const publicKeyPem = import.meta.env.VITE_PUBLIC_KEY_ENCRYPTION;
+            if (!publicKeyPem) {
+                console.error("Public key not found in environment variables.");
+                setError("Configuration error: Cannot perform verification.");
+                return;
+            }
+
+            const keyBuffer = pemToArrayBuffer(atob(publicKeyPem));
+            const cryptoKey = await window.crypto.subtle.importKey(
+                "spki",
+                keyBuffer,
+                {
+                    name: "RSA-OAEP",
+                    hash: "SHA-256",
+                },
+                true,
+                ["encrypt"]
+            );
+            setPublicKey(cryptoKey);
+        } catch (err) {
+            console.error("Error importing public key:", err);
+            setError("Failed to initialize security features.");
+        }
+    };
+
+    importPublicKey();
+  }, []);
 
   useEffect(() => {
     const storedUserName = localStorage.getItem('userName');
@@ -47,6 +94,12 @@ export const PanVerification = ({ onSuccess, onBack }: PanVerificationProps) => 
       return;
     }
 
+    if (!publicKey) {
+      setError("Security features not initialized. Please try again.");
+      setLoading(false);
+      return;
+    }
+
     const requestData = {
       pannumber: panNumber.toUpperCase(),
       userId,
@@ -55,11 +108,24 @@ export const PanVerification = ({ onSuccess, onBack }: PanVerificationProps) => 
       dob,
     };
 
+    const encodedPayload = new TextEncoder().encode(JSON.stringify(requestData));
+
+    const encryptedBuffer = await window.crypto.subtle.encrypt(
+        { name: "RSA-OAEP" },
+        publicKey,
+        encodedPayload
+    );
+
+    const encryptedArray = new Uint8Array(encryptedBuffer);
+    const b64Encrypted = btoa(String.fromCharCode.apply(null, Array.from(encryptedArray)));
+
+    const encryptedPayload = { data: b64Encrypted };
+
     try {
       const response = await fetch('https://api.sagecombat.com/verifyPan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestData),
+        body: JSON.stringify(encryptedPayload),
       });
 
       const data = await response.json();

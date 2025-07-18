@@ -10,6 +10,21 @@ import { Home } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { BACKEND_HOST } from "@/constants/config";
 
+// Helper function to convert PEM key to ArrayBuffer
+function pemToArrayBuffer(pem: string) {
+  const b64 = pem
+    .replace(/-----BEGIN PUBLIC KEY-----/, "")
+    .replace(/-----END PUBLIC KEY-----/, "")
+    .replace(/\s+/g, "");
+  const binary = atob(b64);
+  const buffer = new ArrayBuffer(binary.length);
+  const view = new Uint8Array(buffer);
+  for (let i = 0; i < binary.length; i++) {
+    view[i] = binary.charCodeAt(i);
+  }
+  return buffer;
+}
+
 const Login = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -22,6 +37,39 @@ const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [resetEmail, setResetEmail] = useState("");
+    const [publicKey, setPublicKey] = useState<CryptoKey | null>(null);
+
+    useEffect(() => {
+        const importPublicKey = async () => {
+            try {
+                const publicKeyPem = import.meta.env.VITE_PUBLIC_KEY_ENCRYPTION;
+                // console.log("VITE_PUBLIC_KEY_ENCRYPTION", publicKeyPem);
+                if (!publicKeyPem) {
+                    console.error("Public key not found in environment variables.");
+                    setError("Configuration error: Cannot perform login.");
+                    return;
+                }
+
+                const keyBuffer = pemToArrayBuffer(atob(publicKeyPem)); // Decode base64 then convert
+                const cryptoKey = await window.crypto.subtle.importKey(
+                    "spki",
+                    keyBuffer,
+                    {
+                        name: "RSA-OAEP",
+                        hash: "SHA-256",
+                    },
+                    true, // must be true for encryption
+                    ["encrypt"]
+                );
+                setPublicKey(cryptoKey);
+            } catch (err) {
+                console.error("Error importing public key:", err);
+                setError("Failed to initialize security features.");
+            }
+        };
+
+        importPublicKey();
+    }, []);
 
     useEffect(() => {
         const checkLoginStatus = () => {
@@ -55,22 +103,37 @@ const Login = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
 
+        if (!publicKey) {
+            setError("Security features are not initialized. Please wait a moment and try again.");
+            setIsLoading(false);
+            return;
+        }
+
         try {
-            const loginData = {
-                username: loginMethod === "email" ? formData.emailId : formData.phoneNo,
-                password: formData.password,
-            };
+            const payload = loginMethod === "email" ? { username: formData.emailId, password: formData.password } : { phoneNo: formData.phoneNo, password: formData.password };
+            const encodedPayload = new TextEncoder().encode(JSON.stringify(payload));
+
+            const encryptedBuffer = await window.crypto.subtle.encrypt(
+                { name: "RSA-OAEP" },
+                publicKey,
+                encodedPayload
+            );
+
+            const encryptedArray = new Uint8Array(encryptedBuffer);
+            const b64Encrypted = btoa(String.fromCharCode.apply(null, Array.from(encryptedArray)));
+
+            const encryptedPayload = { data: b64Encrypted };
 
             const apiPath = BACKEND_HOST + 'authenticateUser';
             const response = await fetch(apiPath, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(loginData),
+                body: JSON.stringify(encryptedPayload),
                 credentials: "include",
             });
 
@@ -86,7 +149,6 @@ const Login = () => {
                 localStorage.setItem("userUsername", JSON.stringify(data.data.username));
                 localStorage.setItem("aadharStatus", JSON.stringify(data.data.aadharStatus));
                 localStorage.setItem("panStatus", JSON.stringify(data.data.panStatus));
-
 
                 toast({ title: "Login successful", description: `Welcome back, ${data.data.name}!` });
                 navigate("/");
