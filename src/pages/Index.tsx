@@ -119,10 +119,14 @@ const Index = () => {
               </div>
 
               {/* Main Headline */}
-              <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 animate-fade-up">
-                <span className="block mb-2 text-6xl md:text-7xl">The future of</span>
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-mint-600 to-gold-500 animate-gradient text-7xl md:text-8xl"><span className="whitespace-nowrap">Competitive Skill-based</span><br />Gaming</span>
-                <div className="block px-3 py-1 mt-4 text-xs font-medium tracking-wide text-violet-800 bg-violet-100 border border-violet-200 rounded-full shadow-sm animate-fade-up md:text-sm mx-auto" style={{ animationDelay: '400ms', maxWidth: 'fit-content' }}>
+              <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 animate-fade-up">
+                <span className="block mb-1 text-5xl sm:text-6xl md:text-7xl">The future of</span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-mint-600 to-gold-500 animate-gradient text-6xl sm:text-7xl md:text-8xl leading-tight">
+                  <span className="sm:whitespace-nowrap">Competitive </span>
+                  <span className="sm:whitespace-nowrap">Skill-based</span>
+                  <br />Gaming
+                </span>
+                <div className="block px-3 py-1 mt-6 text-xs font-medium tracking-wide text-violet-800 bg-violet-100 border border-violet-200 rounded-full shadow-sm animate-fade-up md:text-sm mx-auto" style={{ animationDelay: '400ms', maxWidth: 'fit-content' }}>
                   <Lightbulb className="inline-block w-4 h-4 mr-1.5 -mt-0.5 text-violet-500" />
                   Reimagining Gaming for Financial Intelligence
                 </div>
@@ -131,21 +135,21 @@ const Index = () => {
               {/* Subheadline */}
               <p style={{
               animationDelay: '200ms'
-            }} className="text-lg text-muted-foreground mb-12 max-w-3xl mx-auto animate-fade-up leading-relaxed md:text-xl">Transform your market knowledge into real rewards. Compete in skill-based games without the risk.</p>
+            }} className="text-base sm:text-lg text-muted-foreground my-8 max-w-2xl mx-auto animate-fade-up leading-relaxed md:text-xl">Transform your market knowledge into real rewards. Compete in skill-based games without the risk.</p>
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 mb-12 w-full sm:w-auto animate-fade-up" style={{
-              animationDelay: '400ms'
-            }}>
+                animationDelay: '600ms'
+              }}>
                 <Link to="/competitions" className="w-full sm:w-auto">
-                  <Button size="sm" className="w-full sm:w-auto rounded-full px-8 py-4 bg-gradient-to-r from-primary to-mint-600 hover:from-primary/90 hover:to-mint-600/90 shadow-lg transform hover:scale-105 transition-all duration-300 text-sm">
-                    Start Playing Now <ArrowRight className="ml-2 h-5 w-5" />
+                  <Button size="lg" className="w-full sm:w-auto rounded-full px-8 py-6 bg-gradient-to-r from-primary to-mint-600 hover:from-primary/90 hover:to-mint-600/90 shadow-lg transform hover:scale-105 transition-all duration-300 text-base font-semibold">
+                     Start Playing Now <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
-                <Link to="/how-it-works">
-                  <Button variant="outline" size="sm" className="w-full sm:w-auto rounded-full px-8 py-4 border-2 hover:bg-accent/50 transform hover:scale-105 transition-all duration-300 text-sm">
-                    <Play className="mr-2 h-5 w-5" />
-                    See How It Works
+                <Link to="/how-it-works" className="w-full sm:w-auto">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-full px-8 py-6 border-2 hover:bg-accent/50 transform hover:scale-105 transition-all duration-300 text-base font-semibold">
+                     <Play className="mr-2 h-5 w-5" />
+                     See How It Works
                   </Button>
                 </Link>
               </div>
@@ -245,12 +249,12 @@ const Index = () => {
         
         <section className="py-20 relative overflow-hidden">
           <div className="container px-4 mx-auto text-center">
-            <h2 className="font-display text-4xl md:text-6xl font-bold mb-6 max-w-4xl mx-auto animate-fade-up">
-              Ready to turn your market knowledge into
-              <span className="text-5xl md:text-7xl block bg-clip-text text-transparent bg-gradient-to-r from-primary to-mint-600 mt-2">
-                Real Rewards?
-              </span>
-            </h2>
+            <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 max-w-4xl mx-auto animate-fade-up">
+               Ready to turn your market knowledge into
+              <span className="text-5xl md:text-6xl block bg-clip-text text-transparent bg-gradient-to-r from-primary to-mint-600 mt-2">
+                 Real Rewards?
+               </span>
+             </h2>
             <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto animate-fade-up" style={{
             animationDelay: '200ms'
           }}>
