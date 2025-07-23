@@ -23,6 +23,8 @@ import { BACKEND_HOST } from "@/constants/config";
 import { Calendar } from "lucide-react";
 import SelectedStocksNewsSummary from '@/components/SelectedStocksNewsSummary';
 import { toast } from "sonner";
+import MarketNews from '@/components/MarketNews';
+
 
 const CustomBasketGame = () => {
   const navigate = useNavigate();
@@ -67,6 +69,8 @@ const CustomBasketGame = () => {
         stock.symbol.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [searchQuery, stockList]);
+
+
 
   const handleStockSelectionsChange = (selections: Stock[]) => {
     setSelectedStocks(selections);
@@ -203,240 +207,210 @@ const CustomBasketGame = () => {
                 {competitionData.description}
               </p>
 
+              <div className="space-y-5 px-3 py-4 bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 shadow-md">
 
-<div className="space-y-5 px-3 py-4 bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 shadow-md">
-
-{/* Search Input */}
-<Input
-  type="search"
-  placeholder="🔍 Search for a stock..."
-  value={searchQuery}
-  onChange={(e) => {
+                {/* Search Input */}
+                <Input
+                  type="search"
+                  placeholder="🔍 Search for a stock..."
+                  value={searchQuery}
+                  onChange={(e) => {
                     setSearchQuery(e.target.value);
                     setCurrentPage(1);
                   }}
-  className="rounded-md py-1.5 px-3 text-sm shadow-inner border border-gray-300 focus:ring-2 focus:ring-purple-400 placeholder:text-slate-400"
-/>
+                  className="rounded-md py-1.5 px-3 text-sm shadow-inner border border-gray-300 focus:ring-2 focus:ring-purple-400 placeholder:text-slate-400"
+                />
 
-{/* Progress Bar */}
-<div className="relative h-1.5 rounded-full overflow-hidden bg-slate-200">
-  <div
-    className="absolute h-full bg-gradient-to-r from-purple-300 via-indigo-400 to-purple-300 transition-all duration-500"
-    style={{
-      width: `${(selectedStocks.length / competitionData.maxSelectionsAllowed) * 100}%`,
-    }}
-  />
-</div>
+                {/* Progress Bar */}
+                <div className="relative h-1.5 rounded-full overflow-hidden bg-slate-200">
+                  <div
+                    className="absolute h-full bg-gradient-to-r from-purple-300 via-indigo-400 to-purple-300 transition-all duration-500"
+                    style={{
+                      width: `${(selectedStocks.length / competitionData.maxSelectionsAllowed) * 100}%`,
+                    }}
+                  />
+                </div>
 
-{/* Stock List */}
-<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-  {paginatedStocks.map((stock) => (
-    <MorphCard
-      key={stock.id}
-      className="group flex items-center justify-between px-3 py-2.5 bg-white/90 backdrop-blur-md rounded-lg border border-slate-200 hover:border-indigo-500 hover:shadow-sm transition-all"
-    >
-      <div>
-        <div className="text-base font-semibold text-slate-800 group-hover:text-indigo-600 transition">
-          {stock.symbol}
-        </div>
-        <div className="text-xs text-gray-500 truncate max-w-[160px]">
-          {stock.name}
-        </div>
-      </div>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-7 w-7 rounded-full hover:bg-indigo-100 hover:text-indigo-600 transition"
-        onClick={() => handleAddStock(stock)}
-      >
-        <PlusCircle className="h-3.5 w-3.5" />
-      </Button>
-    </MorphCard>
-  ))}
-</div>
+                {/* Stock List */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  {paginatedStocks.map((stock) => (
+                    <MorphCard
+                      key={stock.id}
+                      className="group flex items-center justify-between px-3 py-2.5 bg-white/90 backdrop-blur-md rounded-lg border border-slate-200 hover:border-indigo-500 hover:shadow-sm transition-all"
+                    >
+                      <div>
+                        <div className="text-base font-semibold text-slate-800 group-hover:text-indigo-600 transition">
+                          {stock.symbol}
+                        </div>
+                        <div className="text-xs text-gray-500 truncate max-w-[160px]">
+                          {stock.name}
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 rounded-full hover:bg-indigo-100 hover:text-indigo-600 transition"
+                        onClick={() => handleAddStock(stock)}
+                      >
+                        <PlusCircle className="h-3.5 w-3.5" />
+                      </Button>
+                    </MorphCard>
+                  ))}
+                </div>
 
-{/* Pagination */}
-<div className="flex justify-between items-center text-sm text-slate-600">
-  <Button
-    variant="outline"
-    disabled={currentPage === 1}
-    onClick={() => setCurrentPage(currentPage - 1)}
-    className="px-2 py-1 rounded-md border-slate-300 hover:bg-slate-100 flex items-center"
-  >
-    <ChevronLeft className="h-4 w-4 mr-1" />
-    Previous
-  </Button>
-  <span>
-    Page <span className="font-semibold text-slate-800">{currentPage}</span> of{" "}
-    <span className="font-semibold text-slate-800">{totalPages}</span>
-  </span>
-  <Button
-    variant="outline"
-    disabled={currentPage === totalPages}
-    onClick={() => setCurrentPage(currentPage + 1)}
-    className="px-2 py-1 rounded-md border-slate-300 hover:bg-slate-100 flex items-center"
-  >
-    Next
-    <ChevronRight className="h-4 w-4 ml-1" />
-  </Button>
-</div>
+                {/* Pagination */}
+                <div className="flex justify-between items-center text-sm text-slate-600">
+                  <Button
+                    variant="outline"
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                    className="px-2 py-1 rounded-md border-slate-300 hover:bg-slate-100 flex items-center"
+                  >
+                    <ChevronLeft className="h-4 w-4 mr-1" />
+                    Previous
+                  </Button>
+                  <span>
+                    Page <span className="font-semibold text-slate-800">{currentPage}</span> of{" "}
+                    <span className="font-semibold text-slate-800">{totalPages}</span>
+                  </span>
+                  <Button
+                    variant="outline"
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                    className="px-2 py-1 rounded-md border-slate-300 hover:bg-slate-100 flex items-center"
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4 ml-1" />
+                  </Button>
+                </div>
 
-{/* Selection Count */}
-<div className="text-xs text-center text-slate-500">
-  {selectedStocks.length} of {competitionData.maxSelectionsAllowed} stocks selected
-</div>
+                {/* Selection Count */}
+                <div className="text-xs text-center text-slate-500">
+                  {selectedStocks.length} of {competitionData.maxSelectionsAllowed} stocks selected
+                </div>
 
-{/* Selected Stocks */}
-{selectedStocks.length > 0 && (
-  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-    {selectedStocks.map((stock) => (
-      <MorphCard
-        key={stock.id}
-        className="flex items-center px-2 py-1.5 gap-x-2 bg-gradient-to-tr from-indigo-50 to-white rounded-md border border-slate-300 hover:border-indigo-400 hover:shadow-sm transition"
-      >
-        {/* Symbol Container with strict width */}
-        <div className="w-[80px] truncate text-sm font-medium text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-indigo-400 group-hover:from-indigo-700 group-hover:to-indigo-500">
-          {stock.symbol}
-        </div>
+                {/* Selected Stocks */}
+                {selectedStocks.length > 0 && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    {selectedStocks.map((stock) => (
+                      <MorphCard
+                        key={stock.id}
+                        className="flex items-center px-2 py-1.5 gap-x-2 bg-gradient-to-tr from-indigo-50 to-white rounded-md border border-slate-300 hover:border-indigo-400 hover:shadow-sm transition"
+                      >
+                        {/* Symbol Container with strict width */}
+                        <div className="w-[80px] truncate text-sm font-medium text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-indigo-400 group-hover:from-indigo-700 group-hover:to-indigo-500">
+                          {stock.symbol}
+                        </div>
 
-        {/* Remove Button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6 p-0 ml-auto shrink-0 rounded-full hover:bg-red-100 hover:text-red-500"
-          onClick={() => handleRemoveStock(stock.id)}
-        >
-          <X className="h-3 w-3" />
-        </Button>
-      </MorphCard>
-    ))}
-  </div>
-)}
+                        {/* Remove Button */}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 p-0 ml-auto shrink-0 rounded-full hover:bg-red-100 hover:text-red-500"
+                          onClick={() => handleRemoveStock(stock.id)}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </MorphCard>
+                    ))}
+                  </div>
+                )}
 
+                {/* Join Button */}
+                <div>
+                  <Button
+                    size="sm"
+                    className="w-full md:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full px-5 py-2.5 shadow-md hover:opacity-90 transition text-sm font-medium"
+                    onClick={handleJoinCompetition}
+                    disabled={selectedStocks.length < competitionData.maxSelectionsAllowed}
+                  >
+                    🚀 Join Competition for ₹{competitionData.entryFee}
+                  </Button>
+                </div>
+              </div>
 
+              {/* AI News Summary for Selected Stocks */}
+              <div className="mt-6">
+                <SelectedStocksNewsSummary selectedStocks={selectedStocks} />
+              </div>
 
+              {/* Competition Details Section */}
+              <div className="mt-8">
+                <MorphCard className="p-6">
+                  <h2 className="text-xl font-bold mb-4">Competition Details</h2>
+                  <Separator className="mb-4" />
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-5 text-sm">
+                    <div className="flex items-start gap-3">
+                      <IndianRupee className="h-5 w-5 text-gold-500 mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-muted-foreground">Entry Fee</p>
+                        <p className="font-semibold text-base">₹{competitionData.entryFee}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Users className="h-5 w-5 text-mint-600 mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-muted-foreground">Participants</p>
+                        <p className="font-semibold text-base">
+                          {competitionData.participants}/{competitionData.maxParticipants || "∞"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <TrendingUp className="h-5 w-5 text-gold-500 mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-muted-foreground">Max Selections</p>
+                        <p className="font-semibold text-base">
+                          {competitionData.maxSelectionsAllowed} stocks
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 col-span-2 md:col-span-3">
+                      <IndianRupee className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-muted-foreground">Prize Pool</p>
+                        <p className="font-semibold text-base">
+                          {competitionData.prizePool > 0
+                            ? `₹${competitionData.prizePool.toLocaleString()}`
+                            : <span className="font-medium">Number of players × entry fee</span>}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 col-span-2 md:col-span-3">
+                      <Calendar className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-muted-foreground">Duration</p>
+                        <p className="font-semibold text-base">
+                          {new Date(competitionData.startDate).toLocaleDateString()} - {new Date(competitionData.endDate).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
+                  <Separator className="my-5" />
 
-{/* Join Button */}
-<div>
-  <Button
-    size="sm"
-    className="w-full md:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full px-5 py-2.5 shadow-md hover:opacity-90 transition text-sm font-medium"
-    onClick={handleJoinCompetition}
-    disabled={selectedStocks.length < competitionData.maxSelectionsAllowed}
-  >
-    🚀 Join Competition for ₹{competitionData.entryFee}
-  </Button>
-</div>
-</div>
-
-{/* AI News Summary for Selected Stocks */}
-<div className="mt-6">
-  <SelectedStocksNewsSummary selectedStocks={selectedStocks} />
-</div>
+                  <div className="grid md:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+                    <div>
+                      <h3 className="font-semibold mb-1">How Scoring Works</h3>
+                      <p className="text-muted-foreground leading-relaxed">
+                        Your score is based on the average % return of your selected stocks over the competition period.
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">Prize Distribution</h3>
+                      <p className="text-muted-foreground leading-relaxed">
+                        Prizes are distributed based on an exponential decay model to reward top performers.
+                      </p>
+                    </div>
+                  </div>
+                </MorphCard>
+              </div>
 
             </div>
 
-            <div className="lg:col-span-4">
-              <MorphCard className="p-6 sticky top-24">
-                <h2 className="text-xl font-bold mb-4">Competition Details</h2>
-                <Separator className="mb-4" />
-                <div className="space-y-4">
-                  <div className="flex items-center">
-                    <IndianRupee className="h-5 w-5 text-gold-500 mr-2" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Entry Fee</p>
-                      <p className="font-medium">₹{competitionData.entryFee}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <IndianRupee className="h-5 w-5 text-primary mt-1" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        Prize Pool
-                      </p>
-                      <p className="text-sm text-foreground font-medium leading-snug">
-                        {competitionData.prizePool > 0 ? (
-                          `₹${competitionData.prizePool.toLocaleString()}`
-                        ) : (
-                          <span className="font-semibold">
-                            number of players × entry fee
-                          </span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Users className="h-5 w-5 text-mint-600 mr-2" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        Participants
-                      </p>
-                      <p className="font-medium">
-                        {competitionData.participants}/
-                        {competitionData.maxParticipants || "∞"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Calendar className="h-5 w-5 text-primary mr-2" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Duration</p>
-                      <p className="font-medium">
-                        {new Date(
-                          competitionData.startDate
-                        ).toLocaleDateString()}{" "}
-                        -{" "}
-                        {new Date(competitionData.endDate).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <TrendingUp className="h-5 w-5 text-gold-500 mr-2" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        Selection Requirement
-                      </p>
-                      <p className="font-medium">
-                        {competitionData.maxSelectionsAllowed} stocks
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center">
-                    <IndianRupee className="h-5 w-5 text-blue-500 mr-2" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        Currency Type
-                      </p>
-                      <p className="font-medium capitalize">
-                        {competitionData.currencyType}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <Separator className="my-4" />
-
-                <div className="space-y-2">
-                  <h3 className="font-medium">How Scoring Works</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Your score is calculated based on the average percentage
-                    return of your selected stocks basket over the competition period.
-                    The higher the return, the higher your ranking.
-                  </p>
-                </div>
-
-                <Separator className="my-4" />
-
-                <div className="space-y-2">
-                  <h3 className="font-medium">Prize Distribution</h3>
-                  <ul className="text-sm text-muted-foreground">
-                    <li>Exponential decay</li>
-                    {/* <li>Will add more details soon</li> */}
-                  </ul>
-                </div>
-              </MorphCard>
+            <div className="lg:col-span-4 space-y-6">
+              <MarketNews />
             </div>
           </div>
         </div>
