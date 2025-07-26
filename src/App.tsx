@@ -28,6 +28,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import SharedProfile from "./pages/SharedProfile";
 import GeoQuest from "./pages/GeoQuest";
 import GeoQuestLeaderboard from "./pages/GeoQuestLeaderboard";
+import MarketNewsPage from "./pages/MarketNewsPage";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -66,6 +67,7 @@ const App = () => (
           {/* New GeoQuest routes */}
           <Route path="/geoquest/:contestId" element={<GeoQuest />} />
           <Route path="/geoquest/:contestId/leaderboard" element={<GeoQuestLeaderboard />} />
+          <Route path="/market-news" element={<MarketNewsPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

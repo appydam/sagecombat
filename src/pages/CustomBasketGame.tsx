@@ -232,14 +232,14 @@ const CustomBasketGame = () => {
                 </div>
 
                 {/* Stock List */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                   {paginatedStocks.map((stock) => (
                     <MorphCard
                       key={stock.id}
-                      className="group flex items-center justify-between px-3 py-2.5 bg-white/90 backdrop-blur-md rounded-lg border border-slate-200 hover:border-indigo-500 hover:shadow-sm transition-all"
+                      className="group flex items-center justify-between px-2 py-1.5 bg-white/90 backdrop-blur-md rounded-lg border border-slate-200 hover:border-indigo-500 hover:shadow-sm transition-all"
                     >
                       <div>
-                        <div className="text-base font-semibold text-slate-800 group-hover:text-indigo-600 transition">
+                        <div className="text-sm font-semibold text-slate-800 group-hover:text-indigo-600 transition">
                           {stock.symbol}
                         </div>
                         <div className="text-xs text-gray-500 truncate max-w-[160px]">
@@ -249,10 +249,10 @@ const CustomBasketGame = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-7 w-7 rounded-full hover:bg-indigo-100 hover:text-indigo-600 transition"
+                        className="h-6 w-6 rounded-full hover:bg-indigo-100 hover:text-indigo-600 transition"
                         onClick={() => handleAddStock(stock)}
                       >
-                        <PlusCircle className="h-3.5 w-3.5" />
+                        <PlusCircle className="h-3 w-3" />
                       </Button>
                     </MorphCard>
                   ))}
@@ -291,14 +291,13 @@ const CustomBasketGame = () => {
 
                 {/* Selected Stocks */}
                 {selectedStocks.length > 0 && (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
                     {selectedStocks.map((stock) => (
                       <MorphCard
                         key={stock.id}
-                        className="flex items-center px-2 py-1.5 gap-x-2 bg-gradient-to-tr from-indigo-50 to-white rounded-md border border-slate-300 hover:border-indigo-400 hover:shadow-sm transition"
+                        className="flex items-center px-2 py-1 gap-x-1 bg-gradient-to-tr from-indigo-50 to-white rounded-md border border-slate-300 hover:border-indigo-400 hover:shadow-sm transition"
                       >
-                        {/* Symbol Container with strict width */}
-                        <div className="w-[80px] truncate text-sm font-medium text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-indigo-400 group-hover:from-indigo-700 group-hover:to-indigo-500">
+                        <div className="flex-grow truncate text-xs font-medium text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-indigo-400 group-hover:from-indigo-700 group-hover:to-indigo-500">
                           {stock.symbol}
                         </div>
 
@@ -306,7 +305,7 @@ const CustomBasketGame = () => {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-6 w-6 p-0 ml-auto shrink-0 rounded-full hover:bg-red-100 hover:text-red-500"
+                          className="h-5 w-5 p-0 ml-auto shrink-0 rounded-full hover:bg-red-100 hover:text-red-500"
                           onClick={() => handleRemoveStock(stock.id)}
                         >
                           <X className="h-3 w-3" />
