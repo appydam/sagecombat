@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
+import DailyStreak from "@/components/DailyStreak";
 import Footer from "@/components/Footer";
 import { Stock } from "@/components/StockSelector";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ import {
   IndianRupee,
   ChevronLeft,
   ChevronRight,
+  Flame,
 } from "lucide-react";
 import MorphCard from "@/components/ui/MorphCard";
 import { Input } from "@/components/ui/input";
@@ -409,6 +411,13 @@ const CustomBasketGame = () => {
             </div>
 
             <div className="lg:col-span-4 space-y-6">
+              <DailyStreak 
+                currentStreak={3}
+                nextReward="Amazon Pay ₹20 Voucher"
+                daysCompleted={3}
+                totalDaysForNextReward={7}
+              />
+
               <MarketNews />
             </div>
           </div>

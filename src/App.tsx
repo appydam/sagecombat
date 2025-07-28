@@ -29,6 +29,7 @@ import SharedProfile from "./pages/SharedProfile";
 import GeoQuest from "./pages/GeoQuest";
 import GeoQuestLeaderboard from "./pages/GeoQuestLeaderboard";
 import MarketNewsPage from "./pages/MarketNewsPage";
+import StreakMilestones from "./pages/StreakMilestones";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -55,6 +56,8 @@ const App = () => (
           <Route path="/crypto-basket" element={<CryptoBasketGame />} />
           <Route path="/opinion-trading" element={<OpinionTradingGame />} />
           <Route path="/competition-confirmation" element={<CompetitionConfirmation />} />
+          <Route path="/leaderboard/contest/:contestId" element={<ContestLeaderboard />} />
+          <Route path="/streak-milestones" element={<StreakMilestones />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
