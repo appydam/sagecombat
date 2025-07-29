@@ -21,12 +21,17 @@ const MarketNews = () => {
     setIsLoadingNews(true);
     setError(null);
     try {
-      const response = await fetch('https://api.sagecombat.com/news');
+      const response = await fetch('https://api.sagecombat.com/news?offset=0&limit=5');
       if (!response.ok) {
         throw new Error(`Failed to fetch news: ${response.statusText}`);
       }
       const result = await response.json();
-      setNewsData(result.data as NewsArticle[]);
+      if (result.code === 200) {
+        // Take only the first 5 news items
+        setNewsData(result.data.news.slice(0, 5) as NewsArticle[]);
+      } else {
+        throw new Error('Failed to fetch news: Invalid response format');
+      }
     } catch (error) {
       console.error('Failed to fetch news:', error);
       setError(error instanceof Error ? error.message : 'An unknown error occurred.');
@@ -69,7 +74,7 @@ const MarketNews = () => {
         </div>
       ) : (
         <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
-        {newsData.map((news, index) => (
+        {newsData.slice(0, 5).map((news, index) => (
           <article 
             key={index} 
             className="relative bg-white rounded-lg border border-gray-100 hover:border-gray-200 transition-all duration-200 overflow-hidden"

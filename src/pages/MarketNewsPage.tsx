@@ -21,8 +21,11 @@ interface NewsItem {
 }
 
 interface ApiResponse {
-  data: NewsItem[];
-  total_count?: number;
+  code: number;
+  data: {
+    totalNews: number;
+    news: NewsItem[];
+  };
 }
 
 const MarketNewsPage: React.FC = () => {
@@ -56,15 +59,12 @@ const MarketNewsPage: React.FC = () => {
       }
       
       const data: ApiResponse = await response.json();
-      setNews(data.data);
-      
-      // If the API returns total count, use it to calculate total pages
-      if (data.total_count) {
-        setTotalItems(data.total_count);
-        setTotalPages(Math.ceil(data.total_count / itemsPerPage));
+      if (data.code === 200) {
+        setNews(data.data.news);
+        setTotalItems(data.data.totalNews);
+        setTotalPages(Math.ceil(data.data.totalNews / itemsPerPage));
       } else {
-        // Fallback if total_count is not provided
-        setTotalPages(page + 1);
+        throw new Error('Failed to fetch news: Invalid response code');
       }
       
       setCurrentPage(page);
