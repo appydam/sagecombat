@@ -97,225 +97,305 @@ const Index = () => {
       )}
       
       <main className="flex-grow relative z-10">
-        {/* Enhanced Hero Section */}
-        <section className="relative overflow-hidden pt-20 pb-8 md:pt-28 md:pb-12">
-          <div className="container px-4 mx-auto">
-            <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
-              {/* Trust Signals */}
-              <div className="flex flex-col sm:flex-row items-center gap-4 mb-8 w-full justify-center animate-fade-in">
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-green-50 to-mint-50 border border-green-200 shadow-sm">
-                  <Shield className="w-4 h-4 mr-2 text-green-600" />
-                  <span className="font-medium text-green-700 text-xs">Secure & Trusted Platform</span>
-                </div>
-                
-                <a href="https://mindstockpapertrading.vercel.app/" target="_blank" rel="noopener noreferrer" className="relative inline-flex items-center px-4 py-2 rounded-full border border-border transition-all duration-300 cursor-pointer animate-fade-in shadow-sm overflow-hidden bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 hover:shadow-md">
-                  <span className="relative z-10 flex items-center">
-                    <TrendingUp className="w-4 h-4 mr-2 text-white" />
-                    <span className="font-semibold text-white text-xs">
-                      🚀 Paper Trading App — <span className="text-yellow-300">Coming Soon!</span>
-                    </span>
-                  </span>
-                </a>
+      {/* Enhanced Hero Section - Mobile Optimized */}
+      <section className="relative overflow-hidden pt-16 pb-8 md:pt-24 md:pb-16 px-4 md:px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="flex flex-col items-center text-center">
+            
+            {/* Mobile-First Trust Badges */}
+            <div className="flex flex-col gap-3 mb-8 w-full max-w-sm md:max-w-none md:flex-row md:justify-center md:gap-4 animate-fade-in">
+              <div className="inline-flex items-center justify-center px-3 py-1.5 rounded-full bg-green-50 border border-green-200 shadow-sm">
+                <Shield className="w-3.5 h-3.5 mr-1.5 text-green-600" />
+                <span className="font-medium text-green-700 text-xs">Secure Platform</span>
               </div>
-
-              {/* Main Headline */}
-              <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 animate-fade-up">
-                <span className="block mb-1 text-5xl sm:text-6xl md:text-7xl">The future of</span>
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-mint-600 to-gold-500 animate-gradient text-6xl sm:text-7xl md:text-8xl leading-tight">
-                  <span className="sm:whitespace-nowrap">Competitive </span>
-                  <span className="sm:whitespace-nowrap">Skill-based</span>
-                  <br />Gaming
+              
+              <a href="https://mindstockpapertrading.vercel.app/" target="_blank" rel="noopener noreferrer" 
+                 className="inline-flex items-center justify-center px-3 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 transition-colors shadow-sm">
+                <TrendingUp className="w-3.5 h-3.5 mr-1.5 text-white" />
+                <span className="font-medium text-white text-xs">
+                  Paper Trading <span className="text-yellow-300">Coming Soon</span>
                 </span>
-                <div className="block px-3 py-1 mt-6 text-xs font-medium tracking-wide text-violet-800 bg-violet-100 border border-violet-200 rounded-full shadow-sm animate-fade-up md:text-sm mx-auto" style={{ animationDelay: '400ms', maxWidth: 'fit-content' }}>
-                  <Lightbulb className="inline-block w-4 h-4 mr-1.5 -mt-0.5 text-violet-500" />
-                  Reimagining Gaming for Financial Intelligence
-                </div>
+              </a>
+            </div>
+
+            {/* Mobile-Optimized Headline */}
+            <div className="space-y-4 mb-6">
+              <h1 className="font-display font-bold tracking-tight animate-fade-up">
+                <span className="block text-2xl md:text-4xl lg:text-5xl text-slate-900 mb-2">
+                  The future of
+                </span>
+                <span className="block text-3xl md:text-5xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-primary via-mint-600 to-gold-500 leading-[1.1] md:leading-tight">
+                  Competitive<br className="md:hidden" />
+                  <span className="md:ml-2">Skill Gaming</span>
+                </span>
               </h1>
+              
+              {/* Value Prop Badge */}
+              <div className="inline-flex items-center px-4 py-2 mx-auto mt-4 text-xs md:text-sm font-medium text-violet-800 bg-violet-50 border border-violet-200 rounded-full shadow-sm animate-fade-up" style={{ animationDelay: '200ms' }}>
+                <Lightbulb className="w-4 h-4 mr-2 text-violet-600" />
+                Turn Market Knowledge into Real Rewards
+              </div>
+            </div>
 
-              {/* Subheadline */}
-              <p style={{
-              animationDelay: '200ms'
-            }} className="text-base sm:text-lg text-muted-foreground my-8 max-w-2xl mx-auto animate-fade-up leading-relaxed md:text-xl">Transform your market knowledge into real rewards. Compete in skill-based games without the risk.</p>
+            {/* Subheadline - Mobile Optimized */}
+            <p className="text-base md:text-lg lg:text-xl text-slate-600 mb-8 max-w-lg md:max-w-2xl mx-auto leading-relaxed animate-fade-up" 
+               style={{ animationDelay: '300ms' }}>
+              Join skill-based competitions where smart predictions earn real cash. No trading risk, just pure strategy.
+            </p>
 
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 mb-12 w-full sm:w-auto animate-fade-up" style={{
-                animationDelay: '600ms'
-              }}>
-                <Link to="/competitions" className="w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto rounded-full px-8 py-6 bg-gradient-to-r from-primary to-mint-600 hover:from-primary/90 hover:to-mint-600/90 shadow-lg transform hover:scale-105 transition-all duration-300 text-base font-semibold">
-                     Start Playing Now <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-                <Link to="/how-it-works" className="w-full sm:w-auto">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-full px-8 py-6 border-2 hover:bg-accent/50 transform hover:scale-105 transition-all duration-300 text-base font-semibold">
-                     <Play className="mr-2 h-5 w-5" />
-                     See How It Works
-                  </Button>
-                </Link>
+            {/* Mobile-First CTA Buttons */}
+            <div className="flex flex-col w-full max-w-sm md:max-w-none md:flex-row gap-3 md:gap-4 mb-12 animate-fade-up" 
+                 style={{ animationDelay: '400ms' }}>
+              <Link to="/competitions" className="w-full md:w-auto">
+                <Button size="lg" className="w-full md:w-auto h-12 md:h-14 rounded-full px-6 md:px-8 bg-gradient-to-r from-primary to-mint-600 hover:from-primary/90 hover:to-mint-600/90 shadow-lg text-base md:text-lg font-semibold transition-all duration-300 hover:scale-[1.02]">
+                  Start Playing Now 
+                  <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
+                </Button>
+              </Link>
+              <Link to="/how-it-works" className="w-full md:w-auto">
+                <Button variant="outline" size="lg" className="w-full md:w-auto h-12 md:h-14 rounded-full px-6 md:px-8 border-2 hover:bg-slate-50 text-base md:text-lg font-semibold transition-all duration-300 hover:scale-[1.02]">
+                  <Play className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                  How It Works
+                </Button>
+              </Link>
+            </div>
+
+            {/* Social Proof - Mobile */}
+            <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 text-xs md:text-sm text-slate-500 animate-fade-up" 
+                 style={{ animationDelay: '500ms' }}>
+              <div className="flex items-center gap-1.5">
+                <Users className="h-4 w-4" />
+                <span>1000+ Players</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Star className="h-4 w-4 text-yellow-500" />
+                <span>4.8/5 Rating</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                <span>Instant Payouts</span>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
         <ContestInfo />
 
         <GameTypes />
-        <section className="py-12 relative overflow-hidden">
-  <div className="container px-4 mx-auto">
-    <div className="text-center mb-8">
-      <h2 className="font-display text-3xl md:text-4xl font-bold mb-3 animate-fade-up">
-        Why Choose SageCombat?
-      </h2>
-      <p className="text-lg text-muted-foreground max-w-xl mx-auto animate-fade-up" style={{
-        animationDelay: '200ms'
-      }}>Advanced competitive skill-based gaming for sharp minds</p>
-    </div>
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-5xl mx-auto">
-      {[{
-        icon: Zap,
-        title: "Instant Rewards",
-        desc: "Immediate payouts"
-      }, {
-        icon: Shield,
-        title: "100% Safe",
-        desc: "No trading risk"
-      }, {
-        icon: TrendingUp,
-        title: "Real Data",
-        desc: "Live market feeds"
-      }, {
-        icon: Users,
-        title: "Active Community",
-        desc: "Thousands of players"
-      }, {
-        icon: CheckCircle2,
-        title: "Easy Start",
-        desc: "Quick registration"
-      }, {
-        icon: Star,
-        title: "Transparent",
-        desc: "Fair & clear rules"
-      }].map((feature, index) => 
-        <div key={index} className="text-center p-4 rounded-xl bg-white/40 backdrop-blur-sm border border-white/30 hover:bg-white/50 transition-all duration-300 animate-fade-up group hover:scale-105" style={{
-          animationDelay: `${index * 100}ms`
-        }}>
-          <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-3 group-hover:bg-primary/20 transition-colors">
-            <feature.icon className="h-5 w-5 text-primary" />
-          </div>
-          <h3 className="text-sm font-semibold mb-1">{feature.title}</h3>
-          <p className="text-muted-foreground text-xs">{feature.desc}</p>
-        </div>
-      )}
-    </div>
-  </div>
-</section>
-
-
-        <section className="py-16 relative">
+        {/* Mobile-Optimized Features Section */}
+        <section className="py-12 md:py-16 relative overflow-hidden">
           <div className="container px-4 mx-auto">
-            <div className="flex flex-col lg:flex-row gap-12 items-center">
-              <div className="flex-1 text-center lg:text-left">
-                <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 animate-fade-up">
+            <div className="text-center mb-10 md:mb-12">
+              <h2 className="font-display text-2xl md:text-4xl font-bold mb-3 animate-fade-up">
+                Why Choose SageCombat?
+              </h2>
+              <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto animate-fade-up" 
+                 style={{ animationDelay: '200ms' }}>
+                The most advanced platform for skill-based competitive gaming
+              </p>
+            </div>
+            
+            {/* Mobile-First Feature Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
+              {[
+                {
+                  icon: Zap,
+                  title: "Instant Rewards",
+                  desc: "Get paid immediately when you win. No waiting, no hassle."
+                },
+                {
+                  icon: Shield,
+                  title: "100% Risk-Free",
+                  desc: "No real trading risk. Pure skill-based competition only."
+                },
+                {
+                  icon: TrendingUp,
+                  title: "Real Market Data",
+                  desc: "Live feeds from actual markets for authentic experience."
+                },
+                {
+                  icon: Users,
+                  title: "Active Community",
+                  desc: "Join thousands of players competing daily."
+                },
+                {
+                  icon: CheckCircle2,
+                  title: "Quick Start",
+                  desc: "Sign up in seconds and start playing immediately."
+                },
+                {
+                  icon: Star,
+                  title: "Fair & Transparent",
+                  desc: "Clear rules, transparent scoring, merit-based rankings."
+                }
+              ].map((feature, index) => (
+                <div 
+                  key={index} 
+                  className="bg-white/60 backdrop-blur-sm border border-white/50 rounded-2xl p-6 md:p-8 text-center hover:bg-white/80 transition-all duration-300 animate-fade-up group hover:scale-[1.02] shadow-sm hover:shadow-md"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <div className="inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-primary/10 to-mint-600/10 mb-4 group-hover:from-primary/20 group-hover:to-mint-600/20 transition-colors">
+                    <feature.icon className="h-6 w-6 md:h-7 md:w-7 text-primary" />
+                  </div>
+                  <h3 className="text-base md:text-lg font-bold mb-2 text-slate-900">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm md:text-base text-slate-600 leading-relaxed">
+                    {feature.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+
+        {/* Mobile-Optimized Leaderboard Section */}
+        <section className="py-12 md:py-20 relative">
+          <div className="container px-4 mx-auto">
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center">
+              <div className="flex-1 text-center lg:text-left order-2 lg:order-1">
+                <h2 className="font-display text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 animate-fade-up">
                   Top Performers Win Big
                 </h2>
-                <p className="text-xl text-muted-foreground mb-8 animate-fade-up" style={{
-                animationDelay: '200ms'
-              }}>
-                  Our leaderboards track performance across all competitions. Top players earn real cash rewards for their market insights and prediction accuracy.
+                <p className="text-base md:text-lg lg:text-xl text-slate-600 mb-6 md:mb-8 animate-fade-up leading-relaxed" 
+                   style={{ animationDelay: '200ms' }}>
+                  Merit-based rankings track your performance. Top players earn real cash rewards for their market insights and prediction accuracy.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 animate-fade-up" style={{
-                animationDelay: '400ms'
-              }}>
-                  <Link to="/leaderboard">
-                    <Button size="lg" className="rounded-full px-8 shadow-lg hover:shadow-xl transition-shadow">
-                      View Global Leaderboard <ArrowRight className="ml-2 h-4 w-4" />
+                <div className="flex flex-col sm:flex-row gap-3 md:gap-4 animate-fade-up justify-center lg:justify-start" 
+                     style={{ animationDelay: '400ms' }}>
+                  <Link to="/leaderboard" className="w-full sm:w-auto">
+                    <Button size="lg" className="w-full sm:w-auto rounded-full px-6 md:px-8 h-12 md:h-14 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                      View Leaderboard <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
-                  <Link to="/competitions">
-                    <Button variant="outline" size="lg" className="rounded-full px-8 border-2 hover:bg-white/50 transition-colors">
+                  <Link to="/competitions" className="w-full sm:w-auto">
+                    <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-full px-6 md:px-8 h-12 md:h-14 border-2 hover:bg-slate-50 transition-all duration-300 hover:scale-[1.02]">
                       Join Competition
                     </Button>
                   </Link>
                 </div>
               </div>
-              <div className="flex-1 animate-fade-up" style={{
-              animationDelay: '300ms'
-            }}>
+              <div className="flex-1 animate-fade-up order-1 lg:order-2 w-full" 
+                   style={{ animationDelay: '300ms' }}>
                 <LeaderboardPreview competitionId="global" entries={leaderboardEntries} title="This Week's Champions" />
               </div>
             </div>
           </div>
         </section>
         
-        <section className="py-20 relative overflow-hidden">
+        {/* Mobile-Optimized CTA Section */}
+        <section className="py-16 md:py-24 relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-mint-50/50">
           <div className="container px-4 mx-auto text-center">
-            <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 max-w-4xl mx-auto animate-fade-up">
-               Ready to turn your market knowledge into
-              <span className="text-5xl md:text-6xl block bg-clip-text text-transparent bg-gradient-to-r from-primary to-mint-600 mt-2">
-                 Real Rewards?
-               </span>
-             </h2>
-            <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto animate-fade-up" style={{
-            animationDelay: '200ms'
-          }}>
-              Join thousands of players competing in skill-based skill-based gaming competitions. Start winning today.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-6 animate-fade-up" style={{
-            animationDelay: '400ms'
-          }}>
-              <Link to="/competitions">
-                <Button size="lg" className="rounded-full px-12 py-4 text-lg bg-gradient-to-r from-primary to-mint-600 hover:from-primary/90 hover:to-mint-600/90 shadow-lg transform hover:scale-105 transition-all duration-300">
-                  Start Playing Now <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link to="/login">
-                <Button variant="outline" size="lg" className="rounded-full px-12 py-4 text-lg border-2 hover:bg-white/50 transform hover:scale-105 transition-all duration-300">
-                  Sign Up Free
-                </Button>
-              </Link>
-            </div>
-            
-            <div className="flex justify-center items-center gap-8 mt-16 opacity-60 animate-fade-up" style={{
-            animationDelay: '600ms'
-          }}>
-              <div className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
-                <span className="text-sm">Secure & Safe</span>
+            <div className="max-w-4xl mx-auto">
+              <h2 className="font-display text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 animate-fade-up">
+                Ready to turn your market knowledge into
+                <span className="block text-3xl md:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-primary via-mint-600 to-gold-500 mt-2">
+                  Real Rewards?
+                </span>
+              </h2>
+              <p className="text-base md:text-lg lg:text-xl text-slate-600 mb-8 md:mb-12 max-w-2xl mx-auto leading-relaxed animate-fade-up" 
+                 style={{ animationDelay: '200ms' }}>
+                Join thousands of players competing in skill-based gaming. Your market insights = Real cash rewards.
+              </p>
+              
+              {/* Mobile-First CTA Buttons */}
+              <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-6 mb-12 md:mb-16 animate-fade-up" 
+                   style={{ animationDelay: '400ms' }}>
+                <Link to="/competitions" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto h-12 md:h-16 rounded-full px-8 md:px-12 text-base md:text-lg font-semibold bg-gradient-to-r from-primary to-mint-600 hover:from-primary/90 hover:to-mint-600/90 shadow-lg transition-all duration-300 hover:scale-[1.02]">
+                    Start Playing Now <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
+                  </Button>
+                </Link>
+                <Link to="/login" className="w-full sm:w-auto">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto h-12 md:h-16 rounded-full px-8 md:px-12 text-base md:text-lg font-semibold border-2 hover:bg-white/80 transition-all duration-300 hover:scale-[1.02]">
+                    Sign Up Free
+                  </Button>
+                </Link>
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5" />
-                <span className="text-sm">Verified Platform</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Star className="h-5 w-5" />
-                <span className="text-sm">Trusted Platform</span>
+              
+              {/* Trust Indicators - Mobile Optimized */}
+              <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8 opacity-70 animate-fade-up" 
+                   style={{ animationDelay: '600ms' }}>
+                <div className="flex items-center gap-2 text-sm md:text-base text-slate-600">
+                  <Shield className="h-4 w-4 md:h-5 md:w-5 text-green-600" />
+                  <span>Secure</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm md:text-base text-slate-600">
+                  <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5 text-blue-600" />
+                  <span>Verified</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm md:text-base text-slate-600">
+                  <Star className="h-4 w-4 md:h-5 md:w-5 text-yellow-500" />
+                  <span>Trusted</span>
+                </div>
               </div>
             </div>
           </div>
         </section>
       </main>
 
-      <section className="py-16 bg-white relative z-10">
-        <div className="container px-4 mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-10">What Players Are Saying</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      {/* Mobile-Optimized Testimonials Section */}
+      <section className="py-12 md:py-20 bg-white relative z-10">
+        <div className="container px-4 mx-auto">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold mb-4 text-slate-900">
+              What Players Are Saying
+            </h2>
+            <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto">
+              Join thousands of satisfied players who've turned their market knowledge into rewards
+            </p>
+          </div>
+          
+          {/* Mobile-First Testimonials Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
             {[
               {
                 name: "Gaurav K.",
-                quote: "Pretty adictive set of mind sport games. This platform is genius!",
+                role: "Active Trader",
+                quote: "Pretty addictive set of mind sport games. This platform is genius!",
+                rating: 5
               },
               {
                 name: "Mehak D.",
+                role: "Finance Professional", 
                 quote: "Feels like skill-based sports - but for finance nerds like me.",
+                rating: 5
               },
               {
                 name: "Rahul A.",
+                role: "Investment Analyst",
                 quote: "Finally, a platform where I can use my knowledge & leaderboard is on merit :)",
+                rating: 5
               }
-            ].map((t, i) => (
-              <div key={i} className="bg-slate-50 p-6 rounded-xl shadow-md border">
-                <p className="text-muted-foreground italic mb-3">"{t.quote}"</p>
-                <p className="text-sm font-semibold text-primary">- {t.name}</p>
+            ].map((testimonial, index) => (
+              <div 
+                key={index} 
+                className="bg-gradient-to-br from-slate-50 to-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 animate-fade-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                {/* Rating Stars */}
+                <div className="flex justify-center mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 text-yellow-500 fill-current" />
+                  ))}
+                </div>
+                
+                {/* Quote */}
+                <blockquote className="text-sm md:text-base text-slate-700 italic mb-4 leading-relaxed">
+                  "{testimonial.quote}"
+                </blockquote>
+                
+                {/* Attribution */}
+                <div className="text-center">
+                  <p className="font-semibold text-slate-900 text-sm md:text-base">
+                    {testimonial.name}
+                  </p>
+                  <p className="text-xs md:text-sm text-slate-500">
+                    {testimonial.role}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
