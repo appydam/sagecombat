@@ -144,7 +144,7 @@ const MarketNewsPage: React.FC = () => {
             <h2 className="text-xl font-semibold text-gray-800 mb-2">Failed to Load News</h2>
             <p className="text-gray-600 mb-4">{error}</p>
             <button 
-              onClick={() => fetchNews(currentPage)}
+              onClick={fetchNews}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors flex items-center mx-auto"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
