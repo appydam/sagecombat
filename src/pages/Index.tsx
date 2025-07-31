@@ -121,10 +121,10 @@ const Index = () => {
             {/* Mobile-Optimized Headline */}
             <div className="space-y-4 mb-6">
               <h1 className="font-display font-bold tracking-tight animate-fade-up">
-                <span className="block text-2xl md:text-4xl lg:text-5xl text-slate-900 mb-2">
+                <span className="block text-2xl md:text-5xl lg:text-6xl text-slate-900 mb-2">
                   The future of
                 </span>
-                <span className="block text-3xl md:text-5xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-primary via-mint-600 to-gold-500 leading-[1.1] md:leading-tight">
+                <span className="block text-3xl md:text-6xl lg:text-8xl bg-clip-text text-transparent bg-gradient-to-r from-primary via-mint-600 to-gold-500 leading-[1.1] md:leading-tight">
                   Competitive<br className="md:hidden" />
                   <span className="md:ml-2">Skill Gaming</span>
                 </span>
