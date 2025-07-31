@@ -70,7 +70,8 @@ export const getMockCompetitions = (): CompetitionProps[] => {
         type: "custom", // Derived from basket_type
         gameType: "equity", // Hardcoded
         currency_type: "virtual", // Added to match the type
-        competition_interval: 24 // Added to match the type, 24 hours
+        competition_interval: 24, // Added to match the type, 24 hours
+        contestCategory: "tech"
       },
       {
         id: "comp-2",
@@ -85,7 +86,8 @@ export const getMockCompetitions = (): CompetitionProps[] => {
         type: "predefined", // Derived
         gameType: "equity",
         currency_type: "virtual", // Added to match the type
-        competition_interval: 48 // Added to match the type, 48 hours
+        competition_interval: 48, // Added to match the type, 48 hours
+        contestCategory: "banking"
       },
       {
         id: "comp-3",
@@ -100,7 +102,8 @@ export const getMockCompetitions = (): CompetitionProps[] => {
         type: "custom", // Derived
         gameType: "equity",
         currency_type: "real", // Added to match the type
-        competition_interval: 12 // Added to match the type, 12 hours
+        competition_interval: 12, // Added to match the type, 12 hours
+        contestCategory: "pharma"
       }
     ];
   };

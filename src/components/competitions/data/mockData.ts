@@ -116,7 +116,8 @@ export const mockCompetitionsData: CompetitionsApiResponseData = {
       created_at: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
       updated_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
       currency_type: "virtual",
-      competition_interval: 24
+      competition_interval: 24,
+      contest_category: "technology"
     },
     {
       id: 2,
@@ -133,7 +134,8 @@ export const mockCompetitionsData: CompetitionsApiResponseData = {
       created_at: new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString(),
       updated_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
       currency_type: "virtual",
-      competition_interval: 48
+      competition_interval: 48,
+      contest_category: "banking"
     },
     {
       id: 3,
@@ -150,7 +152,8 @@ export const mockCompetitionsData: CompetitionsApiResponseData = {
       created_at: new Date(Date.now() - 96 * 60 * 60 * 1000).toISOString(),
       updated_at: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
       currency_type: "real",
-      competition_interval: 12
+      competition_interval: 12,
+      contest_category: "pharmaceutical"
     }
   ],
   orderbook_contests: [
@@ -163,6 +166,8 @@ export const mockCompetitionsData: CompetitionsApiResponseData = {
       status: "open",
       answer: null,
       currency_type: "virtual",
+      total_participants: 2500,
+      total_volume: 125000,
       created_at: "2025-05-01T00:00:00Z",
       updated_at: "2025-05-01T00:00:00Z"
     },
@@ -175,6 +180,8 @@ export const mockCompetitionsData: CompetitionsApiResponseData = {
       status: "open",
       answer: null,
       currency_type: "virtual",
+      total_participants: 1850,
+      total_volume: 92500,
       created_at: "2025-05-02T00:00:00Z",
       updated_at: "2025-05-02T00:00:00Z"
     },
@@ -187,6 +194,8 @@ export const mockCompetitionsData: CompetitionsApiResponseData = {
       status: "open",
       answer: null,
       currency_type: "virtual",
+      total_participants: 3200,
+      total_volume: 160000,
       created_at: "2025-05-03T00:00:00Z",
       updated_at: "2025-05-03T00:00:00Z"
     }
