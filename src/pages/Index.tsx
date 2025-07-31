@@ -144,16 +144,16 @@ const Index = () => {
             </p>
 
             {/* Mobile-First CTA Buttons */}
-            <div className="flex flex-col w-full max-w-sm md:max-w-none md:flex-row gap-3 md:gap-4 mb-12 animate-fade-up" 
+            <div className="flex flex-col w-full max-w-sm md:max-w-none md:flex-row gap-3 md:gap-4 mb-12 animate-fade-up justify-center items-center" 
                  style={{ animationDelay: '400ms' }}>
-              <Link to="/competitions" className="w-full md:w-auto">
-                <Button size="lg" className="w-full md:w-auto h-12 md:h-14 rounded-full px-6 md:px-8 bg-gradient-to-r from-primary to-mint-600 hover:from-primary/90 hover:to-mint-600/90 shadow-lg text-base md:text-lg font-semibold transition-all duration-300 hover:scale-[1.02]">
+              <Link to="/competitions" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto h-12 md:h-14 rounded-full px-6 md:px-8 bg-gradient-to-r from-primary to-mint-600 hover:from-primary/90 hover:to-mint-600/90 shadow-lg text-base md:text-lg font-semibold transition-all duration-300 hover:scale-[1.02]">
                   Start Playing Now 
                   <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
                 </Button>
               </Link>
-              <Link to="/how-it-works" className="w-full md:w-auto">
-                <Button variant="outline" size="lg" className="w-full md:w-auto h-12 md:h-14 rounded-full px-6 md:px-8 border-2 hover:bg-slate-50 text-base md:text-lg font-semibold transition-all duration-300 hover:scale-[1.02]">
+              <Link to="/how-it-works" className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto h-12 md:h-14 rounded-full px-6 md:px-8 border-2 hover:bg-slate-50 text-base md:text-lg font-semibold transition-all duration-300 hover:scale-[1.02]">
                   <Play className="mr-2 h-4 w-4 md:h-5 md:w-5" />
                   How It Works
                 </Button>
