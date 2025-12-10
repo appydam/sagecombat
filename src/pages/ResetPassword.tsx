@@ -27,7 +27,7 @@ const ResetPassword = () => {
     const [formData, setFormData] = useState({ password: "", confirmPassword: "" });
     const [isLoading, setIsLoading] = useState(false);
 
-    const SECRET_KEY = "bhWAJVbYpuIQNV0+SyxK59gjZKudcga1oB8HPLmh0+U=";
+    const SECRET_KEY = import.meta.env.VITE_RESET_PASSWORD_KEY;
 
     const getCryptoKey = async () => {
         const secretKeyBase64 = SECRET_KEY;
